@@ -15,8 +15,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
-import '../di/components/service_locator.dart';
-import '../stores/theme/theme_store.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -41,14 +39,11 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: Strings.appName,
-            theme: _themeStore.darkMode
-                ? AppThemeData.darkThemeData
-                : AppThemeData.lightThemeData,
+            theme: _themeStore.darkMode ? AppThemeData.darkThemeData : AppThemeData.lightThemeData,
             routes: Routes.routes,
             locale: Locale(_languageStore.locale),
-            supportedLocales: _languageStore.supportedLanguages
-                .map((language) => Locale(language.locale!, language.code))
-                .toList(),
+            supportedLocales:
+                _languageStore.supportedLanguages.map((language) => Locale(language.locale!, language.code)).toList(),
             localizationsDelegates: [
               // A class which loads the translations from JSON files
               AppLocalizations.delegate,

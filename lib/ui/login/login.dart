@@ -114,16 +114,45 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             AppIconWidget(image: 'assets/icons/ic_appicon.png'),
-            SizedBox(height: 24.0),
+
+            _buildWelcomeText(),
             _buildUserIdField(),
             _buildPasswordField(),
             _buildForgotPasswordButton(),
-            _buildSignInButton()
+            _buildSignInButton(),
+            _buildSignUpTextButton()
           ],
         ),
       ),
     );
   }
+
+  Widget _buildWelcomeText(){
+    return Column(children: [Container(
+      margin: const EdgeInsets.only(bottom: 20, top: 20),
+      child: const Text(
+        'Login!',
+        style: TextStyle(
+          fontSize: 23,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    ),
+      Container(
+        margin: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+        child: const Text(
+          'Please Login to get medical assistance',
+          style: TextStyle(
+            color: Color(0xFF6E6E6E),
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),],);
+
+
+  }
+
 
   Widget _buildUserIdField() {
     return Observer(
@@ -131,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return TextFieldWidget(
           hint: AppLocalizations.of(context).translate('login_et_user_email'),
           inputType: TextInputType.emailAddress,
-          icon: Icons.person,
+          icon: Icons.email_outlined,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _userEmailController,
           inputAction: TextInputAction.next,
@@ -156,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
               AppLocalizations.of(context).translate('login_et_user_password'),
           isObscure: true,
           padding: EdgeInsets.only(top: 16.0),
-          icon: Icons.lock,
+          icon: Icons.key,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _passwordController,
           focusNode: _passwordFocusNode,
@@ -171,15 +200,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildForgotPasswordButton() {
     return Align(
-      alignment: FractionalOffset.centerRight,
-      child: ElevatedButton(
+      alignment: FractionalOffset.center,
+      child: TextButton(
        // padding: EdgeInsets.all(0.0),
         child: Text(
           AppLocalizations.of(context).translate('login_btn_forgot_password'),
           style: Theme.of(context)
               .textTheme
-              .caption
-              ?.copyWith(color: Colors.orangeAccent),
+              .titleSmall
+              ?.copyWith(color: Color(0xFF16CAEA)),
+        ),
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _buildSignUpTextButton() {
+    return Align(
+      alignment: FractionalOffset.bottomCenter,
+      child: TextButton(
+        // padding: EdgeInsets.all(0.0),
+        child: Text(
+          AppLocalizations.of(context).translate('login_btn_dont_have_an_account'),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: Color(0xFF16CAEA)),
         ),
         onPressed: () {},
       ),
@@ -187,18 +233,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildSignInButton() {
-    return RoundedButtonWidget(
-      buttonText: AppLocalizations.of(context).translate('login_btn_sign_in'),
-      buttonColor: Colors.orangeAccent,
-      textColor: Colors.white,
-      onPressed: () async {
-        if (_store.canLogin) {
-          DeviceUtils.hideKeyboard(context);
-          _store.login();
-        } else {
-          _showErrorMessage('Please fill in all fields');
-        }
-      },
+    return SizedBox(
+      child: RoundedButtonWidget(
+        buttonText: AppLocalizations.of(context).translate('login_btn_sign_in'),
+        buttonColor: Colors.orangeAccent,
+        textColor: Colors.white,
+        onPressed: () async {
+          if (_store.canLogin) {
+            DeviceUtils.hideKeyboard(context);
+            _store.login();
+          } else {
+            _showErrorMessage('Please fill in all fields');
+          }
+        },
+      ),
     );
   }
 

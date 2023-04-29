@@ -102,7 +102,7 @@ abstract class _FormStore with Store {
     if (value.isEmpty) {
       formErrorStore.confirmPassword = "Confirm password can't be empty";
     } else if (value != password) {
-      formErrorStore.confirmPassword = "Password doen't match";
+      formErrorStore.confirmPassword = "Password does not match";
     } else {
       formErrorStore.confirmPassword = null;
     }

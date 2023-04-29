@@ -28,13 +28,40 @@ class AppThemeData {
   static final Color _lightFocusColor = Colors.black.withOpacity(0.12);
   static final Color _darkFocusColor = Colors.white.withOpacity(0.12);
 
-  static ThemeData lightThemeData =
-      themeData(lightColorScheme, _lightFocusColor);
+  static ThemeData lightThemeData = themeData(lightColorScheme, _lightFocusColor);
   static ThemeData darkThemeData = themeData(darkColorScheme, _darkFocusColor);
 
   static ThemeData themeData(ColorScheme colorScheme, Color focusColor) {
     return ThemeData(
+    useMaterial3: true,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF16CAEA),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            textStyle: const TextStyle(fontSize: 16)),
+      ),
       colorScheme: colorScheme,
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        prefixIconColor: const Color(0xFF16CAEA),
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        // Set the border radius for the text field
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        // Set the border color for the text field
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        // Set the focused border color for the text field
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       textTheme: _textTheme,
       // Matches manifest.json colors and background color.
       primaryColor: const Color(0xFF030303),
@@ -54,26 +81,27 @@ class AppThemeData {
           _lightFillColor.withOpacity(0.80),
           _darkFillColor,
         ),
-        contentTextStyle: _textTheme.subtitle1!.apply(color: _darkFillColor),
+        contentTextStyle: _textTheme.titleMedium!.apply(color: _darkFillColor),
       ),
     );
   }
 
   static const ColorScheme lightColorScheme = ColorScheme(
-    primary: Color(0xFFd21e1d),
-    primaryContainer: Color(0xFF9e1718),
-    secondary: Color(0xFFEFF3F3),
-    secondaryContainer: Color(0xFFFAFBFB),
-    background: Color(0xFFE6EBEB),
-    surface: Color(0xFFFAFBFB),
-    onBackground: Colors.white,
+    primary: Color(0xFF16CAEA),
+    primaryContainer: Color(0xFF16CAEA),
+    secondary: Color(0xFFF4F6F7),
+    secondaryContainer: Color(0xFFFFFFFF),
+    background: Color(0xFFF4F6F7),
+    surface: Color(0xFFFFFFFF),
+    onBackground: Color(0xFF241E30),
     error: _lightFillColor,
     onError: _lightFillColor,
-    onPrimary: _lightFillColor,
-    onSecondary: Color(0xFF322942),
+    onPrimary: Colors.white,
+    onSecondary: Color(0xFF241E30),
     onSurface: Color(0xFF241E30),
     brightness: Brightness.light,
   );
+
 
   static const ColorScheme darkColorScheme = ColorScheme(
     primary: Color(0xFFFF8383),
@@ -98,15 +126,15 @@ class AppThemeData {
   static const _bold = FontWeight.w700;
 
   static final TextTheme _textTheme = TextTheme(
-    headline4: GoogleFonts.montserrat(fontWeight: _bold, fontSize: 20.0),
-    caption: GoogleFonts.oswald(fontWeight: _semiBold, fontSize: 16.0),
-    headline5: GoogleFonts.oswald(fontWeight: _medium, fontSize: 16.0),
-    subtitle1: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 16.0),
-    overline: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 12.0),
-    bodyText1: GoogleFonts.montserrat(fontWeight: _regular, fontSize: 14.0),
-    subtitle2: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 14.0),
-    bodyText2: GoogleFonts.montserrat(fontWeight: _regular, fontSize: 16.0),
-    headline6: GoogleFonts.montserrat(fontWeight: _bold, fontSize: 16.0),
-    button: GoogleFonts.montserrat(fontWeight: _semiBold, fontSize: 14.0),
+    headlineMedium: GoogleFonts.montserrat(fontWeight: _bold, fontSize: 20.0),
+    bodySmall: GoogleFonts.oswald(fontWeight: _semiBold, fontSize: 16.0),
+    headlineSmall: GoogleFonts.oswald(fontWeight: _medium, fontSize: 16.0),
+    titleMedium: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 16.0),
+    labelSmall: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 12.0),
+    bodyLarge: GoogleFonts.montserrat(fontWeight: _regular, fontSize: 14.0),
+    titleSmall: GoogleFonts.montserrat(fontWeight: _medium, fontSize: 14.0),
+    bodyMedium: GoogleFonts.montserrat(fontWeight: _regular, fontSize: 16.0),
+    titleLarge: GoogleFonts.montserrat(fontWeight: _bold, fontSize: 16.0),
+    labelLarge: GoogleFonts.montserrat(fontWeight: _semiBold, fontSize: 14.0),
   );
 }

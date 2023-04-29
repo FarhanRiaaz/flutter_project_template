@@ -22,23 +22,27 @@ class TextFieldWidget extends StatelessWidget {
     return Padding(
       padding: padding,
       child: TextFormField(
+
         controller: textController,
         focusNode: focusNode,
+
         onFieldSubmitted: onFieldSubmitted,
         onChanged: onChanged,
         autofocus: autoFocus,
         textInputAction: inputAction,
         obscureText: this.isObscure,
-        maxLength: 25,
+        maxLength: 40 ,
         keyboardType: this.inputType,
-        style: Theme.of(context).textTheme.bodyText1,
+        style: Theme.of(context).textTheme.bodyLarge,
         decoration: InputDecoration(
+          prefixIcon: Icon(this.icon),
             hintText: this.hint,
             hintStyle:
-                Theme.of(context).textTheme.bodyText1!.copyWith(color: hintColor),
+                Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
             errorText: errorText,
             counterText: '',
-            icon: this.isIcon ? Icon(this.icon, color: iconColor) : null),
+           // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
+        ),
       ),
     );
   }
