@@ -5,7 +5,6 @@ import 'package:second_opinion_app/stores/language/language_store.dart';
 import 'package:second_opinion_app/stores/post/post_store.dart';
 import 'package:second_opinion_app/stores/theme/theme_store.dart';
 import 'package:second_opinion_app/utils/locale/app_localization.dart';
-import 'package:second_opinion_app/widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_dialog/material_dialog.dart';
@@ -75,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(resizeToAvoidBottomInset: false,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _buildAppBar(),
       body: _buildBody(),
     );
@@ -222,7 +222,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF222B2C)),
               ),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Routes.categories);
+                  },
                   child: const Text(
                     'See all',
                     style: TextStyle(color: Color(0xFF16CAEA)),
@@ -307,11 +309,17 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildGoodMorningText(),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               _buildCard(),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               _buildSearchBar(),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               _buildCategories(),
             ],
           ),
