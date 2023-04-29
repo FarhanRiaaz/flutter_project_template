@@ -161,11 +161,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
-    return Stack(
-      children: <Widget>[
-        _buildMainContent(),
-      ],
-    );
+    return _buildMainContent();
   }
 
   Widget _buildMainContent() {

@@ -92,7 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLeadingButton() {
     return IconButton(
       icon: const Icon(Icons.headphones_outlined),
-      onPressed: () {},
+      onPressed: () {
+        SharedPreferences.getInstance().then((preference) {
+          preference.setBool(Preferences.is_logged_in, false);
+          Navigator.of(context).pushReplacementNamed(Routes.login);
+        });
+      },
     );
   }
 
@@ -110,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.only(right: 8.0),
       child: InkWell(
         onTap: () {
-          // Do something when the button is tapped
+          Navigator.pushNamed(context, Routes.profile);
         },
         customBorder: CircleBorder(),
         child: CircleAvatar(

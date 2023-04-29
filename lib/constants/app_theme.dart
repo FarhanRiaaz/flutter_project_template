@@ -33,7 +33,7 @@ class AppThemeData {
 
   static ThemeData themeData(ColorScheme colorScheme, Color focusColor) {
     return ThemeData(
-    useMaterial3: true,
+      useMaterial3: true,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF16CAEA),
@@ -48,8 +48,21 @@ class AppThemeData {
         prefixIconColor: const Color(0xFF16CAEA),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         // Set the border radius for the text field
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.white),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.white),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.white),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.white),
         ),
         // Set the border color for the text field
         enabledBorder: OutlineInputBorder(
@@ -64,7 +77,7 @@ class AppThemeData {
       ),
       textTheme: _textTheme,
       // Matches manifest.json colors and background color.
-      primaryColor: const Color(0xFF030303),
+
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.background,
         elevation: 0,
@@ -101,7 +114,6 @@ class AppThemeData {
     onSurface: Color(0xFF241E30),
     brightness: Brightness.light,
   );
-
 
   static const ColorScheme darkColorScheme = ColorScheme(
     primary: Color(0xFFFF8383),
