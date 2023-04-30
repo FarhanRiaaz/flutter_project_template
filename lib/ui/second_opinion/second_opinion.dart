@@ -1,11 +1,11 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/widgets/roundedRectangle_widget.dart';
 
 import '../../widgets/textfield_widget.dart';
 
 class SecondOpinionScreen extends StatefulWidget {
-  const SecondOpinionScreen({Key? key}) : super(key: key);
+  const SecondOpinionScreen({Key? key, required this.onBackPressed}) : super(key: key);
+  final VoidCallback onBackPressed;
 
   @override
   State<SecondOpinionScreen> createState() => _SecondOpinionScreenState();
@@ -24,10 +24,16 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+    return WillPopScope(
+      onWillPop: () async {
+        widget.onBackPressed(); // Call the callback function
+        return false;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _buildAppBar(),
+        body: _buildBody(),
+      ),
     );
   }
 
@@ -43,7 +49,7 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
       onPressed: () {
-        Navigator.pop(context);
+        widget.onBackPressed();
       },
     );
   }
@@ -63,7 +69,7 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: SingleChildScrollView(
-
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -83,10 +89,10 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
             _buildGenderField(),
             _buildDescriptionField(),
             _buildUploadWidget(),
-        SizedBox(
-          height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             _buildProceedButton(),
-
           ],
         ),
       ),
