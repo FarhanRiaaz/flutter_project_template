@@ -46,6 +46,37 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
+  late final _$nameAtom = Atom(name: '_FormStore.name', context: context);
+
+  @override
+  String get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
+    });
+  }
+
+  late final _$checkBoxAtom =
+      Atom(name: '_FormStore.checkBox', context: context);
+
+  @override
+  bool get checkBox {
+    _$checkBoxAtom.reportRead();
+    return super.checkBox;
+  }
+
+  @override
+  set checkBox(bool value) {
+    _$checkBoxAtom.reportWrite(value, super.checkBox, () {
+      super.checkBox = value;
+    });
+  }
+
   late final _$passwordAtom =
       Atom(name: '_FormStore.password', context: context);
 
@@ -155,6 +186,28 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
+  dynamic toggleCheckbox(bool value) {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.toggleCheckbox');
+    try {
+      return super.toggleCheckbox(value);
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setName(String value) {
+    final _$actionInfo =
+        _$_FormStoreActionController.startAction(name: '_FormStore.setName');
+    try {
+      return super.setName(value);
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setPassword(String value) {
     final _$actionInfo = _$_FormStoreActionController.startAction(
         name: '_FormStore.setPassword');
@@ -188,6 +241,17 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
+  void validateName(String value) {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.validateName');
+    try {
+      return super.validateName(value);
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void validatePassword(String value) {
     final _$actionInfo = _$_FormStoreActionController.startAction(
         name: '_FormStore.validatePassword');
@@ -213,6 +277,8 @@ mixin _$FormStore on _FormStore, Store {
   String toString() {
     return '''
 userEmail: ${userEmail},
+name: ${name},
+checkBox: ${checkBox},
 password: ${password},
 confirmPassword: ${confirmPassword},
 success: ${success},
@@ -279,6 +345,21 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
+  late final _$nameAtom = Atom(name: '_FormErrorStore.name', context: context);
+
+  @override
+  String? get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String? value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
+    });
+  }
+
   late final _$confirmPasswordAtom =
       Atom(name: '_FormErrorStore.confirmPassword', context: context);
 
@@ -295,12 +376,30 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
+  late final _$checkBoxAtom =
+      Atom(name: '_FormErrorStore.checkBox', context: context);
+
+  @override
+  bool? get checkBox {
+    _$checkBoxAtom.reportRead();
+    return super.checkBox;
+  }
+
+  @override
+  set checkBox(bool? value) {
+    _$checkBoxAtom.reportWrite(value, super.checkBox, () {
+      super.checkBox = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 userEmail: ${userEmail},
 password: ${password},
+name: ${name},
 confirmPassword: ${confirmPassword},
+checkBox: ${checkBox},
 hasErrorsInLogin: ${hasErrorsInLogin},
 hasErrorsInRegister: ${hasErrorsInRegister},
 hasErrorInForgotPassword: ${hasErrorInForgotPassword}
