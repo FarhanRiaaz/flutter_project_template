@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/ui/home/home.dart';
 
+import '../reports/report.dart';
 import '../second_opinion/second_opinion.dart';
 
 class PageViewScreen extends StatefulWidget {
@@ -24,12 +25,16 @@ class _PageViewScreenState extends State<PageViewScreen> {
   Widget _buildCurrentIndexWidget() {
     return <Widget>[
       HomeScreen(),
-      Container(
-        color: Colors.green,
-        alignment: Alignment.center,
-        child: const Text('Page 2'),
-      ),
-      SecondOpinionScreen(),
+      ReportsScreen(onBackPressed: (){
+        setState(() {
+          currentPageIndex=0;
+        });
+      },),
+      SecondOpinionScreen(onBackPressed: (){
+        setState(() {
+          currentPageIndex=0;
+        });
+      },),
       Container(
         color: Colors.amberAccent,
         alignment: Alignment.center,
