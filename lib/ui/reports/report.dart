@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../utils/routes/routes.dart';
 import '../../widgets/prescription_widget.dart';
@@ -14,12 +17,22 @@ class ReportsScreen extends StatefulWidget {
 class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
+  List<Map<String,dynamic>> prescriptionList = List.generate(15, (index) {
+    final random = Random();
+    final date = DateTime.now().subtract(Duration(days: random.nextInt(30)));
+    final doctorName = 'Dr. ${String.fromCharCode(random.nextInt(26) + 65)}. ${String.fromCharCode(random.nextInt(26) + 97)}. ${String.fromCharCode(random.nextInt(26) + 97)}';
+    final symptoms = ['Fever', 'Cough', 'Headache', 'Sore Throat', 'Fatigue'][random.nextInt(5)];
+    return {'date': date, 'doctorName': doctorName, 'symptoms': symptoms};
+  });
+
+
+
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 350),
     );
     _animationController.forward();
   }
@@ -52,12 +65,32 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     );
   }
 
+  Widget _buildListView (){
+    
+    return ListView.separated(
+      padding: EdgeInsets.only(bottom: 80),
+      itemCount: prescriptionList.length,
+      itemBuilder: (BuildContext context, int index) {
+        final Map<String, dynamic> prescription = prescriptionList[index];
+        final DateTime dateTime = prescription['dateTime'] ?? DateTime.now();
+        final String doctorName = prescription['doctorName'] ?? '';
+        final String symptoms = prescription['symptoms'] ?? '';
+
+        return PrescriptionWidget(
+          symptoms: symptoms,
+          dateTime: dateTime,
+          doctorName:doctorName ,
+        );
+      }, separatorBuilder: (BuildContext context, int index) { return SizedBox(height: 8,); },
+    );
+
+
+  }
+  
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [PrescriptionWidget()],
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: _buildListView ()
     );
   }
 

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PrescriptionWidget extends StatelessWidget {
-  const PrescriptionWidget({Key? key}) : super(key: key);
+  const PrescriptionWidget({Key? key, required this.symptoms, required this.doctorName, required this.dateTime}) : super(key: key);
+
+  final String symptoms;
+  final String doctorName;
+  final DateTime dateTime;
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class PrescriptionWidget extends StatelessWidget {
                 height: 80,
                 child: Center(
                   child: Text(
-                    '22 \n March',
+                    '${DateFormat('d').format(dateTime)}\n${DateFormat('MMMM').format(dateTime)}',
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -39,15 +45,15 @@ class PrescriptionWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Flue, Cough, Fever',
+                    symptoms,
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                   Text(
-                    'Dr. Sanukay',
+                    doctorName,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   Text(
-                    'March 22, 2023',
+                    DateFormat('MMMM d, y').format(dateTime),
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ],
