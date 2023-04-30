@@ -58,15 +58,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildMainContent() {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: SingleChildScrollView(padding: EdgeInsets.only(top: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 30,
-            ),
+
             _buildPictureWidget(),
             SizedBox(
               height: 20,

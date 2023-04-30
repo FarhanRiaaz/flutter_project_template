@@ -1,3 +1,5 @@
+import 'package:second_opinion_app/ui/home_page_view/home_page_view.dart';
+
 import '../constants/app_theme.dart';
 import '../constants/strings.dart';
 import '../data/repository.dart';
@@ -6,7 +8,6 @@ import '../stores/language/language_store.dart';
 import '../stores/post/post_store.dart';
 import '../stores/theme/theme_store.dart';
 import '../stores/user/user_store.dart';
-import '../ui/home/home.dart';
 import '../ui/login/login.dart';
 import '../utils/locale/app_localization.dart';
 import '../utils/routes/routes.dart';
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
               // Built-in localization of basic text for Cupertino widgets
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: _userStore.isLoggedIn ? HomeScreen() : LoginScreen(),
+            home: _userStore.isLoggedIn ? PageViewScreen() : LoginScreen(),
           );
         },
       ),
