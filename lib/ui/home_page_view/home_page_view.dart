@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/ui/home/home.dart';
 
+import '../more/more.dart';
 import '../reports/report.dart';
 import '../second_opinion/second_opinion.dart';
 
@@ -35,11 +36,9 @@ class _PageViewScreenState extends State<PageViewScreen> {
           currentPageIndex=0;
         });
       },),
-      Container(
-        color: Colors.amberAccent,
-        alignment: Alignment.center,
-        child: const Text('Page 4'),
-      ),
+      MoreScreen(onBackPressed: () {setState(() {
+        currentPageIndex=0;
+      });  },)
     ][currentPageIndex];
   }
 
