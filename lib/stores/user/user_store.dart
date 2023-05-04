@@ -1,3 +1,5 @@
+import 'package:second_opinion_app/models/authentication/login_user_response.dart';
+import 'package:second_opinion_app/models/authentication/register_user_response.dart';
 import 'package:second_opinion_app/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -23,7 +25,6 @@ abstract class _UserStore with Store {
 
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : this._repository = repository {
-
     // setting up disposers
     _setupDisposers();
 
@@ -43,37 +44,66 @@ abstract class _UserStore with Store {
   }
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<bool> emptyLoginResponse =
-  ObservableFuture.value(false);
+  static ObservableFuture<LoginUserResponse> emptyLoginResponse =
+      ObservableFuture.value(LoginUserResponse());
+
+  static ObservableFuture<RegisterUserResponse> emptyRegisterResponse =
+      ObservableFuture.value(RegisterUserResponse());
 
   // store variables:-----------------------------------------------------------
   @observable
   bool success = false;
 
   @observable
-  ObservableFuture<bool> loginFuture = emptyLoginResponse;
+  User currentUser = User();
+
+  @observable
+  ObservableFuture<RegisterUserResponse> registerUserFuture =
+      emptyRegisterResponse;
+
+  @observable
+  ObservableFuture<LoginUserResponse> loginFuture = emptyLoginResponse;
 
   @computed
-  bool get isLoading => loginFuture.status == FutureStatus.pending;
+  bool get isRegistrationInProcess =>
+      registerUserFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isLoginInProcess => loginFuture.status == FutureStatus.pending;
 
   // actions:-------------------------------------------------------------------
-  @action
-  Future login(String email, String password) async {
 
-    final future = _repository.login(email, password);
-    loginFuture = ObservableFuture(future);
+  @action
+  Future register(String email, String password, String name) async {
+    final future = _repository.register(name, password, email);
+    registerUserFuture = ObservableFuture(future);
     await future.then((value) async {
-      if (value) {
-        _repository.saveIsLoggedIn(true);
-        this.isLoggedIn = true;
-        this.success = true;
+      if (value.name != null) {
+        currentUser = User(email: value.email, name: value.name);
       } else {
-        print('failed to login');
+        print('failed to register\nEmail already exists!');
       }
     }).catchError((e) {
       print(e);
-      this.isLoggedIn = false;
-      this.success = false;
+      print('failed to register\nEmail already exists!\n ${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future login(String email, String password) async {
+    final future = _repository.login(email, password);
+    loginFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.token!=null) {
+        print('You are logged IN!\n Tokken: ${value.token}');
+      } else {
+        print('failed to login\nInvalid creds are provided!');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to login\nInvalid creds are provided!\n${e.toString()}');
       throw e;
     });
   }
