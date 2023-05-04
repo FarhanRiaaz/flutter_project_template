@@ -46,9 +46,8 @@ Future<void> setupLocator() async {
 
   // repository:----------------------------------------------------------------
   getIt.registerSingleton(Repository(
-    getIt<PostApi>(),
+    getIt<AuthenticationApi>(),
     getIt<SharedPreferenceHelper>(),
-    getIt<PostDataSource>(),
   ));
 
   // stores:--------------------------------------------------------------------

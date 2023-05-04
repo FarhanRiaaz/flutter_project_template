@@ -38,13 +38,16 @@ abstract class _PostStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future getPosts() async {
-    final future = _repository.getPosts();
-    fetchPostsFuture = ObservableFuture(future);
+    final future = _repository.currentLanguage;
+   // fetchPostsFuture = ObservableFuture(future);
 
-    future.then((postList) {
-      this.postList = postList;
-    }).catchError((error) {
-      errorStore.errorMessage = DioErrorUtil.handleError(error);
-    });
+    // future.then((postList) {
+    //   this.postList = postList;
+    // }
+    //)
+      //  .catchError((error) {
+      //errorStore.errorMessage = DioErrorUtil.handleError(error);
+    //}
+    //);
   }
 }
