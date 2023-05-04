@@ -3,7 +3,7 @@ import 'package:second_opinion_app/data/local/datasources/post/post_datasource.d
 import 'package:second_opinion_app/data/network/apis/posts/post_api.dart';
 import 'package:second_opinion_app/data/network/dio_client.dart';
 import 'package:second_opinion_app/data/network/rest_client.dart';
-import 'package:second_opinion_app/data/repository.dart';
+import 'package:second_opinion_app/data/repository/repository.dart';
 import 'package:second_opinion_app/data/sharedpref/shared_preference_helper.dart';
 import 'package:second_opinion_app/di/module/local_module.dart';
 import 'package:second_opinion_app/di/module/network_module.dart';

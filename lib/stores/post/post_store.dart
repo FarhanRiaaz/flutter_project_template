@@ -1,4 +1,4 @@
-import 'package:second_opinion_app/data/repository.dart';
+import 'package:second_opinion_app/data/repository/repository.dart';
 import 'package:second_opinion_app/models/post/post_list.dart';
 import 'package:second_opinion_app/stores/error/error_store.dart';
 import 'package:second_opinion_app/utils/dio/dio_error_util.dart';

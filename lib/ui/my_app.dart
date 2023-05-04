@@ -2,7 +2,7 @@ import 'package:second_opinion_app/ui/home_page_view/home_page_view.dart';
 
 import '../constants/app_theme.dart';
 import '../constants/strings.dart';
-import '../data/repository.dart';
+import '../data/repository/repository.dart';
 import '../di/components/service_locator.dart';
 import '../stores/language/language_store.dart';
 import '../stores/post/post_store.dart';

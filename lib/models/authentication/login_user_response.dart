@@ -1,15 +1,18 @@
 class LoginUserResponse {
   String? token;
   User? user;
+  String? error;
 
   LoginUserResponse({
     this.token,
     this.user,
+    this.error,
   });
 
   LoginUserResponse.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    error = json['error'];
   }
 
   Map<String, dynamic> toJson() {
@@ -18,6 +21,7 @@ class LoginUserResponse {
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
+    data['error'] = this.error;
     return data;
   }
 
@@ -25,20 +29,24 @@ class LoginUserResponse {
       LoginUserResponse(
         token: json["token"],
         user: json["user"],
+        error: json["error"],
       );
 
   Map<String, dynamic> toMap() => {
         "token": token,
         "user": user,
+        "error": error,
       };
 
   LoginUserResponse copyWith({
     String? token,
     User? user,
+    String? error,
   }) =>
       LoginUserResponse(
         token: token ?? this.token,
         user: user ?? this.user,
+        error: error ?? this.error,
       );
 }
 
