@@ -1,9 +1,19 @@
 class LoginUserErrorResponse {
-  final String? error;
+  String? error;
 
   LoginUserErrorResponse({
     this.error,
   });
+
+  LoginUserErrorResponse.fromJson(Map<String, dynamic> json) {
+    error = json['error'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    return data;
+  }
 
   factory LoginUserErrorResponse.fromMap(Map<String, dynamic> json) =>
       LoginUserErrorResponse(
