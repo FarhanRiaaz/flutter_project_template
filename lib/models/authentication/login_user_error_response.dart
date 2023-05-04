@@ -5,6 +5,15 @@ class LoginUserErrorResponse {
     this.error,
   });
 
+  factory LoginUserErrorResponse.fromMap(Map<String, dynamic> json) =>
+      LoginUserErrorResponse(
+        error: json["error"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "error": error,
+      };
+
   LoginUserErrorResponse copyWith({
     String? error,
   }) =>
