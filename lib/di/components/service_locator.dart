@@ -18,6 +18,8 @@ import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/network/apis/user/authentication_api.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupLocator() async {
@@ -37,6 +39,7 @@ Future<void> setupLocator() async {
 
   // api's:---------------------------------------------------------------------
   getIt.registerSingleton(PostApi(getIt<DioClient>(), getIt<RestClient>()));
+  getIt.registerSingleton(AuthenticationApi(getIt<DioClient>(), getIt<RestClient>()));
 
   // data sources
   getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
