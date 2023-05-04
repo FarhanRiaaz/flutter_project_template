@@ -34,12 +34,20 @@ class TextFieldWidget extends StatelessWidget {
         maxLines: this.maxLines,
         keyboardType: this.inputType,
         style: Theme.of(context).textTheme.bodyLarge,
-        decoration: InputDecoration(
+        decoration: errorText!=null?InputDecoration(
           prefixIcon: this.icon != null ? Icon(this.icon) : null,
 
           hintText: this.hint,
           hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
           errorText: errorText,
+          counterText: '',
+          // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
+        ):InputDecoration(
+          prefixIcon: this.icon != null ? Icon(this.icon) : null,
+
+          hintText: this.hint,
+          hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
+
           counterText: '',
           // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
         ),
@@ -51,7 +59,7 @@ class TextFieldWidget extends StatelessWidget {
     Key? key,
     this.icon,
     this.maxLines = 1,
-    required this.errorText,
+    this.errorText,
     required this.textController,
     this.inputType,
     this.hint,

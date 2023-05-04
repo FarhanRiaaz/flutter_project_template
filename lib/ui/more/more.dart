@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/utils/routes/routes.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({Key? key, required this.onBackPressed}) : super(key: key);
   final VoidCallback onBackPressed;
+
   @override
   State<MoreScreen> createState() => _MoreScreenState();
 }
@@ -10,12 +12,11 @@ class MoreScreen extends StatefulWidget {
 class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppBar(),body: _buildBody(),);
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+    );
   }
-
-
-
-
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
@@ -33,7 +34,6 @@ class _MoreScreenState extends State<MoreScreen> {
       },
     );
   }
-
 
   Widget _buildTitle() {
     return Text(
@@ -55,41 +55,44 @@ class _MoreScreenState extends State<MoreScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildIconCard(Icons.credit_card, 'Payment'),
-            _buildIconCard(Icons.settings, 'Setting'),
-            _buildIconCard(Icons.info, 'About Us'),
-
+            _buildIconCard(Icons.credit_card, 'Payment', () {
+              Navigator.pushNamed(context, Routes.payment);
+            }),
+            _buildIconCard(Icons.settings, 'Setting', () {}),
+            _buildIconCard(Icons.info, 'About Us', () {}),
           ],
         ),
       ),
     );
   }
 
-
-  Widget _buildIconCard(IconData icon,String text){
-
-    return Card(elevation: 0,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 24.0,
-              color: Colors.grey[600],
-            ),
-            SizedBox(width: 16.0),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey[800],
+  Widget _buildIconCard(IconData icon, String text, VoidCallback onPressed) {
+    return Card(
+      elevation: 0,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 24.0,
+                color: Colors.grey[600],
               ),
-            ),
-          ],
+              SizedBox(width: 16.0),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.grey[800],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
-
   }
 }

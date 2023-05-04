@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/widgets/roundedRectangle_widget.dart';
+import 'package:second_opinion_app/widgets/upload_document_widget.dart';
 
 import '../../widgets/textfield_widget.dart';
 
@@ -173,23 +174,38 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.2,
-      child: RoundedRectangularWidget(
-          dashPattern: [5, 3],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/icons/uploadIcon.png',
-                width: 60,
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                'Upload Documents',
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor),
-              ),
-            ],
-          )),
+      child: InkWell(
+        onTap: () {
+          showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (context) => SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.85,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.15),
+                      child: const UploadDocumentWidget(),
+                    ),
+                  ));
+        },
+        child: RoundedRectangularWidget(
+            dashPattern: [5, 3],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/icons/uploadIcon.png',
+                  width: 60,
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Upload Documents',
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor),
+                ),
+              ],
+            )),
+      ),
     );
   }
 

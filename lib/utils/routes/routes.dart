@@ -1,6 +1,7 @@
 import 'package:second_opinion_app/ui/categories/categories.dart';
 
 import 'package:second_opinion_app/ui/login/login.dart';
+import 'package:second_opinion_app/ui/payment/payment.dart';
 import 'package:second_opinion_app/ui/profile/profile.dart';
 import 'package:second_opinion_app/ui/registration/registration.dart';
 import 'package:second_opinion_app/ui/splash/splash.dart';
@@ -18,6 +19,7 @@ class Routes {
   static const String categories = '/categories';
   static const String profile = '/profile';
   static const String registration = '/registration';
+  static const String payment = '/payment';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -26,5 +28,6 @@ class Routes {
     categories: (BuildContext context) => CategoriesScreen(),
     profile: (BuildContext context) => ProfileScreen(),
     registration: (BuildContext context) => Registration(),
+    payment: (BuildContext context) => PaymentScreen(),
   };
 }
