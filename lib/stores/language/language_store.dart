@@ -1,4 +1,4 @@
-import 'package:second_opinion_app/data/repository.dart';
+import 'package:second_opinion_app/data/repository/repository.dart';
 import 'package:second_opinion_app/models/language/Language.dart';
 import 'package:second_opinion_app/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';

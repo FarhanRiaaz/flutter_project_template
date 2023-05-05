@@ -3,7 +3,7 @@ import 'package:second_opinion_app/data/local/datasources/post/post_datasource.d
 import 'package:second_opinion_app/data/network/apis/posts/post_api.dart';
 import 'package:second_opinion_app/data/network/dio_client.dart';
 import 'package:second_opinion_app/data/network/rest_client.dart';
-import 'package:second_opinion_app/data/repository.dart';
+import 'package:second_opinion_app/data/repository/repository.dart';
 import 'package:second_opinion_app/data/sharedpref/shared_preference_helper.dart';
 import 'package:second_opinion_app/di/module/local_module.dart';
 import 'package:second_opinion_app/di/module/network_module.dart';
@@ -17,6 +17,8 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../data/network/apis/user/authentication_api.dart';
 
 final getIt = GetIt.instance;
 
@@ -37,15 +39,15 @@ Future<void> setupLocator() async {
 
   // api's:---------------------------------------------------------------------
   getIt.registerSingleton(PostApi(getIt<DioClient>(), getIt<RestClient>()));
+  getIt.registerSingleton(AuthenticationApi(getIt<DioClient>(), getIt<RestClient>()));
 
   // data sources
   getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
 
   // repository:----------------------------------------------------------------
   getIt.registerSingleton(Repository(
-    getIt<PostApi>(),
+    getIt<AuthenticationApi>(),
     getIt<SharedPreferenceHelper>(),
-    getIt<PostDataSource>(),
   ));
 
   // stores:--------------------------------------------------------------------

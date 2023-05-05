@@ -1,4 +1,4 @@
-import 'package:second_opinion_app/data/repository.dart';
+import 'package:second_opinion_app/data/repository/repository.dart';
 import 'package:second_opinion_app/models/post/post_list.dart';
 import 'package:second_opinion_app/stores/error/error_store.dart';
 import 'package:second_opinion_app/utils/dio/dio_error_util.dart';
@@ -38,13 +38,16 @@ abstract class _PostStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future getPosts() async {
-    final future = _repository.getPosts();
-    fetchPostsFuture = ObservableFuture(future);
+    final future = _repository.currentLanguage;
+   // fetchPostsFuture = ObservableFuture(future);
 
-    future.then((postList) {
-      this.postList = postList;
-    }).catchError((error) {
-      errorStore.errorMessage = DioErrorUtil.handleError(error);
-    });
+    // future.then((postList) {
+    //   this.postList = postList;
+    // }
+    //)
+      //  .catchError((error) {
+      //errorStore.errorMessage = DioErrorUtil.handleError(error);
+    //}
+    //);
   }
 }
