@@ -126,7 +126,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     return IconButton(
       icon: Stack(
         children: const [
-          Icon(Icons.notifications_none_rounded),
+          ImageIcon(AssetImage('assets/icons/BellIcon.png')),
           Positioned(
             top: 0,
             right: 0,

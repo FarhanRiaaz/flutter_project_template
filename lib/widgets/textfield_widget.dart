@@ -17,6 +17,7 @@ class TextFieldWidget extends StatelessWidget {
   final bool autoFocus;
   final TextInputAction? inputAction;
   final int maxLines;
+  final String? imageIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class TextFieldWidget extends StatelessWidget {
         keyboardType: this.inputType,
         style: Theme.of(context).textTheme.bodyLarge,
         decoration: errorText!=null?InputDecoration(
-          prefixIcon: this.icon != null ? Icon(this.icon) : null,
+          prefixIcon: this.imageIcon == null? this.icon != null ? Icon(this.icon) : null:ImageIcon(AssetImage(this.imageIcon!)),
 
           hintText: this.hint,
           hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
@@ -43,7 +44,7 @@ class TextFieldWidget extends StatelessWidget {
           counterText: '',
           // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
         ):InputDecoration(
-          prefixIcon: this.icon != null ? Icon(this.icon) : null,
+          prefixIcon:this.imageIcon == null? this.icon != null ? Icon(this.icon) : null:ImageIcon(AssetImage(this.imageIcon!)),
 
           hintText: this.hint,
           hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
@@ -72,6 +73,6 @@ class TextFieldWidget extends StatelessWidget {
     this.onFieldSubmitted,
     this.onChanged,
     this.autoFocus = false,
-    this.inputAction,
+    this.inputAction, this.imageIcon,
   }) : super(key: key);
 }

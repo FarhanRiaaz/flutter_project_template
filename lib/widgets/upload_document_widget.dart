@@ -111,6 +111,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
     return TextFieldWidget(
       padding: EdgeInsets.zero,
       hint: 'Select User',
+      imageIcon: 'assets/icons/Person.png',
       inputType: TextInputType.name,
       icon: Icons.person_outline_rounded,
       inputAction: TextInputAction.next,
@@ -125,6 +126,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
     return TextFieldWidget(
       padding: EdgeInsets.zero,
       hint: 'File Name',
+      imageIcon: 'assets/icons/File.png',
       inputType: TextInputType.name,
       icon: Icons.file_present_rounded,
       inputAction: TextInputAction.next,
@@ -139,6 +141,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
     return TextFieldWidget(
       padding: EdgeInsets.zero,
       hint: 'File Type',
+      imageIcon: 'assets/icons/File.png',
       inputType: TextInputType.name,
       icon: Icons.file_present_rounded,
       inputAction: TextInputAction.next,

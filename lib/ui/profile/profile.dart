@@ -187,6 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       icon: Icons.email_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
+      imageIcon: 'assets/icons/Mail.png',
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
       textController: emailController,
@@ -198,6 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       hint: 'Enter Your Mobile Number',
       inputType: TextInputType.phone,
       icon: Icons.phone_outlined,
+      imageIcon: 'assets/icons/Call.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
@@ -209,6 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildGenderField() {
     return TextFieldWidget(
       hint: 'Enter Your Gender',
+      imageIcon: 'assets/icons/Gender.png',
       inputType: TextInputType.text,
       icon: Icons.female_rounded,
       inputAction: TextInputAction.next,
@@ -223,7 +226,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return TextFieldWidget(
       hint: 'Enter Your Weight',
       inputType: TextInputType.number,
-      icon: Icons.monitor_weight_outlined,
+
+      imageIcon: 'assets/icons/Weight.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
@@ -237,6 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       hint: 'Enter Your Height',
       inputType: TextInputType.number,
       icon: Icons.height_rounded,
+      imageIcon: 'assets/icons/Scale.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},

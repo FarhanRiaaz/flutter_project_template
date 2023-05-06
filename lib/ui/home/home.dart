@@ -97,10 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const Icon(
-        Icons.headphones_outlined,
-        color: Color(0xFF16caea),
-      ),
+      icon: ImageIcon(AssetImage(
+        'assets/icons/Headphones.png',
+      ) ),
       onPressed: () {
         SharedPreferences.getInstance().then((preference) {
           preference.setBool(Preferences.is_logged_in, false);
@@ -212,7 +211,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return IconButton(
       icon: Stack(
         children: const [
-          Icon(Icons.notifications_none_rounded),
+          ImageIcon(AssetImage(
+            'assets/icons/BellIcon.png',
+          ) ),
           Positioned(
             top: 0,
             right: 0,

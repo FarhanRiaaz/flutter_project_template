@@ -54,171 +54,152 @@ class _IntroScreenState extends State<IntroScreen> {
           color: Colors.white,
         ),
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (int page) {
-          setState(() {
-            _currentPage = page;
-          });
-        },
-        children: [
-          Stack(
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Image.asset('assets/images/intro/intro1b.png'),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 80,
-                  ),
-                  Center(
-                    child: SizedBox(
-                      height: 293,
-                      child: Image.asset('assets/images/intro/intro1.png'),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome!',
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
-                        ),
-                        SizedBox(height: 10,),
-                        PageIndicator(
-                          count: 3,
-                          currentIndex: _currentPage,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/intro_background/introBackground1.png'),
+            fit: BoxFit.cover,
           ),
-          Stack(
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Image.asset('assets/images/intro/intro1b.png'),
+        ),
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (int page) {
+            setState(() {
+              _currentPage = page;
+            });
+          },
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 80,
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 80,
+                Center(
+                  child: SizedBox(
+                    height: 293,
+                    child: Image.asset('assets/images/intro/intro1.png'),
                   ),
-                  Center(
-                    child: SizedBox(
-                      height: 293,
-                      child: Image.asset('assets/images/intro/intro1.png'),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome!',
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
-                        ),
-                        SizedBox(height: 10,),
-                        PageIndicator(
-                          count: 3,
-                          currentIndex: _currentPage,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Stack(
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Image.asset('assets/images/intro/intro1b.png'),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 80,
+                SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome!',
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      PageIndicator(
+                        count: 3,
+                        currentIndex: _currentPage,
+                      )
+                    ],
                   ),
-                  Center(
-                    child: SizedBox(
-                      height: 293,
-                      child: Image.asset('assets/images/intro/intro1.png'),
-                    ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 80,
+                ),
+                Center(
+                  child: SizedBox(
+                    height: 293,
+                    child: Image.asset('assets/images/intro/intro1.png'),
                   ),
-                  SizedBox(
-                    height: 30,
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome!',
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      PageIndicator(
+                        count: 3,
+                        currentIndex: _currentPage,
+                      )
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome!',
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
-                        ),
-                        SizedBox(height: 10,),
-                        PageIndicator(
-                          count: 3,
-                          currentIndex: _currentPage,
-                        )
-                      ],
-                    ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 80,
+                ),
+                Center(
+                  child: SizedBox(
+                    height: 293,
+                    child: Image.asset('assets/images/intro/intro1.png'),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome!',
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      PageIndicator(
+                        count: 3,
+                        currentIndex: _currentPage,
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

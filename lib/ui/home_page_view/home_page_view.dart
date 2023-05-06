@@ -54,19 +54,44 @@ class _PageViewScreenState extends State<PageViewScreen> {
   List<Widget> _buildDestinationList() {
     return <Widget>[
       NavigationDestination(
-        icon: Icon(Icons.home_max_rounded),
+        icon: currentPageIndex != 0 ? Icon(Icons.home_max_rounded) : Icon(Icons.home_max_rounded,color: Theme.of(context).primaryColor,),
         label: 'Home',
       ),
       NavigationDestination(
-        icon: Icon(Icons.event_note_rounded),
+        icon: currentPageIndex != 1
+            ? ImageIcon(AssetImage(
+                'assets/icons/unselected_report.png',
+              ))
+            : ImageIcon(
+                AssetImage(
+                  'assets/icons/unselected_report.png',
+                ),
+                color: Theme.of(context).primaryColor,
+              ),
         label: 'Report',
       ),
       NavigationDestination(
-        icon: Icon(Icons.health_and_safety_outlined),
+        icon: currentPageIndex != 2
+            ? ImageIcon(AssetImage(
+                'assets/icons/unselected_opinion.png',
+              ))
+            : ImageIcon(
+                AssetImage(
+                  'assets/icons/unselected_opinion.png',
+                ),
+                color: Theme.of(context).primaryColor),
         label: 'Second Opinion',
       ),
       NavigationDestination(
-        icon: Icon(Icons.more_horiz_rounded),
+        icon: currentPageIndex != 3
+            ? ImageIcon(AssetImage(
+                'assets/icons/More_unselected.png',
+              ))
+            : ImageIcon(
+                AssetImage(
+                  'assets/icons/More_unselected.png',
+                ),
+                color: Theme.of(context).primaryColor),
         label: 'More',
       ),
     ];

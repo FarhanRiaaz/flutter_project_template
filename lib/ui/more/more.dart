@@ -71,11 +71,11 @@ class _MoreScreenState extends State<MoreScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildIconCard(Icons.credit_card, 'Payment', () {
+                _buildIconCard('assets/icons/CreditCard.png', 'Payment', () {
                   Navigator.pushNamed(context, Routes.payment);
                 }),
-                _buildIconCard(Icons.settings, 'Setting', () {}),
-                _buildIconCard(Icons.info, 'About Us', () {}),
+                _buildIconCard('assets/icons/Setting.png', 'Setting', () {}),
+                _buildIconCard('assets/icons/info.png', 'About Us', () {}),
               ],
             ),
           ),
@@ -84,7 +84,7 @@ class _MoreScreenState extends State<MoreScreen> {
     );
   }
 
-  Widget _buildIconCard(IconData icon, String text, VoidCallback onPressed) {
+  Widget _buildIconCard(String icon, String text, VoidCallback onPressed) {
     return Card(
       elevation: 0,
       child: InkWell(
@@ -94,9 +94,8 @@ class _MoreScreenState extends State<MoreScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              Icon(
-                icon,
-                size: 24.0,
+              ImageIcon(
+                AssetImage(icon),
                 color: Theme.of(context).primaryColor,
               ),
               SizedBox(width: 16.0),

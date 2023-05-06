@@ -182,6 +182,7 @@ class _RegistrationState extends State<Registration> {
           icon: Icons.person_outline_rounded,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _nameController,
+          imageIcon: 'assets/icons/Person.png',
           inputAction: TextInputAction.next,
           autoFocus: false,
           onChanged: (value) {
@@ -201,6 +202,7 @@ class _RegistrationState extends State<Registration> {
           inputType: TextInputType.emailAddress,
           padding: EdgeInsets.only(top: 16.0),
           icon: Icons.email_outlined,
+          imageIcon: 'assets/icons/Mail.png',
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _userEmailController,
           inputAction: TextInputAction.next,
@@ -220,6 +222,7 @@ class _RegistrationState extends State<Registration> {
         return TextFieldWidget(
           hint: AppLocalizations.of(context).translate('login_et_user_password'),
           isObscure: true,
+          imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0),
           icon: Icons.key,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
@@ -239,6 +242,7 @@ class _RegistrationState extends State<Registration> {
         return TextFieldWidget(
           hint: 'Confirm Password',
           isObscure: true,
+          imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0, bottom: 16),
           icon: Icons.key,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
@@ -259,7 +263,7 @@ class _RegistrationState extends State<Registration> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Checkbox(
+            Checkbox(fillColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
                 value: _store.checkBox,
                 onChanged: (value) {
                   _store.toggleCheckbox(value!);

@@ -139,6 +139,7 @@ flutter:
     - assets/icons/
     - assets/lang/
     - assets/splash/
+    - assets/intro_background/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

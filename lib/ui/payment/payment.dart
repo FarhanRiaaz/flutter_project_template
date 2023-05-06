@@ -48,10 +48,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _buildTitle() {
     return Text(
       'Second Opinion',
-      style: Theme
-          .of(context)
-          .textTheme
-          .headlineMedium,
+      style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
@@ -81,10 +78,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Stack(
             children: [
               SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: MediaQuery
-                    .of(context)
-                    .viewInsets
-                    .bottom),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -108,15 +102,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               Align(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery
-                      .of(context)
-                      .viewInsets
-                      .bottom + 8),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
                   child: SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.9,
+                    width: MediaQuery.of(context).size.width * 0.9,
                     child: _buildProceedButton(),
                   ),
                 ),
@@ -132,6 +120,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _buildExpiryField() {
     return TextFieldWidget(
       hint: 'Expiry Date',
+      imageIcon: 'assets/icons/Calender2.png',
       inputType: TextInputType.visiblePassword,
       icon: Icons.phone_outlined,
       inputAction: TextInputAction.next,
@@ -146,6 +135,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _buildCvvField() {
     return TextFieldWidget(
       hint: 'CVV',
+      imageIcon: 'assets/icons/CreditCard.png',
       inputType: TextInputType.number,
       icon: Icons.credit_card,
       inputAction: TextInputAction.next,
@@ -162,6 +152,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       hint: 'Card Number',
       inputType: TextInputType.number,
       icon: Icons.credit_card,
+      imageIcon: 'assets/icons/CreditCard.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
@@ -175,6 +166,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return TextFieldWidget(
       hint: 'Name',
       inputType: TextInputType.name,
+      imageIcon: 'assets/icons/Person.png',
       icon: Icons.person,
       inputAction: TextInputAction.next,
       autoFocus: false,
@@ -185,38 +177,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-
-
-
-
   Widget _buildCheckBox() {
-    return
-            SizedBox(
-            height: 40,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                  activeColor: Theme.of(context).primaryColor,
-                  checkColor: Colors.white,
-                  value: checked,
-                  onChanged: (value) {
-                    setState(() {
-                      checked = !checked;
-                    });
-                  },
-                ),
-
-                Text('Save for the future checkouts', style: Theme
-                    .of(context)
-                    .textTheme
-                    .labelSmall),
-
-              ],
-            ),
-          );
-
-
+    return SizedBox(
+      height: 40,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Checkbox(
+            activeColor: Theme.of(context).primaryColor,
+            checkColor: Colors.white,
+            value: checked,
+            onChanged: (value) {
+              setState(() {
+                checked = !checked;
+              });
+            },
+          ),
+          Text('Save for the future checkouts', style: Theme.of(context).textTheme.labelSmall),
+        ],
+      ),
+    );
   }
 
   Widget _buildProceedButton() {

@@ -175,6 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hint: AppLocalizations.of(context).translate('login_et_user_email'),
           inputType: TextInputType.emailAddress,
           icon: Icons.email_outlined,
+          imageIcon: 'assets/icons/Mail.png',
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _userEmailController,
           inputAction: TextInputAction.next,
@@ -198,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hint:
               AppLocalizations.of(context).translate('login_et_user_password'),
           isObscure: true,
+          imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0),
           icon: Icons.key,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
