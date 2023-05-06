@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/widgets/roundedRectangle_widget.dart';
 import 'package:second_opinion_app/widgets/upload_document_widget.dart';
 
@@ -104,13 +105,12 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
                 ),
                 _buildDescriptionField(),
                 _buildUploadWidget(),
-
-
               ],
             ),
           ),
         ),
-        Align(alignment: Alignment.bottomCenter,
+        Align(
+          alignment: Alignment.bottomCenter,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -132,7 +132,9 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
                   width: MediaQuery.of(context).size.width * 0.4,
                   height: MediaQuery.of(context).size.width * 0.12,
                   child: ElevatedButton(
-                    onPressed: () { },
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.doctors);
+                    },
                     child: Text('Next'),
                   ),
                 ),
@@ -148,21 +150,13 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
     return TextFieldWidget(
       hint: 'Enter Disease',
       inputType: TextInputType.text,
-
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-
       textController: diseaseController,
     );
   }
-
-
-
-
-
-
 
   Widget _buildDescriptionField() {
     return TextFieldWidget(

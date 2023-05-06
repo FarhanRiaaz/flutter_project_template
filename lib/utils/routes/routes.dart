@@ -6,6 +6,7 @@ import 'package:second_opinion_app/ui/login/login.dart';
 import 'package:second_opinion_app/ui/payment/payment.dart';
 import 'package:second_opinion_app/ui/profile/profile.dart';
 import 'package:second_opinion_app/ui/registration/registration.dart';
+import 'package:second_opinion_app/ui/second_opinion/doctors.dart';
 import 'package:second_opinion_app/ui/splash/splash.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +25,7 @@ class Routes {
   static const String payment = '/payment';
   static const String question = '/question';
   static const String intro = '/intro';
+  static const String doctors = '/doctors';
 
 
   static final routes = <String, WidgetBuilder>{
@@ -36,5 +38,6 @@ class Routes {
     payment: (BuildContext context) => PaymentScreen(),
     question: (BuildContext context) => QuestionsScreen(),
     intro: (BuildContext context) => IntroScreen(),
+    doctors: (BuildContext context) => DoctorsScreen( ),
   };
 }
