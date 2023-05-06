@@ -47,22 +47,40 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildMainContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildIconCard(Icons.credit_card, 'Payment', () {
-              Navigator.pushNamed(context, Routes.payment);
-            }),
-            _buildIconCard(Icons.settings, 'Setting', () {}),
-            _buildIconCard(Icons.info, 'About Us', () {}),
-          ],
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+          ),
         ),
-      ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildIconCard(Icons.credit_card, 'Payment', () {
+                  Navigator.pushNamed(context, Routes.payment);
+                }),
+                _buildIconCard(Icons.settings, 'Setting', () {}),
+                _buildIconCard(Icons.info, 'About Us', () {}),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -79,7 +97,7 @@ class _MoreScreenState extends State<MoreScreen> {
               Icon(
                 icon,
                 size: 24.0,
-                color: Colors.grey[600],
+                color: Theme.of(context).primaryColor,
               ),
               SizedBox(width: 16.0),
               Text(

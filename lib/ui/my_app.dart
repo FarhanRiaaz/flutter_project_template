@@ -1,4 +1,6 @@
 import 'package:second_opinion_app/ui/home_page_view/home_page_view.dart';
+import 'package:second_opinion_app/ui/into/intro.dart';
+import 'package:second_opinion_app/ui/splash/splash.dart';
 
 import '../constants/app_theme.dart';
 import '../constants/strings.dart';
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: Strings.appName,
-            theme: _themeStore.darkMode ? AppThemeData.darkThemeData : AppThemeData.lightThemeData,
+            theme: AppThemeData.themeData(),
             routes: Routes.routes,
             locale: Locale(_languageStore.locale),
             supportedLocales:
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
               // Built-in localization of basic text for Cupertino widgets
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: _userStore.isLoggedIn ? PageViewScreen() : LoginScreen(),
+            home: SplashScreen() ,
           );
         },
       ),

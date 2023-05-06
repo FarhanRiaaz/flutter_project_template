@@ -61,6 +61,20 @@ class _LoginScreenState extends State<LoginScreen> {
     return Material(
       child: Stack(
         children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.35,
+              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+            ),
+          ),
           MediaQuery.of(context).orientation == Orientation.landscape
               ? Row(
                   children: <Widget>[

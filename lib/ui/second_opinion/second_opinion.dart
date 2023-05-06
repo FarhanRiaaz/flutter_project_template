@@ -67,36 +67,54 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
   }
 
   Widget _buildMainContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(child: _buildFirstNameField()),
-                SizedBox(
-                  width: 10,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(child: _buildFirstNameField()),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(child: _buildLastNameField()),
+                  ],
                 ),
-                Expanded(child: _buildLastNameField()),
+                _buildPhoneField(),
+                _buildGenderField(),
+                _buildDescriptionField(),
+                _buildUploadWidget(),
+                SizedBox(
+                  height: 20,
+                ),
+                _buildProceedButton(),
               ],
             ),
-            _buildPhoneField(),
-            _buildGenderField(),
-            _buildDescriptionField(),
-            _buildUploadWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            _buildProceedButton(),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 

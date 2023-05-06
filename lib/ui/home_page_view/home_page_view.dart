@@ -18,34 +18,41 @@ class _PageViewScreenState extends State<PageViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        bottomNavigationBar: _buildBottomNavBar(),
-        body: _buildCurrentIndexWidget());
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: _buildBottomNavBar(),
+      body: _buildCurrentIndexWidget(),
+    );
   }
 
   Widget _buildCurrentIndexWidget() {
     return <Widget>[
       HomeScreen(),
-      ReportsScreen(onBackPressed: (){
-        setState(() {
-          currentPageIndex=0;
-        });
-      },),
-      SecondOpinionScreen(onBackPressed: (){
-        setState(() {
-          currentPageIndex=0;
-        });
-      },),
-      MoreScreen(onBackPressed: () {setState(() {
-        currentPageIndex=0;
-      });  },)
+      ReportsScreen(
+        onBackPressed: () {
+          setState(() {
+            currentPageIndex = 0;
+          });
+        },
+      ),
+      SecondOpinionScreen(
+        onBackPressed: () {
+          setState(() {
+            currentPageIndex = 0;
+          });
+        },
+      ),
+      MoreScreen(
+        onBackPressed: () {
+          setState(() {
+            currentPageIndex = 0;
+          });
+        },
+      )
     ][currentPageIndex];
   }
 
-
-  List<Widget> _buildDestinationList(){
-
-    return   <Widget>[
+  List<Widget> _buildDestinationList() {
+    return <Widget>[
       NavigationDestination(
         icon: Icon(Icons.home_max_rounded),
         label: 'Home',
@@ -63,13 +70,10 @@ class _PageViewScreenState extends State<PageViewScreen> {
         label: 'More',
       ),
     ];
-
   }
 
-
-  Widget _buildBottomNavBar(){
+  Widget _buildBottomNavBar() {
     return NavigationBar(
-        backgroundColor: Colors.white,
         elevation: 5,
         onDestinationSelected: (int index) {
           setState(() {
@@ -77,8 +81,6 @@ class _PageViewScreenState extends State<PageViewScreen> {
           });
         },
         selectedIndex: currentPageIndex,
-        destinations: _buildDestinationList()
-    );
-
+        destinations: _buildDestinationList());
   }
 }

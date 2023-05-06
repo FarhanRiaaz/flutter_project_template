@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PrescriptionWidget extends StatelessWidget {
-  const PrescriptionWidget({Key? key, required this.symptoms, required this.doctorName, required this.dateTime}) : super(key: key);
+  const PrescriptionWidget({Key? key, required this.symptoms, required this.doctorName, required this.dateTime})
+      : super(key: key);
 
   final String symptoms;
   final String doctorName;
   final DateTime dateTime;
-
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,10 @@ class PrescriptionWidget extends StatelessWidget {
                 ),
                 height: 80,
                 child: Center(
-                  child: Text(
-                    '${DateFormat('d').format(dateTime)}\n${DateFormat('MMMM').format(dateTime)}',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                    child: Image.asset(
+                  'assets/icons/blankImage.png',
+                  scale: 2.6,
+                )),
               ),
             ),
             SizedBox(
@@ -46,15 +45,15 @@ class PrescriptionWidget extends StatelessWidget {
                 children: [
                   Text(
                     symptoms,
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 16),
                   ),
                   Text(
                     doctorName,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                   Text(
                     DateFormat('MMMM d, y').format(dateTime),
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                 ],
               ),
@@ -64,8 +63,9 @@ class PrescriptionWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildActionWidget(icon: Icons.remove_red_eye_outlined, onPressed: () {},context: context),
-                    _buildActionWidget(icon: Icons.download_for_offline_outlined, onPressed: () {},context: context),
+                    _buildActionWidget(icon: Icons.remove_red_eye_outlined, onPressed: () {}, context: context),
+                    SizedBox(height: 8,),
+                    _buildActionWidget(icon: Icons.download_for_offline_outlined, onPressed: () {}, context: context),
                   ],
                 )),
           ],
@@ -74,14 +74,26 @@ class PrescriptionWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildActionWidget({required IconData icon, required VoidCallback onPressed,required BuildContext context}) {
-    return SizedBox(width: double.infinity,height: 40,
-      child: IconButton(splashRadius:10,
+  Widget _buildActionWidget({
+    required IconData icon,
+    required VoidCallback onPressed,
+    required BuildContext context,
+  }) {
+    return SizedBox(
+      width: 30,
+      height: 30,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).primaryColor.withOpacity(0.1),
+        ),
+        child: IconButton(
+          splashRadius: 10,
           color: Theme.of(context).primaryColor,
-          onPressed: () {
-            onPressed();
-          },
-          icon: Icon(icon,size: 20,)),
+          onPressed: onPressed,
+          icon: Icon(icon, size: 15),
+        ),
+      ),
     );
   }
 }

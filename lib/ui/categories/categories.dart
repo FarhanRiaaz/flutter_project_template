@@ -167,18 +167,36 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget _buildMainContent() {
     return Observer(
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSearchBar(),
-              SizedBox(
-                height: 20,
+        return Stack(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.35,
+                child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
               ),
-              _buildGridView(),
-            ],
-          ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSearchBar(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _buildGridView(),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );

@@ -162,10 +162,10 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   }
 
   Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
+    return FloatingActionButton(backgroundColor: Color(0xFF1ce0a3),
       shape: CircleBorder(),
       onPressed: () {},
-      child: Icon(Icons.add),
+      child: Icon(Icons.add,color: Colors.white,),
     );
   }
 

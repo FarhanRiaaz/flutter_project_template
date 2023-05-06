@@ -3,14 +3,14 @@ import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 
 import '../../widgets/textfield_widget.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class AddUserScreen extends StatefulWidget {
+  const AddUserScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<AddUserScreen> createState() => _AddUserScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _AddUserScreenState extends State<AddUserScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildTitle() {
     return Text(
-      'Profile',
+      'Add User',
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
@@ -88,25 +88,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 20,
                 ),
                 _buildNameField(),
-                SizedBox(
-                  height: 15,
-                ),
                 _buildEmailField(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildPhoneField(),
-                SizedBox(
-                  height: 15,
-                ),
                 _buildGenderField(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildAgeField(),
-                SizedBox(
-                  height: 15,
-                ),
+                _buildDOBField(),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,13 +103,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 15,
-                ),
-                SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: RoundedButtonWidget(
-                    buttonText: 'Save',
+                    buttonText: 'Continue',
                     buttonColor: Theme.of(context).primaryColor,
                     onPressed: () {},
                   ),
@@ -175,6 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         autoFocus: false,
         onChanged: (value) {},
         onFieldSubmitted: (value) {},
+        errorText: '',
         textController: nameController,
       ),
     );
@@ -182,27 +164,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildEmailField() {
     return TextFieldWidget(
-      hint: 'Enter Your Email',
+      hint: 'Select the Color for name',
       inputType: TextInputType.emailAddress,
-      icon: Icons.email_outlined,
+      icon: Icons.color_lens_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
+      errorText: '',
       textController: emailController,
-    );
-  }
-
-  Widget _buildPhoneField() {
-    return TextFieldWidget(
-      hint: 'Enter Your Mobile Number',
-      inputType: TextInputType.phone,
-      icon: Icons.phone_outlined,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      textController: mobileController,
     );
   }
 
@@ -215,46 +185,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
+      errorText: '',
       textController: genderController,
     );
   }
 
   Widget _buildWeightField() {
     return TextFieldWidget(
-      hint: 'Enter Your Weight',
+      hint: 'Enter Weight',
       inputType: TextInputType.number,
       icon: Icons.monitor_weight_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
+      errorText: '',
       textController: weightController,
     );
   }
 
   Widget _buildHeightField() {
     return TextFieldWidget(
-      hint: 'Enter Your Height',
+      hint: 'Enter Height',
       inputType: TextInputType.number,
       icon: Icons.height_rounded,
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
+      errorText: '',
       textController: heightController,
     );
   }
 
-  Widget _buildAgeField() {
+  Widget _buildDOBField() {
     return TextFieldWidget(
-      hint: 'Enter Your Age',
+      hint: 'Enter Your Date of Birth',
       inputType: TextInputType.number,
-      icon: Icons.person_outline_rounded,
-      textController: ageController,
+      icon: Icons.calendar_month_rounded,
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
+      errorText: '',
+      textController: dobController,
     );
   }
 }

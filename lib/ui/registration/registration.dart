@@ -63,6 +63,20 @@ class _RegistrationState extends State<Registration> {
     return Material(
       child: Stack(
         children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.35,
+              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+            ),
+          ),
           MediaQuery.of(context).orientation == Orientation.landscape
               ? Row(
                   children: <Widget>[
@@ -120,9 +134,10 @@ class _RegistrationState extends State<Registration> {
             _buildPasswordField(),
             _buildConfirmPasswordField(),
             _buildCheckBox(),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             _buildSignInButton(),
-
             _buildSignUpTextButton()
           ],
         ),
@@ -238,31 +253,27 @@ class _RegistrationState extends State<Registration> {
   }
 
   Widget _buildCheckBox() {
-    return Observer(
-      builder: (context) {
-        return SizedBox(
-          height: 40,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Checkbox(
-                  value: _store.checkBox,
-                  onChanged: (value) {
-
-                      _store.toggleCheckbox(value!);
-                      print(_store.checkBox);
-
-                  }),
-              Text('Agree with', style: Theme.of(context).textTheme.labelSmall),
-              Text(
-                ' Terms and Conditions',
-                style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).primaryColor),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+    return Observer(builder: (context) {
+      return SizedBox(
+        height: 40,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(
+                value: _store.checkBox,
+                onChanged: (value) {
+                  _store.toggleCheckbox(value!);
+                  print(_store.checkBox);
+                }),
+            Text('Agree with', style: Theme.of(context).textTheme.labelSmall),
+            Text(
+              ' Terms and Conditions',
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).primaryColor),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildSignUpTextButton() {
@@ -270,12 +281,20 @@ class _RegistrationState extends State<Registration> {
       alignment: FractionalOffset.bottomCenter,
       child: TextButton(
         // padding: EdgeInsets.all(0.0),
-        child: Text(
-          'Already Have an account? Sign in',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Already Have an account? ',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            Text(
+              'Sign in',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
+            ),
+          ],
         ),
         onPressed: () {
-
           Navigator.pushReplacementNamed(context, Routes.login);
         },
       ),
@@ -291,6 +310,7 @@ class _RegistrationState extends State<Registration> {
         onPressed: () async {
           if (_store.canRegister) {
             DeviceUtils.hideKeyboard(context);
+            await showRegistrationDialog(context);
             _store.register();
           } else {
             _showErrorMessage('Please fill in all fields');
@@ -301,10 +321,6 @@ class _RegistrationState extends State<Registration> {
   }
 
   Widget navigate(BuildContext context) {
-
-
-
-
     Future.delayed(Duration(milliseconds: 0), () {
       Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (Route<dynamic> route) => false);
     });
@@ -327,6 +343,74 @@ class _RegistrationState extends State<Registration> {
     }
 
     return SizedBox.shrink();
+  }
+
+  Future<void> showRegistrationDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            height: 311,
+            width: 290,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              image: const DecorationImage(
+                image: AssetImage("assets/images/background/backgroundPopUp.png"),
+                fit: BoxFit.contain,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 60,
+                      child: Image.asset(
+                        'assets/images/background/tick-icon.png',
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    const Center(
+                      child: Text(
+                        "Congratulations!",
+                        style: TextStyle(fontSize: 18.0, color: Color(0xFF222B2C)),
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    const Text(
+                      "You are successfully registered to Second Opinion app.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16.0, color: Color(0xFFBEBEBE)),
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Continue",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // dispose:-------------------------------------------------------------------

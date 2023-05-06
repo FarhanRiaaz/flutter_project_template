@@ -21,11 +21,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
 
-    return Material(
-      child: Center(child: AppIconWidget(image: Assets.appLogo)),
+        image: DecorationImage(
+          image: AssetImage('assets/splash/splashB.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+
     );
   }
+
 
   startTimer() {
     var _duration = Duration(milliseconds: 2000);
@@ -38,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (preferences.getBool(Preferences.is_logged_in) ?? false) {
       Navigator.of(context).pushReplacementNamed(Routes.home);
     } else {
-      Navigator.of(context).pushReplacementNamed(Routes.login);
+      Navigator.of(context).pushReplacementNamed(Routes.intro);
     }
   }
 }

@@ -25,15 +25,13 @@ class AppThemeData {
   static const _lightFillColor = Colors.black;
   static const _darkFillColor = Colors.white;
 
-  static final Color _lightFocusColor = Colors.black.withOpacity(0.12);
-  static final Color _darkFocusColor = Colors.white.withOpacity(0.12);
 
-  static ThemeData lightThemeData = themeData(lightColorScheme, _lightFocusColor);
-  static ThemeData darkThemeData = themeData(darkColorScheme, _darkFocusColor);
 
-  static ThemeData themeData(ColorScheme colorScheme, Color focusColor) {
+
+
+  static ThemeData themeData(  ) {
     return ThemeData(
-      useMaterial3: true,
+      primaryColor: lightColorScheme.primary,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF16CAEA),
@@ -41,7 +39,7 @@ class AppThemeData {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             textStyle: const TextStyle(fontSize: 16)),
       ),
-      colorScheme: colorScheme,
+      colorScheme: lightColorScheme,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
@@ -79,15 +77,15 @@ class AppThemeData {
       // Matches manifest.json colors and background color.
 
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.background,
+        backgroundColor: lightColorScheme.background,
         elevation: 0,
-        iconTheme: IconThemeData(color: colorScheme.primary),
+        iconTheme: IconThemeData(color: lightColorScheme.primary),
       ),
-      iconTheme: IconThemeData(color: colorScheme.onPrimary),
-      canvasColor: colorScheme.background,
-      scaffoldBackgroundColor: colorScheme.background,
+      iconTheme: IconThemeData(color: lightColorScheme.onPrimary),
+      canvasColor: lightColorScheme.background,
+      scaffoldBackgroundColor: lightColorScheme.background,
       highlightColor: Colors.transparent,
-      focusColor: focusColor,
+
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: Color.alphaBlend(

@@ -186,7 +186,7 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
-  dynamic toggleCheckbox(bool value) {
+  void toggleCheckbox(bool value) {
     final _$actionInfo = _$_FormStoreActionController.startAction(
         name: '_FormStore.toggleCheckbox');
     try {

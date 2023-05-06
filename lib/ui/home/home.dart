@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
+import 'package:second_opinion_app/ui/add_user.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/stores/language/language_store.dart';
 import 'package:second_opinion_app/stores/post/post_store.dart';
@@ -76,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: _buildAppBar(),
       body: _buildBody(),
     );
   }
@@ -84,6 +84,12 @@ class _HomeScreenState extends State<HomeScreen> {
   // app bar methods:-----------------------------------------------------------
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
+      title: Image.asset(
+        'assets/icons/icon.png',
+        scale: 3.5,
+      ),
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       actions: _buildActions(context),
     );
@@ -91,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const Icon(Icons.headphones_outlined),
+      icon: const Icon(Icons.headphones_outlined,color: Color(0xFF16caea),),
       onPressed: () {
         SharedPreferences.getInstance().then((preference) {
           preference.setBool(Preferences.is_logged_in, false);
@@ -127,12 +133,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildGoodMorningText() {
-    return Text(
-      'Good morning!',
-      style: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '👋 Good morning!',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+        ),
+        Text(
+          'Muhammad',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 
@@ -166,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                    Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     Text('You need our best consultancy and assistance ',
                         style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
                   ],
@@ -216,42 +232,40 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategories() {
-    return Expanded(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Categories',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF222B2C)),
-              ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(Routes.categories);
-                  },
-                  child: const Text(
-                    'See all',
-                    style: TextStyle(color: Color(0xFF16CAEA)),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Categories',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF222B2C)),
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(Routes.categories);
+                },
+                child: const Text(
+                  'See all',
+                  style: TextStyle(color: Color(0xFF16CAEA)),
+                ))
+          ],
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 3,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          children: gridItems
+              .take(6)
+              .map((item) => MedicalFieldGridTile(
+                    title: item['name'],
+                    path: item['imagePath'],
                   ))
-            ],
-          ),
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            children: gridItems
-                .take(6)
-                .map((item) => MedicalFieldGridTile(
-                      title: item['name'],
-                      path: item['imagePath'],
-                    ))
-                .toList(),
-          ),
-        ],
-      ),
+              .toList(),
+        ),
+      ],
     );
   }
 
@@ -284,21 +298,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildLanguageButton() {
-    return IconButton(
-      onPressed: () {
-        _buildLanguageDialog();
-      },
-      icon: Icon(
-        Icons.language,
-      ),
-    );
-  }
-
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Stack(
       children: <Widget>[
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+          ),
+        ),
         _handleErrorMessage(),
         _buildMainContent(),
       ],
@@ -308,66 +325,97 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildMainContent() {
     return Observer(
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildGoodMorningText(),
-              SizedBox(
-                height: 20,
+        return Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildGoodMorningText(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildCard(),
+                      _buildMyUser(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildSearchBar(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildCategories(),
+                    ],
+                  ),
+                ),
               ),
-              _buildCard(),
-              SizedBox(
-                height: 20,
-              ),
-              _buildSearchBar(),
-              SizedBox(
-                height: 20,
-              ),
-              _buildCategories(),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildListView() {
-    return _postStore.postList != null
-        ? ListView.separated(
-            itemCount: _postStore.postList!.posts!.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
-            },
-          )
-        : Center(
-            child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+  Widget _buildMyUser() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 8,
+        ),
+        Text(
+          'My Users',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Column(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: 18,
+                  child: Image.asset(
+                    'assets/images/circleAvatar.png',
+                  ),
+                ),
+                Text(
+                  'You',
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                )
+              ],
             ),
-          );
-  }
+            SizedBox(
+              width: 2,
+            ),
+            Column(
+              children: [
+                GestureDetector(onTap: (){
 
-  Widget _buildListItem(int position) {
-    return ListTile(
-      dense: true,
-      leading: Icon(Icons.cloud_circle),
-      title: Text(
-        '${_postStore.postList?.posts?[position].title}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      subtitle: Text(
-        '${_postStore.postList?.posts?[position].body}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      ),
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>AddUserScreen()));
+
+                },
+                  child: CircleAvatar(
+                    radius: 18,
+                    child: Icon(Icons.add),
+                  ),
+                ),
+                Text('', style: TextStyle(fontSize: 12)),
+              ],
+            ),
+          ],
+        )
+      ],
     );
   }
 
@@ -396,62 +444,5 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     return SizedBox.shrink();
-  }
-
-  _buildLanguageDialog() {
-    _showDialog<String>(
-      context: context,
-      child: MaterialDialog(
-        borderRadius: 5.0,
-        enableFullWidth: true,
-        title: Text(
-          AppLocalizations.of(context).translate('home_tv_choose_language'),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-          ),
-        ),
-        headerColor: Theme.of(context).primaryColor,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        closeButtonColor: Colors.white,
-        enableCloseButton: true,
-        enableBackButton: false,
-        onCloseButtonClicked: () {
-          Navigator.of(context).pop();
-        },
-        children: _languageStore.supportedLanguages
-            .map(
-              (object) => ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.all(0.0),
-                title: Text(
-                  object.language!,
-                  style: TextStyle(
-                    color: _languageStore.locale == object.locale
-                        ? Theme.of(context).primaryColor
-                        : _themeStore.darkMode
-                            ? Colors.white
-                            : Colors.black,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // change user language based on selected locale
-                  _languageStore.changeLanguage(object.locale!);
-                },
-              ),
-            )
-            .toList(),
-      ),
-    );
-  }
-
-  _showDialog<T>({required BuildContext context, required Widget child}) {
-    showDialog<T>(
-      context: context,
-      builder: (BuildContext context) => child,
-    ).then<void>((T? value) {
-      // The value passed to Navigator.pop() or null.
-    });
   }
 }

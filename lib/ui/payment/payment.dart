@@ -60,54 +60,72 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildMainContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery
-                .of(context)
-                .viewInsets
-                .bottom),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildCardNumberField(),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: MediaQuery
+                    .of(context)
+                    .viewInsets
+                    .bottom),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(child: _buildExpiryField()),
-                    SizedBox(
-                      width: 10,
+                    _buildCardNumberField(),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(child: _buildExpiryField()),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(child: _buildCvvField()),
+                      ],
                     ),
-                    Expanded(child: _buildCvvField()),
+                    _buildNameField(),
+                    _buildCheckBox()
                   ],
                 ),
-                _buildNameField(),
-                _buildCheckBox()
-              ],
-            ),
-          ),
-          Align(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery
-                  .of(context)
-                  .viewInsets
-                  .bottom + 8),
-              child: SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.9,
-                child: _buildProceedButton(),
               ),
-            ),
-            alignment: Alignment.bottomCenter,
+              Align(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery
+                      .of(context)
+                      .viewInsets
+                      .bottom + 8),
+                  child: SizedBox(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.9,
+                    child: _buildProceedButton(),
+                  ),
+                ),
+                alignment: Alignment.bottomCenter,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -179,12 +197,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Checkbox(
-                    value: checked,
-                    onChanged: (value) {
-                      setState(() {
-                        checked=!checked;
-                      });
-                    }),
+                  activeColor: Theme.of(context).primaryColor,
+                  checkColor: Colors.white,
+                  value: checked,
+                  onChanged: (value) {
+                    setState(() {
+                      checked = !checked;
+                    });
+                  },
+                ),
+
                 Text('Save for the future checkouts', style: Theme
                     .of(context)
                     .textTheme
