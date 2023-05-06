@@ -89,7 +89,10 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   }
 
   Widget _buildBody() {
-    return Padding(padding: const EdgeInsets.symmetric(horizontal: 12.0), child: _buildListView());
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: _buildListView(),
+    );
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -162,10 +165,14 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   }
 
   Widget _buildFloatingActionButton() {
-    return FloatingActionButton(backgroundColor: Color(0xFF1ce0a3),
+    return FloatingActionButton(
+      backgroundColor: Color(0xFF1ce0a3),
       shape: CircleBorder(),
       onPressed: () {},
-      child: Icon(Icons.add,color: Colors.white,),
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -173,6 +180,53 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     return Text(
       'Prescription',
       style: Theme.of(context).textTheme.headlineMedium,
+    );
+  }
+
+  Widget _buildSearchBarWithButton() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).primaryColor,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
+                ),
+                color: Colors.white,
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Color(0xFFCCD2D8),
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {},
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -97,7 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const Icon(Icons.headphones_outlined,color: Color(0xFF16caea),),
+      icon: const Icon(
+        Icons.headphones_outlined,
+        color: Color(0xFF16caea),
+      ),
       onPressed: () {
         SharedPreferences.getInstance().then((preference) {
           preference.setBool(Preferences.is_logged_in, false);
@@ -400,11 +403,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Column(
               children: [
-                GestureDetector(onTap: (){
-
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>AddUserScreen()));
-
-                },
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AddUserScreen()));
+                  },
                   child: CircleAvatar(
                     radius: 18,
                     child: Icon(Icons.add),

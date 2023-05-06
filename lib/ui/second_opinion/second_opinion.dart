@@ -15,7 +15,7 @@ class SecondOpinionScreen extends StatefulWidget {
 class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
+  TextEditingController diseaseController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController LastNameController = TextEditingController();
@@ -91,25 +91,51 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(child: _buildFirstNameField()),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(child: _buildLastNameField()),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    'Please Answer Following Questions',
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
-                _buildPhoneField(),
-                _buildGenderField(),
+                _buildDiseaseField(),
+                SizedBox(
+                  height: 15,
+                ),
                 _buildDescriptionField(),
                 _buildUploadWidget(),
+
+
+              ],
+            ),
+          ),
+        ),
+        Align(alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
                 SizedBox(
-                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.width * 0.12,
+                  child: ElevatedButton(
+                    style: Theme.of(context)
+                        .elevatedButtonTheme
+                        .style
+                        ?.copyWith(backgroundColor: MaterialStatePropertyAll(Colors.grey.shade400)),
+                    onPressed: () {},
+                    child: Text('Previous'),
+                  ),
                 ),
-                _buildProceedButton(),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.width * 0.12,
+                  child: ElevatedButton(
+                    onPressed: () { },
+                    child: Text('Next'),
+                  ),
+                ),
               ],
             ),
           ),
@@ -118,67 +144,31 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
     );
   }
 
-  Widget _buildPhoneField() {
+  Widget _buildDiseaseField() {
     return TextFieldWidget(
-      hint: 'Enter Your Mobile Number',
-      inputType: TextInputType.phone,
-      icon: Icons.phone_outlined,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      errorText: '',
-      textController: mobileController,
-    );
-  }
-
-  Widget _buildGenderField() {
-    return TextFieldWidget(
-      hint: 'Enter Your Gender',
+      hint: 'Enter Disease',
       inputType: TextInputType.text,
-      icon: Icons.female_rounded,
+
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
-      textController: genderController,
+
+      textController: diseaseController,
     );
   }
 
-  Widget _buildFirstNameField() {
-    return TextFieldWidget(
-      hint: 'First Name',
-      inputType: TextInputType.name,
-      icon: Icons.person_outline_rounded,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      errorText: '',
-      textController: firstNameController,
-    );
-  }
 
-  Widget _buildLastNameField() {
-    return TextFieldWidget(
-      hint: 'Last Name',
-      inputType: TextInputType.name,
-      icon: Icons.person_outline_rounded,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      errorText: '',
-      textController: LastNameController,
-    );
-  }
+
+
+
+
 
   Widget _buildDescriptionField() {
     return TextFieldWidget(
       hint: 'Description',
       inputType: TextInputType.text,
-      maxLines: 3,
+      maxLines: 6,
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
