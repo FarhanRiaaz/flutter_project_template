@@ -31,6 +31,15 @@ abstract class _FormStore with Store {
 
   // store variables:-----------------------------------------------------------
   @observable
+  bool showPassword = true;
+
+  @observable
+  bool showPasswordRegistration = true;
+
+  @observable
+  bool showConfirmPasswordRegistration = true;
+
+  @observable
   String userEmail = '';
 
   @observable
@@ -75,6 +84,21 @@ abstract class _FormStore with Store {
   @action
   void toggleCheckbox(bool value) {
     checkBox = value;
+  }
+
+  @action
+  void toggleShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  @action
+  void toggleShowPasswordRegistration() {
+    this.showPasswordRegistration = !this.showPasswordRegistration;
+  }
+
+  @action
+  void toggleShowConfirmPasswordRegistration() {
+    this.showConfirmPasswordRegistration = !this.showConfirmPasswordRegistration;
   }
 
   @action

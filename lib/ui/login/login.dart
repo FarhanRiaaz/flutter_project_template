@@ -91,9 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
               : Center(child: _buildRightSide()),
           Observer(
             builder: (context) {
-              return _store.success
-                  ? navigate(context)
-                  : _showErrorMessage(_store.errorStore.errorMessage);
+              return _store.success ? navigate(context) : _showErrorMessage(_store.errorStore.errorMessage);
             },
           ),
           Observer(
@@ -128,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             AppIconWidget(image: 'assets/icons/ic_appicon.png'),
-
             _buildWelcomeText(),
             _buildUserIdField(),
             _buildPasswordField(),
@@ -141,32 +138,33 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildWelcomeText(){
-    return Column(children: [Container(
-      margin: const EdgeInsets.only(bottom: 20, top: 20),
-      child: const Text(
-        'Login!',
-        style: TextStyle(
-          fontSize: 23,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    ),
-      Container(
-        margin: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
-        child: const Text(
-          'Please Login to get medical assistance',
-          style: TextStyle(
-            color: Color(0xFF6E6E6E),
-            fontSize: 12,
+  Widget _buildWelcomeText() {
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 20, top: 20),
+          child: const Text(
+            'Login!',
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-          textAlign: TextAlign.center,
         ),
-      ),],);
-
-
+        Container(
+          margin: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+          child: const Text(
+            'Please Login to get medical assistance',
+            style: TextStyle(
+              color: Color(0xFF6E6E6E),
+              fontSize: 12,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
   }
-
 
   Widget _buildUserIdField() {
     return Observer(
@@ -195,10 +193,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildPasswordField() {
     return Observer(
       builder: (context) {
-        return TextFieldWidget(
-          hint:
-              AppLocalizations.of(context).translate('login_et_user_password'),
-          isObscure: true,
+        return TextFieldPasswordWidget(
+          onPasswordToggle: () {
+             _store.toggleShowPassword();
+          },
+          hint: AppLocalizations.of(context).translate('login_et_user_password'),
+          isObscure: _store.showPassword,
           imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0),
           icon: Icons.key,
@@ -218,13 +218,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Align(
       alignment: FractionalOffset.center,
       child: TextButton(
-       // padding: EdgeInsets.all(0.0),
+        // padding: EdgeInsets.all(0.0),
         child: Text(
           AppLocalizations.of(context).translate('login_btn_forgot_password'),
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: Color(0xFF16CAEA)),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
         ),
         onPressed: () {},
       ),
@@ -238,12 +235,11 @@ class _LoginScreenState extends State<LoginScreen> {
         // padding: EdgeInsets.all(0.0),
         child: Text(
           AppLocalizations.of(context).translate('login_btn_dont_have_an_account'),
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: Color(0xFF16CAEA)),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
         ),
-        onPressed: () {Navigator.pushReplacementNamed(context, Routes.registration);},
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, Routes.registration);
+        },
       ),
     );
   }
@@ -272,8 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.home, (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (Route<dynamic> route) => false);
     });
 
     return Container();

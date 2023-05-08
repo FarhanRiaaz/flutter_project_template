@@ -1,6 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:second_opinion_app/constants/assets.dart';
-import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
+
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/stores/form/form_store.dart';
 import 'package:second_opinion_app/stores/theme/theme_store.dart';
@@ -14,7 +14,7 @@ import 'package:second_opinion_app/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Registration extends StatefulWidget {
   @override
@@ -219,9 +219,9 @@ class _RegistrationState extends State<Registration> {
   Widget _buildPasswordField() {
     return Observer(
       builder: (context) {
-        return TextFieldWidget(
+        return TextFieldPasswordWidget(
           hint: AppLocalizations.of(context).translate('login_et_user_password'),
-          isObscure: true,
+          isObscure: _store.showPasswordRegistration,
           imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0),
           icon: Icons.key,
@@ -230,7 +230,9 @@ class _RegistrationState extends State<Registration> {
           errorText: _store.formErrorStore.password,
           onChanged: (value) {
             _store.setPassword(_passwordController.text);
-          },
+          }, onPasswordToggle: (){
+            _store.toggleShowPasswordRegistration();
+        },
         );
       },
     );
@@ -239,9 +241,9 @@ class _RegistrationState extends State<Registration> {
   Widget _buildConfirmPasswordField() {
     return Observer(
       builder: (context) {
-        return TextFieldWidget(
+        return TextFieldPasswordWidget(
           hint: 'Confirm Password',
-          isObscure: true,
+          isObscure: _store.showConfirmPasswordRegistration,
           imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0, bottom: 16),
           icon: Icons.key,
@@ -250,7 +252,9 @@ class _RegistrationState extends State<Registration> {
           errorText: _store.formErrorStore.confirmPassword,
           onChanged: (value) {
             _store.setConfirmPassword(_confirmPasswordController.text);
-          },
+          }, onPasswordToggle: (){
+            _store.toggleShowConfirmPasswordRegistration();
+        },
         );
       },
     );
@@ -263,7 +267,8 @@ class _RegistrationState extends State<Registration> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Checkbox(fillColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
+            Checkbox(
+                fillColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
                 value: _store.checkBox,
                 onChanged: (value) {
                   _store.toggleCheckbox(value!);

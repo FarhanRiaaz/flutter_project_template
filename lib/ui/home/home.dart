@@ -8,7 +8,7 @@ import 'package:second_opinion_app/stores/theme/theme_store.dart';
 import 'package:second_opinion_app/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:material_dialog/material_dialog.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return IconButton(
       icon: ImageIcon(AssetImage(
         'assets/icons/Headphones.png',
-      ) ),
+      )),
       onPressed: () {
         SharedPreferences.getInstance().then((preference) {
           preference.setBool(Preferences.is_logged_in, false);
@@ -213,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: const [
           ImageIcon(AssetImage(
             'assets/icons/BellIcon.png',
-          ) ),
+          )),
           Positioned(
             top: 0,
             right: 0,
@@ -335,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  padding: const EdgeInsets.only(left: 12.0,right:12,bottom: 18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -402,6 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               width: 2,
             ),
+            Expanded(child: Container()),
             Column(
               children: [
                 GestureDetector(

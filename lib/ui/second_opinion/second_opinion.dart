@@ -6,36 +6,33 @@ import 'package:second_opinion_app/widgets/upload_document_widget.dart';
 import '../../widgets/textfield_widget.dart';
 
 class SecondOpinionScreen extends StatefulWidget {
-  const SecondOpinionScreen({Key? key, required this.onBackPressed}) : super(key: key);
-  final VoidCallback onBackPressed;
+  const SecondOpinionScreen({Key? key, }) : super(key: key);
+
 
   @override
   State<SecondOpinionScreen> createState() => _SecondOpinionScreenState();
 }
 
 class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+
   TextEditingController diseaseController = TextEditingController();
-  TextEditingController genderController = TextEditingController();
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController LastNameController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
+
   TextEditingController descriptionController = TextEditingController();
 
+
+
+   @override
+  void dispose() {
+   diseaseController.dispose();
+   descriptionController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        widget.onBackPressed(); // Call the callback function
-        return false;
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: _buildAppBar(),
-        body: _buildBody(),
-      ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: _buildAppBar(),
+      body: _buildBody(),
     );
   }
 
@@ -51,7 +48,7 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
       onPressed: () {
-        widget.onBackPressed();
+        Navigator.pop(context);
       },
     );
   }
@@ -133,7 +130,7 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
                   height: MediaQuery.of(context).size.width * 0.12,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.doctors);
+                      Navigator.pushNamed(context, Routes.payment_method);
                     },
                     child: Text('Next'),
                   ),

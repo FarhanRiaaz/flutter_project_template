@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/routes/routes.dart';
 import '../../widgets/textfield_widget.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -203,9 +204,78 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return SizedBox(
       height: 50,
       child: ElevatedButton(
-        onPressed: () {},
-        child: Text('Proceed'),
+        onPressed: () async {await showCongradulationsDialog(context);
+          Navigator.pushNamed(context, Routes.home);},
+        child: Text('Pay Now'),
       ),
+    );
+  }
+
+  Future<void> showCongradulationsDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            height: 311,
+            width: 290,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              image: const DecorationImage(
+                image: AssetImage("assets/images/background/backgroundPopUp.png"),
+                fit: BoxFit.contain,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 60,
+                      child: Image.asset(
+                        'assets/images/background/tick-icon.png',
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    const Center(
+                      child: Text(
+                        "Thank You!",
+                        style: TextStyle(fontSize: 18.0, color: Color(0xFF222B2C)),
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    const Text(
+                      "You have successfully made second opinion with us",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16.0, color: Color(0xFFBEBEBE)),
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Continue",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

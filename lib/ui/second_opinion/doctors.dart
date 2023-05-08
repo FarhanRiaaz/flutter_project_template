@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:second_opinion_app/widgets/doctors_widget.dart';
 
 import '../../utils/routes/routes.dart';
-import '../../widgets/prescription_widget.dart';
+
 
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({
@@ -63,9 +63,27 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   }
 
   Widget _buildBody() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: _buildListView(),
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: _buildListView(),
+        ),
+      ],
     );
   }
 
@@ -73,6 +91,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     return AppBar(
       leading: _buildLeadingButton(),
       title: _buildTitle(),
+      actions: _buildAction(),
       centerTitle: true,
     );
   }
@@ -138,5 +157,27 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildAddButton() {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: SizedBox(
+        child: ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, Routes.categories);
+          },
+          icon: Icon(Icons.add),
+          label: Text('Add'),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFec652a)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildAction() {
+    return [_buildAddButton()];
   }
 }

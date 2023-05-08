@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 
-class MoreScreen extends StatefulWidget {
-  const MoreScreen({Key? key, required this.onBackPressed}) : super(key: key);
-  final VoidCallback onBackPressed;
+class SettingScreen extends StatefulWidget {
+  const SettingScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<MoreScreen> createState() => _MoreScreenState();
+  State<SettingScreen> createState() => _SettingScreenState();
 }
 
-class _MoreScreenState extends State<MoreScreen> {
+class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,14 +31,14 @@ class _MoreScreenState extends State<MoreScreen> {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
       onPressed: () {
-        widget.onBackPressed();
+        Navigator.pop(context);
       },
     );
   }
 
   Widget _buildTitle() {
     return Text(
-      'More',
+      'Settings',
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
@@ -71,11 +72,13 @@ class _MoreScreenState extends State<MoreScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildIconCard('assets/icons/CreditCard.png', 'Payment', () {
-                  Navigator.pushNamed(context, Routes.payment);
+                _buildIconCard('assets/icons/Person.png', 'Profile', () {}),
+                _buildIconCard('assets/icons/BellIcon.png', 'Notifications', () {
+                  Navigator.pushNamed(context, Routes.notification);
                 }),
-                _buildIconCard('assets/icons/Setting.png', 'Setting', () { Navigator.pushNamed(context, Routes.setting);}),
-                _buildIconCard('assets/icons/info.png', 'About Us', () {}),
+                _buildIconCard('assets/icons/Headphones.png', 'Help and Support', () {}),
+                _buildIconCard('assets/icons/info.png', 'Privacy and Security', () {}),
+                _buildIconCard('assets/icons/Key.png', 'Change Password', () {Navigator.pushNamed(context,Routes.change_password);}),
               ],
             ),
           ),

@@ -3,7 +3,8 @@ import 'package:second_opinion_app/ui/home/home.dart';
 
 import '../more/more.dart';
 import '../reports/report.dart';
-import '../second_opinion/second_opinion.dart';
+import '../second_opinion/doctors.dart';
+
 
 class PageViewScreen extends StatefulWidget {
   const PageViewScreen({super.key});
@@ -34,12 +35,8 @@ class _PageViewScreenState extends State<PageViewScreen> {
           });
         },
       ),
-      SecondOpinionScreen(
-        onBackPressed: () {
-          setState(() {
-            currentPageIndex = 0;
-          });
-        },
+      DoctorsScreen(
+
       ),
       MoreScreen(
         onBackPressed: () {

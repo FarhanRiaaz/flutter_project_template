@@ -30,6 +30,56 @@ mixin _$FormStore on _FormStore, Store {
           name: '_FormStore.canForgetPassword'))
       .value;
 
+  late final _$showPasswordAtom =
+      Atom(name: '_FormStore.showPassword', context: context);
+
+  @override
+  bool get showPassword {
+    _$showPasswordAtom.reportRead();
+    return super.showPassword;
+  }
+
+  @override
+  set showPassword(bool value) {
+    _$showPasswordAtom.reportWrite(value, super.showPassword, () {
+      super.showPassword = value;
+    });
+  }
+
+  late final _$showPasswordRegistrationAtom =
+      Atom(name: '_FormStore.showPasswordRegistration', context: context);
+
+  @override
+  bool get showPasswordRegistration {
+    _$showPasswordRegistrationAtom.reportRead();
+    return super.showPasswordRegistration;
+  }
+
+  @override
+  set showPasswordRegistration(bool value) {
+    _$showPasswordRegistrationAtom
+        .reportWrite(value, super.showPasswordRegistration, () {
+      super.showPasswordRegistration = value;
+    });
+  }
+
+  late final _$showConfirmPasswordRegistrationAtom = Atom(
+      name: '_FormStore.showConfirmPasswordRegistration', context: context);
+
+  @override
+  bool get showConfirmPasswordRegistration {
+    _$showConfirmPasswordRegistrationAtom.reportRead();
+    return super.showConfirmPasswordRegistration;
+  }
+
+  @override
+  set showConfirmPasswordRegistration(bool value) {
+    _$showConfirmPasswordRegistrationAtom
+        .reportWrite(value, super.showConfirmPasswordRegistration, () {
+      super.showConfirmPasswordRegistration = value;
+    });
+  }
+
   late final _$userEmailAtom =
       Atom(name: '_FormStore.userEmail', context: context);
 
@@ -197,6 +247,39 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
+  void toggleShowPassword() {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.toggleShowPassword');
+    try {
+      return super.toggleShowPassword();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void toggleShowPasswordRegistration() {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.toggleShowPasswordRegistration');
+    try {
+      return super.toggleShowPasswordRegistration();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void toggleShowConfirmPasswordRegistration() {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.toggleShowConfirmPasswordRegistration');
+    try {
+      return super.toggleShowConfirmPasswordRegistration();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setName(String value) {
     final _$actionInfo =
         _$_FormStoreActionController.startAction(name: '_FormStore.setName');
@@ -276,6 +359,9 @@ mixin _$FormStore on _FormStore, Store {
   @override
   String toString() {
     return '''
+showPassword: ${showPassword},
+showPasswordRegistration: ${showPasswordRegistration},
+showConfirmPasswordRegistration: ${showConfirmPasswordRegistration},
 userEmail: ${userEmail},
 name: ${name},
 checkBox: ${checkBox},

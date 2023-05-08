@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:second_opinion_app/utils/routes/routes.dart';
 
 class DoctorsWidget extends StatelessWidget {
   const DoctorsWidget(
@@ -13,64 +14,69 @@ class DoctorsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8.0),
+      child: InkWell(
         borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 18,horizontal: 8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 9,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    specialization,
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 16),
-                  ),
-                  Text(
-                    doctorName,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
-                  ),
-                  Text(
-                    DateFormat('MMMM d, y').format(dateTime),
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
-                  ),
-                ],
+        onTap: () {
+          Navigator.pushNamed(context, Routes.second_opinion_detail);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 10,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: status == 'Pending'
-                      ? Color(0xfffce7da)
-                      : status == 'Complete'
-                      ? Color(0xffd4fae7)
-                      : Color(0xfffadada),
-                  borderRadius: BorderRadius.circular(8.0),
+              Expanded(
+                flex: 9,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      specialization,
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 16),
+                    ),
+                    Text(
+                      doctorName,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      DateFormat('MMMM d, y').format(dateTime),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
+                    ),
+                  ],
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: Text(
-                  status,
-                  style: TextStyle(
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Container(
+                  decoration: BoxDecoration(
                     color: status == 'Pending'
-                        ? Color(0xfffdae54)
+                        ? Color(0xfffce7da)
                         : status == 'Complete'
-                        ? Color(0xff1ce0a3)
-                        : Color(0xFFe35959),
-                    fontSize: 12,
+                            ? Color(0xffd4fae7)
+                            : Color(0xfffadada),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  child: Text(
+                    status,
+                    style: TextStyle(
+                      color: status == 'Pending'
+                          ? Color(0xfffdae54)
+                          : status == 'Complete'
+                              ? Color(0xff1ce0a3)
+                              : Color(0xFFe35959),
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

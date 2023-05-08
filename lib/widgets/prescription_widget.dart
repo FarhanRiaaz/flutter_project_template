@@ -20,20 +20,19 @@ class PrescriptionWidget extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Expanded(
-              flex: 4,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                height: 80,
-                child: Center(
-                    child: Image.asset(
-                  'assets/icons/blankImage.png',
-                  scale: 2.6,
-                )),
+            Container(
+
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8.0),
               ),
+              height: 90,
+              width: 90,
+              child: Center(
+                  child: Image.asset(
+                'assets/icons/blankImage.png',
+                scale: 2.6,
+              )),
             ),
             SizedBox(
               width: 10,
@@ -65,7 +64,7 @@ class PrescriptionWidget extends StatelessWidget {
                   children: [
                     _buildActionWidget(icon: Icons.remove_red_eye_outlined, onPressed: () {}, context: context),
                     SizedBox(height: 8,),
-                    _buildActionWidget(icon: Icons.download_for_offline_outlined, onPressed: () {}, context: context),
+                    _buildActionWidget(icon: Icons.delete_outline, onPressed: () {}, context: context),
                   ],
                 )),
           ],

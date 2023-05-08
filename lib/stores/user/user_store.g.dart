@@ -13,13 +13,16 @@ mixin _$UserStore on _UserStore, Store {
 
   @override
   bool get isRegistrationInProcess => (_$isRegistrationInProcessComputed ??=
-          Computed<bool>(() => super.isRegistrationInProcess, name: '_UserStore.isRegistrationInProcess'))
+          Computed<bool>(() => super.isRegistrationInProcess,
+              name: '_UserStore.isRegistrationInProcess'))
       .value;
   Computed<bool>? _$isLoginInProcessComputed;
 
   @override
-  bool get isLoginInProcess =>
-      (_$isLoginInProcessComputed ??= Computed<bool>(() => super.isLoginInProcess, name: '_UserStore.isLoginInProcess')).value;
+  bool get isLoginInProcess => (_$isLoginInProcessComputed ??= Computed<bool>(
+          () => super.isLoginInProcess,
+          name: '_UserStore.isLoginInProcess'))
+      .value;
 
   late final _$successAtom = Atom(name: '_UserStore.success', context: context);
 
@@ -36,7 +39,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  late final _$currentUserAtom = Atom(name: '_UserStore.currentUser', context: context);
+  late final _$currentUserAtom =
+      Atom(name: '_UserStore.currentUser', context: context);
 
   @override
   User get currentUser {
@@ -51,7 +55,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  late final _$registerUserFutureAtom = Atom(name: '_UserStore.registerUserFuture', context: context);
+  late final _$registerUserFutureAtom =
+      Atom(name: '_UserStore.registerUserFuture', context: context);
 
   @override
   ObservableFuture<RegisterUserResponse> get registerUserFuture {
@@ -66,7 +71,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  late final _$loginFutureAtom = Atom(name: '_UserStore.loginFuture', context: context);
+  late final _$loginFutureAtom =
+      Atom(name: '_UserStore.loginFuture', context: context);
 
   @override
   ObservableFuture<LoginUserResponse> get loginFuture {
@@ -81,14 +87,17 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  late final _$registerAsyncAction = AsyncAction('_UserStore.register', context: context);
+  late final _$registerAsyncAction =
+      AsyncAction('_UserStore.register', context: context);
 
   @override
   Future<dynamic> register(String email, String password, String name) {
-    return _$registerAsyncAction.run(() => super.register(email, password, name));
+    return _$registerAsyncAction
+        .run(() => super.register(email, password, name));
   }
 
-  late final _$loginAsyncAction = AsyncAction('_UserStore.login', context: context);
+  late final _$loginAsyncAction =
+      AsyncAction('_UserStore.login', context: context);
 
   @override
   Future<dynamic> login(String email, String password) {

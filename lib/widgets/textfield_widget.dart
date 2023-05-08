@@ -35,23 +35,33 @@ class TextFieldWidget extends StatelessWidget {
         maxLines: this.maxLines,
         keyboardType: this.inputType,
         style: Theme.of(context).textTheme.bodyLarge,
-        decoration: errorText!=null?InputDecoration(
-          prefixIcon: this.imageIcon == null? this.icon != null ? Icon(this.icon) : null:ImageIcon(AssetImage(this.imageIcon!)),
+        decoration: errorText != null
+            ? InputDecoration(
+                prefixIcon: this.imageIcon == null
+                    ? this.icon != null
+                        ? Icon(this.icon)
+                        : null
+                    : ImageIcon(AssetImage(this.imageIcon!)),
 
-          hintText: this.hint,
-          hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
-          errorText: errorText,
-          counterText: '',
-          // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
-        ):InputDecoration(
-          prefixIcon:this.imageIcon == null? this.icon != null ? Icon(this.icon) : null:ImageIcon(AssetImage(this.imageIcon!)),
+                hintText: this.hint,
+                hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
+                errorText: errorText,
+                counterText: '',
+                // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
+              )
+            : InputDecoration(
+                prefixIcon: this.imageIcon == null
+                    ? this.icon != null
+                        ? Icon(this.icon)
+                        : null
+                    : ImageIcon(AssetImage(this.imageIcon!)),
 
-          hintText: this.hint,
-          hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
+                hintText: this.hint,
+                hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
 
-          counterText: '',
-          // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
-        ),
+                counterText: '',
+                // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
+              ),
       ),
     );
   }
@@ -73,6 +83,109 @@ class TextFieldWidget extends StatelessWidget {
     this.onFieldSubmitted,
     this.onChanged,
     this.autoFocus = false,
-    this.inputAction, this.imageIcon,
+    this.inputAction,
+    this.imageIcon,
+  }) : super(key: key);
+}
+
+class TextFieldPasswordWidget extends StatelessWidget {
+  final IconData? icon;
+  final String? hint;
+  final String? errorText;
+  final bool isObscure;
+  final bool isIcon;
+  final TextInputType? inputType;
+  final TextEditingController textController;
+  final EdgeInsets padding;
+  final Color hintColor;
+  final Color iconColor;
+  final FocusNode? focusNode;
+  final ValueChanged? onFieldSubmitted;
+  final ValueChanged? onChanged;
+  final bool autoFocus;
+  final TextInputAction? inputAction;
+  final int maxLines;
+  final String? imageIcon;
+  final Function onPasswordToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: TextFormField(
+        controller: textController,
+        focusNode: focusNode,
+        onFieldSubmitted: onFieldSubmitted,
+        onChanged: onChanged,
+        autofocus: autoFocus,
+        textInputAction: inputAction,
+        obscureText: this.isObscure,
+        maxLength: 40,
+        maxLines: this.maxLines,
+        keyboardType: this.inputType,
+        style: Theme.of(context).textTheme.bodyLarge,
+        decoration: errorText != null
+            ? InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: (){
+                    onPasswordToggle();
+                  },
+                  icon: Icon(isObscure ? Icons.remove_red_eye : Icons.remove_red_eye_outlined),
+                ),
+                prefixIcon: this.imageIcon == null
+                    ? this.icon != null
+                        ? Icon(this.icon)
+                        : null
+                    : ImageIcon(AssetImage(this.imageIcon!)),
+
+                hintText: this.hint,
+                hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
+                errorText: errorText,
+                counterText: '',
+                // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
+              )
+            : InputDecoration(
+          suffixIcon:IconButton(
+            onPressed: (){
+              onPasswordToggle();
+            },
+            icon: Icon(isObscure ? Icons.remove_red_eye : Icons.remove_red_eye_outlined),
+          ),
+                prefixIcon: this.imageIcon == null
+                    ? this.icon != null
+                        ? Icon(this.icon)
+                        : null
+                    : ImageIcon(AssetImage(this.imageIcon!)),
+
+                hintText: this.hint,
+                hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
+
+                counterText: '',
+                // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
+              ),
+      ),
+    );
+  }
+
+  const TextFieldPasswordWidget({
+    Key? key,
+    required this.onPasswordToggle,
+    this.icon,
+    this.maxLines = 1,
+    this.errorText,
+    required this.textController,
+    this.inputType,
+    this.hint,
+    this.isObscure = false,
+    this.isIcon = true,
+    this.padding = const EdgeInsets.all(0),
+    this.hintColor = Colors.grey,
+    this.iconColor = Colors.grey,
+    this.focusNode,
+    this.onFieldSubmitted,
+    this.onChanged,
+    this.autoFocus = false,
+    this.inputAction,
+    this.imageIcon,
   }) : super(key: key);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:second_opinion_app/ui/home_page_view/home_page_view.dart';
+
 import 'package:second_opinion_app/ui/landing.dart';
-import 'package:second_opinion_app/ui/login/login.dart';
+
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);
@@ -121,7 +121,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 Center(
                   child: SizedBox(
                     height: 293,
-                    child: Image.asset('assets/images/intro/intro1.png'),
+                    child: Image.asset('assets/images/intro/intro2.png'),
                   ),
                 ),
                 SizedBox(
@@ -164,7 +164,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 Center(
                   child: SizedBox(
                     height: 293,
-                    child: Image.asset('assets/images/intro/intro1.png'),
+                    child: Image.asset('assets/images/intro/intro3.png'),
                   ),
                 ),
                 SizedBox(

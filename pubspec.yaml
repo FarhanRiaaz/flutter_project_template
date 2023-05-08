@@ -87,6 +87,7 @@ dependencies:
 
   google_fonts: ^4.0.4
   dotted_border: ^2.0.0+3
+  timeago: ^3.3.0
 
 dev_dependencies:
   flutter_test:

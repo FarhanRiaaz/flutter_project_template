@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import '../../utils/routes/routes.dart';
 import '../../widgets/prescription_widget.dart';
 
 class ReportsScreen extends StatefulWidget {
@@ -44,23 +42,9 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        widget.onBackPressed();
-        return false;
-      },
-      child: Scaffold(
-        body: _buildBody(),
-        appBar: _buildAppBar(),
-        floatingActionButton: ScaleTransition(
-          scale: CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeInOutBack,
-            reverseCurve: Curves.easeInOutBack.flipped,
-          ),
-          child: _buildFloatingActionButton(),
-        ),
-      ),
+    return Scaffold(
+      body: _buildBody(),
+      appBar: _buildAppBar(),
     );
   }
 
@@ -89,9 +73,27 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   }
 
   Widget _buildBody() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: _buildListView(),
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: _buildListView(),
+        ),
+      ],
     );
   }
 
@@ -100,132 +102,53 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
       leading: _buildLeadingButton(),
       title: _buildTitle(),
       centerTitle: true,
-      actions: _buildActions(context),
+      actions: _buildActions(),
     );
   }
 
-  List<Widget> _buildActions(BuildContext context) {
-    return <Widget>[
-      _buildNotificationButton(),
-      _buildAvatarButton(),
-      // _buildThemeButton(),
-      //_buildLogoutButton(),
-    ];
+  List<Widget> _buildActions() {
+    return <Widget>[_buildAddButton()];
   }
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const Icon(Icons.arrow_back_ios_new_rounded),
-      onPressed: () {
-        widget.onBackPressed();
-      },
-    );
-  }
-
-  Widget _buildNotificationButton() {
-    return IconButton(
-      icon: Stack(
-        children: const [
-          ImageIcon(AssetImage('assets/icons/BellIcon.png')),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: CircleAvatar(
-              radius: 7,
-              backgroundColor: Colors.redAccent,
-              child: Text(
-                '1',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      onPressed: () {},
-    );
-  }
-
-  Widget _buildAvatarButton() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, Routes.profile);
-        },
-        customBorder: CircleBorder(),
-        child: CircleAvatar(
-          radius: 18,
-          backgroundImage: AssetImage('assets/images/circleAvatar.png'),
+      icon: const ImageIcon(
+        AssetImage(
+          'assets/icons/Headphones.png',
         ),
+        color: Colors.black,
       ),
+      onPressed: () {},
     );
   }
 
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      backgroundColor: Color(0xFF1ce0a3),
-      shape: CircleBorder(),
-      onPressed: () {},
-      child: Icon(
-        Icons.add,
-        color: Colors.white,
-      ),
-    );
-  }
+
+
+
+
+
 
   Widget _buildTitle() {
     return Text(
-      'Prescription',
+      'Reports',
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
-  Widget _buildSearchBarWithButton() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Theme.of(context).primaryColor,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
-                ),
-                color: Colors.white,
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Color(0xFFCCD2D8),
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
+
+
+  Widget _buildAddButton() {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: SizedBox(
+        child: ElevatedButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.add),
+          label: Text('Add'),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF1ce0a3)),
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-              color: Theme.of(context).primaryColor,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {},
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
