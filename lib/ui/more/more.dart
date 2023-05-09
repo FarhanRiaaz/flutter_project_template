@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/ui/payment/card_screen.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -72,7 +73,7 @@ class _MoreScreenState extends State<MoreScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildIconCard('assets/icons/CreditCard.png', 'Payment', () {
-                  Navigator.pushNamed(context, Routes.payment);
+                 Navigator.push(context,MaterialPageRoute(builder: (context)=>CardScreen()));
                 }),
                 _buildIconCard('assets/icons/Setting.png', 'Setting', () { Navigator.pushNamed(context, Routes.setting);}),
                 _buildIconCard('assets/icons/info.png', 'About Us', () {}),

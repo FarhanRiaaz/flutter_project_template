@@ -1,18 +1,20 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/routes/routes.dart';
 import '../../widgets/textfield_widget.dart';
+import 'package:awesome_card/awesome_card.dart';
 
-class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({
+class CardScreen extends StatefulWidget {
+  const CardScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<CardScreen> createState() => _CardScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _CardScreenState extends State<CardScreen> {
   TextEditingController cardNumberController = TextEditingController();
   TextEditingController cardExpiryController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
@@ -23,7 +25,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: _buildAppBar(),
       body: _buildBody(),
     );
@@ -49,10 +51,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _buildTitle() {
     return Text(
       'Second Opinion',
-      style: Theme
-          .of(context)
-          .textTheme
-          .headlineMedium,
+      style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
@@ -66,37 +65,43 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Align(
           alignment: Alignment.topLeft,
           child: SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.35,
+            width: MediaQuery.of(context).size.width * 0.35,
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
           ),
         ),
         Align(
           alignment: Alignment.bottomRight,
           child: SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.7,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Stack(
             children: [
               SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: MediaQuery
-                    .of(context)
-                    .viewInsets
-                    .bottom),
+                padding: EdgeInsets.symmetric(vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    _buildPaymentMethodType(),
+                    _buildCreditCard(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Card Details',
+                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     _buildCardNumberField(),
+                    SizedBox(
+                      height: 15,
+                    ),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,22 +113,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         Expanded(child: _buildCvvField()),
                       ],
                     ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     _buildNameField(),
+                    SizedBox(
+                      height: 15,
+                    ),
                     _buildCheckBox()
                   ],
                 ),
               ),
               Align(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery
-                      .of(context)
-                      .viewInsets
-                      .bottom + 8),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
                   child: SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.9,
+                    width: MediaQuery.of(context).size.width * 0.9,
                     child: _buildProceedButton(),
                   ),
                 ),
@@ -146,7 +151,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
       textController: cardExpiryController,
     );
   }
@@ -161,23 +165,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
       textController: cvvController,
     );
   }
 
   Widget _buildCardNumberField() {
-    return TextFieldWidget(
-      hint: 'Card Number',
-      inputType: TextInputType.number,
-      icon: Icons.credit_card,
-      imageIcon: 'assets/icons/CreditCard.png',
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      errorText: '',
-      textController: cvvController,
+    return Material(
+      child: TextFieldWidget(
+        hint: 'Card Number',
+        inputType: TextInputType.number,
+        icon: Icons.credit_card,
+        imageIcon: 'assets/icons/CreditCard.png',
+        inputAction: TextInputAction.next,
+        autoFocus: false,
+        onChanged: (value) {},
+        onFieldSubmitted: (value) {},
+        textController: cvvController,
+      ),
     );
   }
 
@@ -191,7 +195,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
       textController: cvvController,
     );
   }
@@ -203,9 +206,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Checkbox(
-            activeColor: Theme
-                .of(context)
-                .primaryColor,
+            activeColor: Theme.of(context).primaryColor,
             checkColor: Colors.white,
             value: checked,
             onChanged: (value) {
@@ -214,10 +215,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               });
             },
           ),
-          Text('Save for the future checkouts', style: Theme
-              .of(context)
-              .textTheme
-              .labelSmall),
+          Text('Save for the future checkouts', style: Theme.of(context).textTheme.labelSmall),
         ],
       ),
     );
@@ -301,6 +299,155 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCreditCard() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: (14), vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'My Card',
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.add_circle_outline_rounded),
+                    label: Text('Add New'),
+                  )
+                ],
+              ),
+            ),
+            CarouselSlider(
+                options: CarouselOptions(
+
+                  aspectRatio: 11 / 9,
+                  padEnds: false,
+                  viewportFraction: 1,
+                  enableInfiniteScroll: true,
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.3,
+                  scrollDirection: Axis.horizontal,
+                ),
+                items: [
+                  CreditCard(
+                      cardNumber: "5450 7879 4864 7854",
+                      cardExpiry: "10/25",
+                      cardHolderName: " ",
+                      cvv: "456",
+                      bankName: "Card Number",
+                      cardType: CardType.masterCard,
+                      showBackSide: false,
+                      frontBackground: CardBackgrounds.custom(0xFF18abc5),
+                      backBackground: CardBackgrounds.white,
+                      showShadow: true,
+                      textExpDate: 'Exp. Date',
+                      textName: 'Name',
+                      textExpiry: 'MM/YY'),
+
+                ]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodType() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Please select your payment method',
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Color(0xFF6e6e6e)),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: BouncingScrollPhysics(),
+          child: Row(
+            children: [
+              SelectableLogo(
+                text: 'Card',
+                imagePath: 'assets/icons/credit-card (1).png',
+              ),
+              SelectableLogo(
+                text: 'Apple Pay',
+                imagePath: 'assets/icons/applePay.png',
+              ),
+              SelectableLogo(
+                text: 'Google Pay',
+                imagePath: 'assets/icons/gPay.png',
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class SelectableLogo extends StatefulWidget {
+  final String text;
+  final String imagePath;
+
+  SelectableLogo({required this.text, required this.imagePath});
+
+  @override
+  _SelectableLogoState createState() => _SelectableLogoState();
+}
+
+class _SelectableLogoState extends State<SelectableLogo> {
+  bool _isSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    Color textColor = _isSelected ? Theme.of(context).primaryColor : Colors.black;
+    Color borderColor = _isSelected ? Theme.of(context).primaryColor : Colors.grey;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, right: 8, bottom: 8),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _isSelected = !_isSelected;
+          });
+        },
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border: Border.all(color: borderColor),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                height: 20,
+                child: Image.asset(
+                  widget.imagePath,
+                  semanticLabel: '',
+                ),
+              ),
+              SizedBox(width: 16),
+              Text(
+                widget.text,
+                style: TextStyle(color: textColor),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

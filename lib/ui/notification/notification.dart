@@ -30,28 +30,29 @@ class NotificationScreenState extends State<NotificationScreen> {
       'timeago': DateTime.now().subtract(
         Duration(minutes: 15),
       ),
-    }
+    },
+    {
+      'label': 'Appointment Alarm',
+      'description': 'Your appointment will start in 20 minutes',
+      'timeago': DateTime.now().subtract(
+        Duration(hours: 5),
+      ),
+    },
+    {
+      'label': 'Appointment Confirmed',
+      'description': 'Your appointment will start in 40 minutes',
+      'timeago': DateTime.now().subtract(
+        Duration(hours: 5, minutes: 20),
+      ),
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: _buildAppBar(),
-        body: RefreshIndicator(
-          onRefresh: () async {},
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            itemCount: notificationData.length,
-            itemBuilder: (context, index) {
-              return NotificationsTile(
-                label: notificationData[index]['label'],
-                description: notificationData[index]['description'],
-                timeStamp: notificationData[index]['timeago'],
-                iconData: Icons.notifications_rounded,
-              );
-            },
-          ),
-        ));
+        body: RefreshIndicator(onRefresh: () async {}, child: _buildBody()));
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -65,16 +66,52 @@ class NotificationScreenState extends State<NotificationScreen> {
   Widget _buildTitle() {
     return Text(
       'Notifications',
-      style: Theme.of(context).textTheme.headlineMedium,
+      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
     );
   }
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+      icon: const Icon(
+        Icons.arrow_back_ios_new_rounded,
+        color: Colors.black,
+      ),
       onPressed: () {
         Navigator.pop(context);
       },
+    );
+  }
+
+  Widget _buildBody() {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+          ),
+        ),
+        ListView.builder(
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          itemCount: notificationData.length,
+          itemBuilder: (context, index) {
+            return NotificationsTile(
+              label: notificationData[index]['label'],
+              description: notificationData[index]['description'],
+              timeStamp: notificationData[index]['timeago'],
+              iconData: Icons.notifications_rounded,
+            );
+          },
+        ),
+      ],
     );
   }
 }
@@ -101,12 +138,14 @@ class NotificationsTile extends StatelessWidget {
         vertical: 4.0,
       ),
       child: Material(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(padding: const EdgeInsets.all(8.0), child: _buildIcon()),
+              Padding(padding: const EdgeInsets.all(8.0), child: _buildIcon(label)),
               const SizedBox(width: 8.0),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.69,
@@ -115,7 +154,7 @@ class NotificationsTile extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
                       height: 5,
@@ -136,8 +175,9 @@ class NotificationsTile extends StatelessWidget {
     );
   }
 
-  CircleAvatar _buildIcon() {
-    if (label == 'Appointment Confirmed') {
+  CircleAvatar _buildIcon(String label) {
+    print(label.contains('arm'));
+    if (label.contains('Conf')) {
       return CircleAvatar(
           foregroundColor: Colors.white,
           backgroundColor: Color(0xFF1ce0a3),
@@ -145,8 +185,8 @@ class NotificationsTile extends StatelessWidget {
             AssetImage('assets/icons/appointmentConfirmed.png'),
             size: 18,
           ));
-    } else if (label == 'Appointment Alarm') {
-      CircleAvatar(
+    } else if (label.contains('Alarm')) {
+      return CircleAvatar(
           foregroundColor: Colors.white,
           backgroundColor: Color(0xFFec652a),
           child: ImageIcon(

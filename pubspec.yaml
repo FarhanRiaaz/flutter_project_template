@@ -88,6 +88,8 @@ dependencies:
   google_fonts: ^4.0.4
   dotted_border: ^2.0.0+3
   timeago: ^3.3.0
+  awesome_card: ^1.1.7
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
