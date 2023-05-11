@@ -162,43 +162,45 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   Widget _buildChatWidget(String name, String question, String date) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          CircleAvatar(
-            radius: 25,
-          ),
-          SizedBox(
-            width: 6,
-          ),
-          Expanded(
-            flex: 6,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(date),
-                  ],
-                ),
-                SizedBox(
-                  height: 3,
-                ),
-                Text(
-                  question,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+    return InkWell(onTap: (){},
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            CircleAvatar(
+              radius: 25,
             ),
-          ),
-        ],
+            SizedBox(
+              width: 6,
+            ),
+            Expanded(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        name,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(date),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Text(
+                    question,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

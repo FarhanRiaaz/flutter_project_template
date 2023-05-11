@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
-
+import 'package:flex_color_picker/flex_color_picker.dart' as flex;
 import '../../widgets/textfield_widget.dart';
 
 class AddUserScreen extends StatefulWidget {
@@ -88,7 +88,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   height: 20,
                 ),
                 _buildNameField(),
-                _buildEmailField(),
+                _buildColorField(),
                 _buildGenderField(),
                 _buildDOBField(),
                 Row(
@@ -162,10 +162,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
     );
   }
 
-  Widget _buildEmailField() {
-    return TextFieldWidget(
+  Widget _buildColorField() {
+    return TextFieldWidget(onTap: (){flex.showColorPickerDialog(context, Color(0xFFFFFFFF));},
       hint: 'Select the Color for name',
       inputType: TextInputType.emailAddress,
+isReadOnly: true,
       icon: Icons.color_lens_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,

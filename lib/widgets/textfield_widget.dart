@@ -18,14 +18,21 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputAction? inputAction;
   final int maxLines;
   final String? imageIcon;
+  final Function? onTap;
+  bool isReadOnly ;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
       child: TextFormField(
+        readOnly: isReadOnly,
+        onTap: (){
+          onTap!();
+        },
         controller: textController,
         focusNode: focusNode,
+
         onFieldSubmitted: onFieldSubmitted,
         onChanged: onChanged,
         autofocus: autoFocus,
@@ -66,9 +73,10 @@ class TextFieldWidget extends StatelessWidget {
     );
   }
 
-  const TextFieldWidget({
+    TextFieldWidget({
     Key? key,
     this.icon,
+    this.isReadOnly = false,
     this.maxLines = 1,
     this.errorText,
     required this.textController,
@@ -84,7 +92,7 @@ class TextFieldWidget extends StatelessWidget {
     this.onChanged,
     this.autoFocus = false,
     this.inputAction,
-    this.imageIcon,
+    this.imageIcon,  this.onTap,
   }) : super(key: key);
 }
 

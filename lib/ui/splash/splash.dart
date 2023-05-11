@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:second_opinion_app/constants/assets.dart';
 import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
-import 'package:second_opinion_app/widgets/app_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
