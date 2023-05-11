@@ -19,7 +19,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     final random = Random();
     final date = DateTime.now().subtract(Duration(days: random.nextInt(30)));
     final doctorName =
-        'Dr. ${String.fromCharCode(random.nextInt(26) + 65)}. ${String.fromCharCode(random.nextInt(26) + 97)}. ${String.fromCharCode(random.nextInt(26) + 97)}';
+        'Dr. ${String.fromCharCode(random.nextInt(26) + 65)}. ${String.fromCharCode(random.nextInt(26) + 97)}. ${String
+        .fromCharCode(random.nextInt(26) + 97)}';
     final symptoms = ['Fever', 'Cough', 'Headache', 'Sore Throat', 'Fatigue'][random.nextInt(5)];
     return {'date': date, 'doctorName': doctorName, 'symptoms': symptoms};
   });
@@ -78,14 +79,20 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
         Align(
           alignment: Alignment.topLeft,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.35,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * 0.35,
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
           ),
         ),
         Align(
           alignment: Alignment.bottomRight,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * 0.7,
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
@@ -123,18 +130,15 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   }
 
 
-
-
-
-
-
   Widget _buildTitle() {
     return Text(
       'Reports',
-      style: Theme.of(context).textTheme.headlineMedium,
+      style: Theme
+          .of(context)
+          .textTheme
+          .headlineMedium,
     );
   }
-
 
 
   Widget _buildAddButton() {
