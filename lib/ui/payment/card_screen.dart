@@ -41,7 +41,7 @@ class _CardScreenState extends State<CardScreen> {
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+      icon: const Icon(Icons.arrow_back_ios_new_rounded,color: Colors.black,),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -50,8 +50,8 @@ class _CardScreenState extends State<CardScreen> {
 
   Widget _buildTitle() {
     return Text(
-      'Second Opinion',
-      style: Theme.of(context).textTheme.headlineMedium,
+      'Payments',
+      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
     );
   }
 

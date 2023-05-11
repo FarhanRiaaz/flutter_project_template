@@ -13,6 +13,7 @@ import 'package:second_opinion_app/ui/second_opinion/second_opinion_details.dart
 import 'package:second_opinion_app/ui/setting/setting.dart';
 import 'package:second_opinion_app/ui/splash/splash.dart';
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/ui/support/support.dart';
 
 import '../../ui/change_password/change_password.dart';
 import '../../ui/home_page_view/home_page_view.dart';
@@ -38,6 +39,7 @@ class Routes {
   static const String upload_screen = '/upload';
   static const String payment_method = '/paymentMethod';
   static const String change_password = '/changePassword';
+  static const String support = '/support';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -56,5 +58,6 @@ class Routes {
     upload_screen: (BuildContext context) => SecondOpinionScreen(),
     payment_method: (BuildContext context) => PaymentMethodScreen(),
     change_password: (BuildContext context) => ChangePasswordScreen(),
+    support: (BuildContext context) => SupportScreen(),
   };
 }

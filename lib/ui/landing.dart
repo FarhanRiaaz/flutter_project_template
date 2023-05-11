@@ -80,7 +80,7 @@ class _LandingPageState extends State<LandingPage> {
     return SizedBox(
       height: 50,
       child: RoundedButtonWidget(
-        buttonText: 'Login In',
+        buttonText: 'Log In',
         buttonColor: Colors.orangeAccent,
         textColor: Colors.white,
         onPressed: () async {Navigator.pushNamed(context, Routes.login);},

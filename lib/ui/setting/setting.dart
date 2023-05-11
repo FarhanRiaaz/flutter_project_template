@@ -76,7 +76,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 _buildIconCard('assets/icons/BellIcon.png', 'Notifications', () {
                   Navigator.pushNamed(context, Routes.notification);
                 }),
-                _buildIconCard('assets/icons/Headphones.png', 'Help and Support', () {}),
+                _buildIconCard('assets/icons/Headphones.png', 'Help and Support', () {Navigator.pushNamed(context,Routes.support);}),
                 _buildIconCard('assets/icons/info.png', 'Privacy and Security', () {}),
                 _buildIconCard('assets/icons/Key.png', 'Change Password', () {Navigator.pushNamed(context,Routes.change_password);}),
               ],
