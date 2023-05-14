@@ -4,6 +4,7 @@ import 'package:second_opinion_app/ui/into/intro.dart';
 
 import 'package:second_opinion_app/ui/login/login.dart';
 import 'package:second_opinion_app/ui/filter/filter.dart';
+import 'package:second_opinion_app/ui/my_user.dart';
 import 'package:second_opinion_app/ui/payment/payment.dart';
 import 'package:second_opinion_app/ui/profile/profile.dart';
 import 'package:second_opinion_app/ui/registration/registration.dart';
@@ -19,6 +20,7 @@ import 'package:second_opinion_app/ui/support/support.dart';
 import '../../ui/change_password/change_password.dart';
 import '../../ui/home_page_view/home_page_view.dart';
 import '../../ui/notification/notification.dart';
+import '../../ui/support/chat.dart';
 
 class Routes {
   Routes._();
@@ -42,6 +44,8 @@ class Routes {
   static const String change_password = '/changePassword';
   static const String support = '/support';
   static const String filter = '/filter';
+  static const String chat = '/chat';
+  static const String myUsers = '/myUsers';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -62,5 +66,7 @@ class Routes {
     change_password: (BuildContext context) => ChangePasswordScreen(),
     support: (BuildContext context) => SupportScreen(),
     filter: (BuildContext context) => FilterScreen(),
+    chat: (BuildContext context) => ChatScreen(),
+    myUsers: (BuildContext context) => MyUsers(),
   };
 }

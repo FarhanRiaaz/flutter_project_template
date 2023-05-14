@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 
-class SupportScreen extends StatefulWidget {
-  const SupportScreen({Key? key}) : super(key: key);
+class MyUsers extends StatefulWidget {
+  const MyUsers({Key? key}) : super(key: key);
 
   @override
-  State<SupportScreen> createState() => _SupportScreenState();
+  State<MyUsers> createState() => _MyUsersState();
 }
 
-class _SupportScreenState extends State<SupportScreen> {
-  List<Map<String, String>> chatList = [
+class _MyUsersState extends State<MyUsers> {
+  List<Map<String, String>> users = [
     {
       'name': 'John Doe',
-      'question': 'How can I reset my password?',
-      'date': '2023-05-08',
+      'relationship': 'Me',
+
     },
     {
       'name': 'Jane Smith',
-      'question': 'What are the payment options?',
-      'date': '2023-05-09',
+      'relationship': 'Daughter',
+
     },
     {
       'name': 'Bob Johnson',
-      'question': 'How can I track my order?',
-      'date': '2023-05-10',
+      'relationship': 'Son',
+
     },
   ];
 
@@ -70,11 +70,7 @@ class _SupportScreenState extends State<SupportScreen> {
               SizedBox(
                 height: 10,
               ),
-              Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                color: Colors.white,
-                child: _buildCardList(),
-              ),
+              _buildCardList(),
             ],
           ),
         ),
@@ -106,7 +102,7 @@ class _SupportScreenState extends State<SupportScreen> {
       height: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Theme.of(context).primaryColor,
+
       ),
       child: Row(
         children: [
@@ -131,16 +127,17 @@ class _SupportScreenState extends State<SupportScreen> {
               ),
             ),
           ),
+          SizedBox(width: 5,),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(10),
-                bottomRight: Radius.circular(10),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+
               ),
               color: Theme.of(context).primaryColor,
             ),
             child: IconButton(
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.add_circle_outline_rounded),
               onPressed: () {},
             ),
           ),
@@ -150,57 +147,89 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   Widget _buildCardList() {
-    return ListView.separated(
+    return ListView.builder(
       shrinkWrap: true,
-      itemCount: chatList.length,
+      itemCount: users.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildChatWidget(chatList[index]['name']!, chatList[index]['question']!, chatList[index]['date']!);
+        return _buildUserWidget(users[index]['name']!, users[index]['relationship']! );
       },
-      separatorBuilder: (BuildContext context, int index) {
-        return Divider();
-      },
+
     );
   }
 
-  Widget _buildChatWidget(String name, String question, String date) {
-    return InkWell(onTap: (){Navigator.pushNamed(context, Routes.chat);},
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            CircleAvatar(
-              radius: 25,
-            ),
-            SizedBox(
-              width: 6,
-            ),
-            Expanded(
-              flex: 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildUserWidget(String name, String relation ) {
+    return InkWell(onTap: (){Navigator.pushNamed(context,Routes.profile);},
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/images/profilePicture.png',
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
+
+              SizedBox(
+                width: 12,
+              ),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      relation,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(date),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    question,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  _buildActionWidget(icon: Icons.delete_outline, onPressed: () {}, context: context),
+
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionWidget({
+    required IconData icon,
+    required VoidCallback onPressed,
+    required BuildContext context,
+  }) {
+    return SizedBox(
+      width: 30,
+      height: 30,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).primaryColor.withOpacity(0.1),
+        ),
+        child: IconButton(
+          splashRadius: 10,
+          color: Theme.of(context).primaryColor,
+          onPressed: onPressed,
+          icon: Icon(icon, size: 15),
         ),
       ),
     );

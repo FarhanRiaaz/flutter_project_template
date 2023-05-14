@@ -86,7 +86,7 @@ class _CardScreenState extends State<CardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildPaymentMethodType(),
+                   // _buildPaymentMethodType(),
                     _buildCreditCard(),
                     SizedBox(
                       height: 20,

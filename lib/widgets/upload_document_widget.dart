@@ -138,17 +138,27 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
   }
 
   Widget _buildFileTypeField() {
-    return TextFieldWidget(
-      padding: EdgeInsets.zero,
-      hint: 'File Type',
-      imageIcon: 'assets/icons/File.png',
-      inputType: TextInputType.name,
-      icon: Icons.file_present_rounded,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      textController: TextEditingController(),
+    List<String> items = ['Test Report', 'Prescription', 'Medical certificate'];
+    String? selectedItem;
+
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        hintText: 'File Type',
+        hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
+        prefixIcon: Image.asset('assets/icons/File.png'),
+      ),
+      value: selectedItem,
+      items: items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedItem = value!;
+        });
+      },
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 
 import '../../widgets/textfield_widget.dart';
@@ -19,6 +20,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController heightController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
+
+  ProfileStore store = ProfileStore();
 
   @override
   Widget build(BuildContext context) {

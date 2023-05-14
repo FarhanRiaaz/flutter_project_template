@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../widgets/prescription_widget.dart';
+import '../../widgets/upload_document_widget.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({Key? key, required this.onBackPressed}) : super(key: key);
@@ -146,7 +147,19 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
       padding: EdgeInsets.all(10),
       child: SizedBox(
         child: ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                context: context,
+                builder: (context) => SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.15),
+                    child: const UploadDocumentWidget(),
+                  ),
+                ));
+          },
           icon: Icon(Icons.add),
           label: Text('Add'),
           style: ButtonStyle(

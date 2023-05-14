@@ -382,22 +382,29 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Column(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  radius: 18,
-                  child: Image.asset(
-                    'assets/images/circleAvatar.png',
+            GestureDetector(
+              onTap: (){
+                
+                Navigator.pushNamed(context, Routes.myUsers);
+                
+              },
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    radius: 18,
+                    child: Image.asset(
+                      'assets/images/circleAvatar.png',
+                    ),
                   ),
-                ),
-                Text(
-                  'You',
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                )
-              ],
+                  Text(
+                    'You',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  )
+                ],
+              ),
             ),
             SizedBox(
               width: 2,

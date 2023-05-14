@@ -88,9 +88,25 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   height: 20,
                 ),
                 _buildNameField(),
+                SizedBox(
+                  height: 15,
+                ),
                 _buildColorField(),
+                SizedBox(
+                  height: 15,
+                ),
                 _buildGenderField(),
+                SizedBox(
+                  height: 15,
+                ),
+                _buildRelationshipField(),
+                SizedBox(
+                  height: 15,
+                ),
                 _buildDOBField(),
+                SizedBox(
+                  height: 15,
+                ),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,10 +119,13 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   ],
                 ),
                 SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: RoundedButtonWidget(
-                    buttonText: 'Continue',
+                    buttonText: 'Save',
                     buttonColor: Theme.of(context).primaryColor,
                     onPressed: () {},
                   ),
@@ -156,23 +175,24 @@ class _AddUserScreenState extends State<AddUserScreen> {
         autoFocus: false,
         onChanged: (value) {},
         onFieldSubmitted: (value) {},
-        errorText: '',
         textController: nameController,
       ),
     );
   }
 
   Widget _buildColorField() {
-    return TextFieldWidget(onTap: (){flex.showColorPickerDialog(context, Color(0xFFFFFFFF));},
+    return TextFieldWidget(
+      onTap: () {
+        flex.showColorPickerDialog(context, Color(0xFFFFFFFF));
+      },
       hint: 'Select the Color for name',
       inputType: TextInputType.emailAddress,
-isReadOnly: true,
+      isReadOnly: true,
       icon: Icons.color_lens_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
       textController: emailController,
     );
   }
@@ -186,7 +206,19 @@ isReadOnly: true,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
+      textController: genderController,
+    );
+  }
+
+  Widget _buildRelationshipField() {
+    return TextFieldWidget(
+      hint: 'Enter Relationship',
+      inputType: TextInputType.text,
+      icon: Icons.person_outline_rounded,
+      inputAction: TextInputAction.next,
+      autoFocus: false,
+      onChanged: (value) {},
+      onFieldSubmitted: (value) {},
       textController: genderController,
     );
   }
@@ -200,7 +232,6 @@ isReadOnly: true,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
       textController: weightController,
     );
   }
@@ -214,7 +245,6 @@ isReadOnly: true,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
       textController: heightController,
     );
   }
@@ -228,7 +258,6 @@ isReadOnly: true,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      errorText: '',
       textController: dobController,
     );
   }
