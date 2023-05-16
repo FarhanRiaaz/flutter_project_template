@@ -1,6 +1,8 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:second_opinion_app/constants/assets.dart';
 import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
+import 'package:second_opinion_app/models/authentication/login_user_response.dart';
+import 'package:second_opinion_app/stores/user/user_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/stores/form/form_store.dart';
 import 'package:second_opinion_app/stores/theme/theme_store.dart';
@@ -16,6 +18,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../di/components/service_locator.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -28,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //stores:---------------------------------------------------------------------
   late ThemeStore _themeStore;
+  UserStore _userStore = getIt<UserStore>();
 
   //focus node:-----------------------------------------------------------------
   late FocusNode _passwordFocusNode;
@@ -65,14 +70,19 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.35,
-              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+              child: Opacity(
+                  opacity: 0.25,
+                  child:
+                      Image.asset('assets/images/background/bottomRight.png')),
             ),
           ),
           Align(
             alignment: Alignment.bottomRight,
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
-              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+              child: Opacity(
+                  opacity: 0.25,
+                  child: Image.asset('assets/images/background/topLeft.png')),
             ),
           ),
           MediaQuery.of(context).orientation == Orientation.landscape
@@ -91,13 +101,15 @@ class _LoginScreenState extends State<LoginScreen> {
               : Center(child: _buildRightSide()),
           Observer(
             builder: (context) {
-              return _store.success ? navigate(context) : _showErrorMessage(_store.errorStore.errorMessage);
+              return _store.success
+                  ? navigate(context)
+                  : _showErrorMessage(_store.errorStore.errorMessage);
             },
           ),
           Observer(
             builder: (context) {
               return Visibility(
-                visible: _store.loading,
+                visible: _userStore.isLoginInProcess,
                 child: CustomProgressIndicatorWidget(),
               );
             },
@@ -195,9 +207,10 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context) {
         return TextFieldPasswordWidget(
           onPasswordToggle: () {
-             _store.toggleShowPassword();
+            _store.toggleShowPassword();
           },
-          hint: AppLocalizations.of(context).translate('login_et_user_password'),
+          hint:
+              AppLocalizations.of(context).translate('login_et_user_password'),
           isObscure: _store.showPassword,
           imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0),
@@ -221,7 +234,10 @@ class _LoginScreenState extends State<LoginScreen> {
         // padding: EdgeInsets.all(0.0),
         child: Text(
           AppLocalizations.of(context).translate('login_btn_forgot_password'),
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: Color(0xFF16CAEA)),
         ),
         onPressed: () {},
       ),
@@ -234,8 +250,12 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextButton(
         // padding: EdgeInsets.all(0.0),
         child: Text(
-          AppLocalizations.of(context).translate('login_btn_dont_have_an_account'),
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
+          AppLocalizations.of(context)
+              .translate('login_btn_dont_have_an_account'),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: Color(0xFF16CAEA)),
         ),
         onPressed: () {
           Navigator.pushReplacementNamed(context, Routes.registration);
@@ -253,7 +273,11 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () async {
           if (_store.canLogin) {
             DeviceUtils.hideKeyboard(context);
-            _store.login();
+            await _userStore
+                .login(_store.userEmail, _store.password)
+                .then((value) {
+              _store.login();
+            });
           } else {
             _showErrorMessage('Please fill in all fields');
           }
@@ -268,7 +292,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.home, (Route<dynamic> route) => false);
     });
 
     return Container();

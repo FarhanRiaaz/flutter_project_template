@@ -44,9 +44,11 @@ abstract class _UserStore with Store {
   }
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<LoginUserResponse> emptyLoginResponse = ObservableFuture.value(LoginUserResponse());
+  static ObservableFuture<LoginUserResponse> emptyLoginResponse =
+      ObservableFuture.value(LoginUserResponse());
 
-  static ObservableFuture<RegisterUserResponse> emptyRegisterResponse = ObservableFuture.value(RegisterUserResponse());
+  static ObservableFuture<RegisterUserResponse> emptyRegisterResponse =
+      ObservableFuture.value(RegisterUserResponse());
 
   // store variables:-----------------------------------------------------------
   @observable
@@ -56,13 +58,15 @@ abstract class _UserStore with Store {
   User currentUser = User();
 
   @observable
-  ObservableFuture<RegisterUserResponse> registerUserFuture = emptyRegisterResponse;
+  ObservableFuture<RegisterUserResponse> registerUserFuture =
+      emptyRegisterResponse;
 
   @observable
   ObservableFuture<LoginUserResponse> loginFuture = emptyLoginResponse;
 
   @computed
-  bool get isRegistrationInProcess => registerUserFuture.status == FutureStatus.pending;
+  bool get isRegistrationInProcess =>
+      registerUserFuture.status == FutureStatus.pending;
 
   @computed
   bool get isLoginInProcess => loginFuture.status == FutureStatus.pending;
@@ -92,6 +96,8 @@ abstract class _UserStore with Store {
     loginFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.token != null) {
+        // saving informtion here
+        _repository.saveAuthenticationToken(value.token!);
         print('You are logged IN!\n Tokken: ${value.token}');
       } else {
         print('failed to login\nInvalid creds are provided!');
