@@ -110,7 +110,9 @@ class _RegistrationState extends State<Registration> {
           Observer(
             builder: (context) {
               return Visibility(
-                visible: _store.loading,
+                visible: _userStore.isRegistrationInProcess
+
+                ,
                 child: CustomProgressIndicatorWidget(),
               );
             },
@@ -190,6 +192,7 @@ class _RegistrationState extends State<Registration> {
         return TextFieldWidget(
           hint: 'Enter Your Name',
           inputType: TextInputType.name,
+          onTap: (){},
           icon: Icons.person_outline_rounded,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _nameController,
@@ -217,6 +220,7 @@ class _RegistrationState extends State<Registration> {
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _userEmailController,
           inputAction: TextInputAction.next,
+          onTap: (){},
           autoFocus: false,
           onChanged: (value) {
             _store.setUserId(_userEmailController.text);

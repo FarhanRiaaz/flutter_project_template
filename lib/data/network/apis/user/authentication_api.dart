@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:second_opinion_app/data/network/dio_client.dart';
 import 'package:second_opinion_app/data/network/rest_client.dart';
 import 'package:second_opinion_app/models/authentication/login_request.dart';
@@ -23,7 +24,7 @@ class AuthenticationApi {
       RegistrationRequest registerRequest) async {
     var req = registerRequest.toJson();
     try {
-      final res = await _dioClient.post(Endpoints.register, data: req);
+      final res = await _dioClient.post(Endpoints.register, data: req,);
       if (res != null && RegisterUserResponse.fromJson(res).name != null) {
         return RegisterUserResponse.fromJson(res);
       } else {
