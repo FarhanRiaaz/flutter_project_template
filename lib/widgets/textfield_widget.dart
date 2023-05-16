@@ -147,6 +147,7 @@ class TextFieldPasswordWidget extends StatelessWidget {
                     : ImageIcon(AssetImage(this.imageIcon!)),
 
                 hintText: this.hint,
+               errorMaxLines: 2,
                 hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
                 errorText: errorText,
                 counterText: '',

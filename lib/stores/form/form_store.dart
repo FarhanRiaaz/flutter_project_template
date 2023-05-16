@@ -2,6 +2,8 @@ import 'package:second_opinion_app/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
+import '../../data/network/apis/user/authentication_api.dart';
+
 part 'form_store.g.dart';
 
 class FormStore = _FormStore with _$FormStore;
@@ -12,6 +14,7 @@ abstract class _FormStore with Store {
 
   // store for handling error messages
   final ErrorStore errorStore = ErrorStore();
+
 
   _FormStore() {
     _setupValidations();
@@ -139,15 +142,18 @@ abstract class _FormStore with Store {
   }
 
   @action
-  void validatePassword(String value) {
-    if (value.isEmpty) {
+  void validatePassword(String password) {
+    if (password.isEmpty) {
       formErrorStore.password = "Password can't be empty";
-    } else if (value.length < 6) {
-      formErrorStore.password = "Password must be at-least 6 characters long";
+    } else if (password.length < 8) {
+      formErrorStore.password = "Password must be at least 8 characters long";
+    } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$').hasMatch(password)) {
+      formErrorStore.password = "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number";
     } else {
       formErrorStore.password = null;
     }
   }
+
 
   @action
   void validateConfirmPassword(String value) {

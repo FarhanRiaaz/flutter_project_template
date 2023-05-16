@@ -335,11 +335,11 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
-  void validatePassword(String value) {
+  void validatePassword(String password) {
     final _$actionInfo = _$_FormStoreActionController.startAction(
         name: '_FormStore.validatePassword');
     try {
-      return super.validatePassword(value);
+      return super.validatePassword(password);
     } finally {
       _$_FormStoreActionController.endAction(_$actionInfo);
     }
