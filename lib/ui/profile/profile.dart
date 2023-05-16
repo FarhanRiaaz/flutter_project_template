@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 
+import '../../di/components/service_locator.dart';
 import '../../widgets/textfield_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,7 +22,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
-  ProfileStore store = ProfileStore();
+
+  ProfileStore store = getIt<ProfileStore>();
+
+
+  @override
+  void initState() {
+    store.get();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

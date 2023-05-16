@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
+
+import '../../data/repository/repository.dart';
+
 part 'profile_store.g.dart';
 
 class ProfileStore = _ProfileStore with _$ProfileStore;
 
 abstract class _ProfileStore with Store {
+  final Repository _repository;
+
   @observable
   int id;
 
@@ -49,7 +54,34 @@ abstract class _ProfileStore with Store {
     }
   }
 
-  _ProfileStore({
+  @action
+  Future get() async {
+    final future = _repository.getProfile();
+    final loginFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.id != null) {
+        // saving informtion here
+        this.id = value.id!;
+        this.height = value.height!;
+        this.name = value.name!;
+        this.age = value.age!;
+        this.email = value.email!;
+        this.profileImg = value.profileImg!;
+        this.gender = value.gender!;
+        this.weight = value.weight!;
+      } else {
+        print('failed to login\nInvalid creds are provided!');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to login\nInvalid creds are provided!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  _ProfileStore(
+    Repository repository, {
     this.id = 0,
     this.name = '',
     this.email = '',
@@ -58,7 +90,7 @@ abstract class _ProfileStore with Store {
     this.age = '',
     this.weight = '',
     this.height = '',
-  }) {
+  }) : this._repository = repository {
     fetchProfileData();
   }
 }

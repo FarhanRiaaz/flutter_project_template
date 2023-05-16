@@ -5,7 +5,6 @@ import '../more/more.dart';
 import '../reports/report.dart';
 import '../second_opinion/doctors.dart';
 
-
 class PageViewScreen extends StatefulWidget {
   const PageViewScreen({super.key});
 
@@ -35,9 +34,7 @@ class _PageViewScreenState extends State<PageViewScreen> {
           });
         },
       ),
-      DoctorsScreen(
-
-      ),
+      DoctorsScreen(),
       MoreScreen(
         onBackPressed: () {
           setState(() {
@@ -51,10 +48,16 @@ class _PageViewScreenState extends State<PageViewScreen> {
   List<Widget> _buildDestinationList() {
     return <Widget>[
       NavigationDestination(
-        icon: currentPageIndex != 0 ? Icon(Icons.home_max_rounded) : Icon(Icons.home_max_rounded,color: Theme.of(context).primaryColor,),
+        icon: currentPageIndex != 0
+            ? Icon(Icons.home_max_rounded)
+            : Icon(
+                Icons.home_max_rounded,
+                color: Theme.of(context).primaryColor,
+              ),
         label: 'Home',
       ),
       NavigationDestination(
+
         icon: currentPageIndex != 1
             ? ImageIcon(AssetImage(
                 'assets/icons/unselected_report.png',

@@ -1,6 +1,7 @@
 
 import 'package:second_opinion_app/data/local/datasources/post/post_datasource.dart';
 import 'package:second_opinion_app/data/network/apis/posts/post_api.dart';
+import 'package:second_opinion_app/data/network/apis/profile/profile_api.dart';
 import 'package:second_opinion_app/data/network/dio_client.dart';
 import 'package:second_opinion_app/data/network/rest_client.dart';
 import 'package:second_opinion_app/data/repository/repository.dart';
@@ -23,9 +24,12 @@ import '../../data/network/apis/user/authentication_api.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupLocator() async {
+
   // factories:-----------------------------------------------------------------
   getIt.registerFactory(() => ErrorStore());
   getIt.registerFactory(() => FormStore());
+  getIt.registerFactory(() => ProfileApi(DioClient(Dio())));
+
 
   // async singletons:----------------------------------------------------------
   getIt.registerSingletonAsync<Database>(() => LocalModule.provideDatabase());
@@ -48,6 +52,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(Repository(
     getIt<AuthenticationApi>(),
     getIt<SharedPreferenceHelper>(),
+    getIt<ProfileApi>()
   ));
 
   // stores:--------------------------------------------------------------------
