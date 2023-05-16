@@ -1,5 +1,8 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:second_opinion_app/constants/assets.dart';
+import 'package:second_opinion_app/constants/strings.dart';
+import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/stores/user/user_store.dart';
 
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/stores/form/form_store.dart';
@@ -8,13 +11,13 @@ import 'package:second_opinion_app/utils/device/device_utils.dart';
 import 'package:second_opinion_app/utils/locale/app_localization.dart';
 import 'package:second_opinion_app/widgets/app_icon_widget.dart';
 import 'package:second_opinion_app/widgets/empty_app_bar_widget.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 import 'package:second_opinion_app/widgets/progress_indicator_widget.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 import 'package:second_opinion_app/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-
 
 class Registration extends StatefulWidget {
   @override
@@ -30,6 +33,7 @@ class _RegistrationState extends State<Registration> {
 
   //stores:---------------------------------------------------------------------
   late ThemeStore _themeStore;
+  UserStore _userStore = getIt<UserStore>();
 
   //focus node:-----------------------------------------------------------------
   late FocusNode _passwordFocusNode;
@@ -67,14 +71,19 @@ class _RegistrationState extends State<Registration> {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.35,
-              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+              child: Opacity(
+                  opacity: 0.25,
+                  child:
+                      Image.asset('assets/images/background/bottomRight.png')),
             ),
           ),
           Align(
             alignment: Alignment.bottomRight,
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
-              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+              child: Opacity(
+                  opacity: 0.25,
+                  child: Image.asset('assets/images/background/topLeft.png')),
             ),
           ),
           MediaQuery.of(context).orientation == Orientation.landscape
@@ -93,7 +102,9 @@ class _RegistrationState extends State<Registration> {
               : Center(child: _buildRightSide()),
           Observer(
             builder: (context) {
-              return _store.success ? navigate(context) : _showErrorMessage(_store.errorStore.errorMessage);
+              return _store.success
+                  ? navigate(context)
+                  : _showErrorMessage(_store.errorStore.errorMessage);
             },
           ),
           Observer(
@@ -220,7 +231,8 @@ class _RegistrationState extends State<Registration> {
     return Observer(
       builder: (context) {
         return TextFieldPasswordWidget(
-          hint: AppLocalizations.of(context).translate('login_et_user_password'),
+          hint:
+              AppLocalizations.of(context).translate('login_et_user_password'),
           isObscure: _store.showPasswordRegistration,
           imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0),
@@ -230,9 +242,10 @@ class _RegistrationState extends State<Registration> {
           errorText: _store.formErrorStore.password,
           onChanged: (value) {
             _store.setPassword(_passwordController.text);
-          }, onPasswordToggle: (){
+          },
+          onPasswordToggle: () {
             _store.toggleShowPasswordRegistration();
-        },
+          },
         );
       },
     );
@@ -252,9 +265,10 @@ class _RegistrationState extends State<Registration> {
           errorText: _store.formErrorStore.confirmPassword,
           onChanged: (value) {
             _store.setConfirmPassword(_confirmPasswordController.text);
-          }, onPasswordToggle: (){
+          },
+          onPasswordToggle: () {
             _store.toggleShowConfirmPasswordRegistration();
-        },
+          },
         );
       },
     );
@@ -268,7 +282,8 @@ class _RegistrationState extends State<Registration> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Checkbox(
-                fillColor: MaterialStatePropertyAll(Theme.of(context).primaryColor),
+                fillColor:
+                    MaterialStatePropertyAll(Theme.of(context).primaryColor),
                 value: _store.checkBox,
                 onChanged: (value) {
                   _store.toggleCheckbox(value!);
@@ -277,7 +292,10 @@ class _RegistrationState extends State<Registration> {
             Text('Agree with', style: Theme.of(context).textTheme.labelSmall),
             Text(
               ' Terms and Conditions',
-              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).primaryColor),
+              style: Theme.of(context)
+                  .textTheme
+                  .labelSmall!
+                  .copyWith(color: Theme.of(context).primaryColor),
             ),
           ],
         ),
@@ -299,7 +317,10 @@ class _RegistrationState extends State<Registration> {
             ),
             Text(
               'Sign in',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall
+                  ?.copyWith(color: Color(0xFF16CAEA)),
             ),
           ],
         ),
@@ -319,8 +340,15 @@ class _RegistrationState extends State<Registration> {
         onPressed: () async {
           if (_store.canRegister) {
             DeviceUtils.hideKeyboard(context);
-            await showRegistrationDialog(context);
-            _store.register();
+            await _userStore
+                .register(_store.userEmail, _store.confirmPassword, _store.name)
+                .then((value) {
+                  DialogHelper.showRegistrationDialog(context, Strings.congratulations, Strings.continueText, Strings.registerSuccessMessage, () {
+                    Navigator.pop(context);
+                    navigate(context);
+                  });
+            });
+            // _store.register();
           } else {
             _showErrorMessage('Please fill in all fields');
           }
@@ -331,7 +359,8 @@ class _RegistrationState extends State<Registration> {
 
   Widget navigate(BuildContext context) {
     Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.login, (Route<dynamic> route) => false);
     });
 
     return Container();
@@ -353,76 +382,6 @@ class _RegistrationState extends State<Registration> {
 
     return SizedBox.shrink();
   }
-
-  Future<void> showRegistrationDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            height: 311,
-            width: 290,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              image: const DecorationImage(
-                image: AssetImage("assets/images/background/backgroundPopUp.png"),
-                fit: BoxFit.contain,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 60,
-                      child: Image.asset(
-                        'assets/images/background/tick-icon.png',
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Center(
-                      child: Text(
-                        "Congratulations!",
-                        style: TextStyle(fontSize: 18.0, color: Color(0xFF222B2C)),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Text(
-                      "You are successfully registered to Second Opinion app.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16.0, color: Color(0xFFBEBEBE)),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Continue",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  // dispose:-------------------------------------------------------------------
   @override
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree

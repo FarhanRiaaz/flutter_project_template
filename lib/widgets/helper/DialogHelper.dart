@@ -5,7 +5,7 @@ import 'package:second_opinion_app/constants/strings.dart';
 class DialogHelper {
   DialogHelper._();
 
-  Future<void> showRegistrationDialog(BuildContext context, String title,
+ static Future<void> showRegistrationDialog(BuildContext context, String title,
       String buttonText, String description, VoidCallback callback) async {
     return showDialog(
       context: context,
