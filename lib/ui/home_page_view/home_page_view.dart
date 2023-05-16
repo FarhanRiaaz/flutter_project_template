@@ -80,7 +80,7 @@ class _PageViewScreenState extends State<PageViewScreen> {
             : ImageIcon(
                 AssetImage(
                   'assets/icons/secondOpinionIcon.png',
-                ),size: 70,
+                ),size: 50,
                 color: Color(0xFFec652a)),
         label: 'Second',
       ),

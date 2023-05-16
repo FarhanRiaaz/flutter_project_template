@@ -20,16 +20,24 @@ class AuthenticationApi {
 
   /// Method to registerUser it will return with a complete model or with a single item
 
-  Future<RegisterUserResponse> registerUser(
-      RegistrationRequest registerRequest) async {
-    var req = registerRequest.toJson();
+  Future<RegisterUserResponse> registerUser(RegistrationRequest registerRequest) async {
     try {
-      final res = await _dioClient.post(Endpoints.register, data: req,);
-      if (res != null && RegisterUserResponse.fromJson(res).name != null) {
+      FormData formData = FormData.fromMap(registerRequest.toJson());
+
+      final res = await _dioClient.post(
+        Endpoints.register,
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (res != null) {
         return RegisterUserResponse.fromJson(res);
       } else {
-        print("Null response received!\nregisterUser()");
-        return RegisterUserResponse();
+        throw Exception("Null response received!");
       }
     } catch (e) {
       print(e.toString());
@@ -37,15 +45,29 @@ class AuthenticationApi {
     }
   }
 
+
   /// method to login user it will respond with token otherwise with an error
   Future<LoginUserResponse> loginUser(LoginRequest request) async {
-    var req = request.toJson();
     try {
-      final res = await _dioClient.post(Endpoints.login, data: req);
+      FormData formData = FormData.fromMap({
+        'email': request.email,
+        'password': request.password,
+      });
+
+      final res = await _dioClient.post(
+        Endpoints.login,
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
       if (res != null) {
         return LoginUserResponse.fromJson(res);
       } else {
-        throw Future.error(Exception("Null response received!\loginUser()"));
+        throw Exception("Null response received!");
       }
     } catch (e) {
       print(e.toString());
