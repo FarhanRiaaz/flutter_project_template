@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository/repository.dart';
+import '../../models/profile/profile_response.dart';
 
 part 'profile_store.g.dart';
 
@@ -10,6 +11,9 @@ class ProfileStore = _ProfileStore with _$ProfileStore;
 
 abstract class _ProfileStore with Store {
   final Repository _repository;
+
+  @observable
+  ProfileResponse? currentUserProfile;
 
   @observable
   int id;
@@ -60,15 +64,16 @@ abstract class _ProfileStore with Store {
     final loginFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {
+        currentUserProfile=value;
         // saving informtion here
-        this.id = value.id!;
-        this.height = value.height!;
-        this.name = value.name!;
-        this.age = value.age!;
-        this.email = value.email!;
-        this.profileImg = value.profileImg!;
-        this.gender = value.gender!;
-        this.weight = value.weight!;
+        // this.id = value.id??0;
+        // this.height = value.height??"";
+        // this.name = value.name??"";
+        // this.age = value.age!;
+        // this.email = value.email??"";
+        // this.profileImg = value.profileImg??"";
+        // this.gender = value.gender??"";
+        // this.weight = value.weight??"";
       } else {
         print('failed to login\nInvalid creds are provided!');
       }
@@ -91,6 +96,6 @@ abstract class _ProfileStore with Store {
     this.weight = '',
     this.height = '',
   }) : this._repository = repository {
-    fetchProfileData();
+   // fetchProfileData();
   }
 }

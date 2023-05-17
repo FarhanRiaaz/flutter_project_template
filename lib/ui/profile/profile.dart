@@ -23,13 +23,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController dobController = TextEditingController();
 
 
-  ProfileStore _store = getIt<ProfileStore>();
+  ProfileStore _profileStore = getIt<ProfileStore>();
 
 
   @override
   void initState() {
-    _store.getProfile();
+    _profileStore.getProfile().then((value) {
+      popUpTheData().then((value){});
+
+    });
     super.initState();
+  }
+  @override
+  void didChangeDependencies() async{
+    popUpTheData();
+    super.didChangeDependencies();
   }
 
   @override
@@ -273,5 +281,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
     );
+  }
+
+  Future<void> popUpTheData()async {
+    nameController.text= _profileStore.currentUserProfile?.name ?? "";
+    emailController.text= _profileStore.currentUserProfile?.email ?? "";
+    genderController.text=_profileStore.currentUserProfile?.gender ?? "";
+    ageController.text=_profileStore.currentUserProfile?.age ?? "";
+    heightController.text=_profileStore.currentUserProfile?.height ?? "";
+    weightController.text=_profileStore.currentUserProfile?.weight ?? "";
   }
 }

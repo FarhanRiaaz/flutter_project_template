@@ -54,9 +54,8 @@ class Repository {
 
   Future<ProfileResponse> getProfile() async {
     final authToken = await _sharedPrefsHelper.authToken;
-    return await _profileApi.getUserProfile(authToken!).then((response) {
-      return response;
-    });
+    print("getProfile$authToken");
+    return await _profileApi.getUserProfile(authToken!);
   }
 
   Future<void> saveIsLoggedIn(bool value) => _sharedPrefsHelper.saveIsLoggedIn(value);

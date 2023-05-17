@@ -20,7 +20,7 @@ class ProfileApi {
         Endpoints.profile,
         options: Options(
           headers: {
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Token $token',
           },
         ),
       );
