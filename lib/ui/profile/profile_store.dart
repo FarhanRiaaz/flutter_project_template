@@ -55,8 +55,8 @@ abstract class _ProfileStore with Store {
   }
 
   @action
-  Future get() async {
-    final future = _repository.getProfile();
+  Future getProfile() async {
+    final future =  _repository.getProfile();
     final loginFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {

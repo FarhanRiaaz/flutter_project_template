@@ -16,6 +16,7 @@ import 'package:second_opinion_app/stores/theme/theme_store.dart';
 import 'package:second_opinion_app/stores/user/user_store.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +29,6 @@ Future<void> setupLocator() async {
   // factories:-----------------------------------------------------------------
   getIt.registerFactory(() => ErrorStore());
   getIt.registerFactory(() => FormStore());
-  getIt.registerFactory(() => ProfileApi(DioClient(Dio())));
 
 
   // async singletons:----------------------------------------------------------
@@ -44,6 +44,7 @@ Future<void> setupLocator() async {
   // api's:---------------------------------------------------------------------
   getIt.registerSingleton(PostApi(getIt<DioClient>(), getIt<RestClient>()));
   getIt.registerSingleton(AuthenticationApi(getIt<DioClient>(), getIt<RestClient>()));
+  getIt.registerSingleton(ProfileApi(getIt<DioClient>()));
 
   // data sources
   getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
@@ -60,4 +61,5 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(PostStore(getIt<Repository>()));
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   getIt.registerSingleton(UserStore(getIt<Repository>()));
+  getIt.registerSingleton(ProfileStore(getIt<Repository>()));
 }

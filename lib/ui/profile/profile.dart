@@ -23,12 +23,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController dobController = TextEditingController();
 
 
-  ProfileStore store = getIt<ProfileStore>();
+  ProfileStore _store = getIt<ProfileStore>();
 
 
   @override
   void initState() {
-    store.get();
+    _store.getProfile();
     super.initState();
   }
 
