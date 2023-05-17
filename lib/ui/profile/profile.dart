@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 
 import '../../di/components/service_locator.dart';
+import '../../widgets/progress_indicator_widget.dart';
 import '../../widgets/textfield_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -22,20 +24,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
-
   ProfileStore _profileStore = getIt<ProfileStore>();
-
 
   @override
   void initState() {
     _profileStore.getProfile().then((value) {
-      popUpTheData().then((value){});
-
+      popUpTheData().then((value) {});
     });
     super.initState();
   }
+
   @override
-  void didChangeDependencies() async{
+  void didChangeDependencies() async {
     popUpTheData();
     super.didChangeDependencies();
   }
@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white10.withOpacity(0.1),
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -75,7 +75,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildBody() {
-    return _buildMainContent();
+    return Observer(builder: (context) {
+      _profileStore.isProfileInProcess
+          ? CustomProgressIndicatorWidget()
+          : _buildMainContent();
+    });
   }
 
   Widget _buildMainContent() {
@@ -85,20 +89,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
           alignment: Alignment.topLeft,
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.35,
-            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
+            child: Opacity(
+                opacity: 0.25,
+                child: Image.asset('assets/images/background/bottomRight.png')),
           ),
         ),
         Align(
           alignment: Alignment.bottomRight,
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
-            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
+            child: Opacity(
+                opacity: 0.25,
+                child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 30),
           child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -246,7 +255,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return TextFieldWidget(
       hint: 'Enter Your Weight',
       inputType: TextInputType.number,
-
       imageIcon: 'assets/icons/Weight.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
@@ -283,12 +291,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<void> popUpTheData()async {
-    nameController.text= _profileStore.currentUserProfile?.name ?? "";
-    emailController.text= _profileStore.currentUserProfile?.email ?? "";
-    genderController.text=_profileStore.currentUserProfile?.gender ?? "";
-    ageController.text=_profileStore.currentUserProfile?.age ?? "";
-    heightController.text=_profileStore.currentUserProfile?.height ?? "";
-    weightController.text=_profileStore.currentUserProfile?.weight ?? "";
+  Future<void> popUpTheData() async {
+    nameController.text = _profileStore.currentUserProfile?.name ?? "";
+    emailController.text = _profileStore.currentUserProfile?.email ?? "";
+    genderController.text = _profileStore.currentUserProfile?.gender ?? "";
+    ageController.text = _profileStore.currentUserProfile?.age ?? "";
+    heightController.text = _profileStore.currentUserProfile?.height ?? "";
+    weightController.text = _profileStore.currentUserProfile?.weight ?? "";
   }
 }
