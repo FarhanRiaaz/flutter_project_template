@@ -6,7 +6,6 @@ import 'package:second_opinion_app/widgets/doctors_widget.dart';
 
 import '../../utils/routes/routes.dart';
 
-
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({
     Key? key,
@@ -33,6 +32,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     return Scaffold(
       body: _buildBody(),
       appBar: _buildAppBar(),
+      floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
@@ -91,7 +91,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     return AppBar(
       leading: _buildLeadingButton(),
       title: _buildTitle(),
-      actions: _buildAction(),
+      // actions: _buildAction(),
       centerTitle: true,
     );
   }
@@ -180,4 +180,10 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   List<Widget> _buildAction() {
     return [_buildAddButton()];
   }
+
+ FloatingActionButton _buildFloatingActionButton() {
+
+    return FloatingActionButton(onPressed: (){ Navigator.pushNamed(context, Routes.categories);},child: Icon(Icons.add,color: Colors.white,),backgroundColor: Color(0xFFec652a),);
+
+ }
 }

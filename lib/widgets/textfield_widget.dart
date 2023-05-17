@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 class TextFieldWidget extends StatelessWidget {
   final IconData? icon;
   final String? hint;
+  final Widget? suffixIcon;
   final String? errorText;
   final bool isObscure;
   final bool isIcon;
@@ -57,6 +58,8 @@ class TextFieldWidget extends StatelessWidget {
                 hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
                 errorText: errorText,
                 counterText: '',
+                suffixIcon: suffixIcon
+
                 // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
               )
             : InputDecoration(
@@ -69,7 +72,7 @@ class TextFieldWidget extends StatelessWidget {
                 hintText: this.hint,
                 hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: hintColor),
 
-                counterText: '',
+                counterText: '', suffixIcon: suffixIcon
                 // icon: this.isIcon ? Icon(this.icon, color: iconColor) : null,
               ),
       ),
@@ -86,6 +89,7 @@ class TextFieldWidget extends StatelessWidget {
     required this.textController,
     this.inputType,
     this.hint,
+      this.suffixIcon,
     this.isObscure = false,
     this.isIcon = true,
     this.padding = const EdgeInsets.all(0),

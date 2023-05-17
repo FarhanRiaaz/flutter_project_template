@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart' as flex;
 import '../../widgets/textfield_widget.dart';
@@ -19,6 +20,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
   TextEditingController heightController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
+
+  bool isCm = true;
+
+  bool isLbs = true;
 
   @override
   Widget build(BuildContext context) {
@@ -198,15 +203,27 @@ class _AddUserScreenState extends State<AddUserScreen> {
   }
 
   Widget _buildGenderField() {
-    return TextFieldWidget(
-      hint: 'Enter Your Gender',
-      inputType: TextInputType.text,
-      icon: Icons.female_rounded,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      textController: genderController,
+    List<String> items = ['Male', 'Female'];
+    String? selectedGender;
+
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        hintText: 'Gender',
+        hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
+        prefixIcon: Image.asset('assets/icons/Gender.png'),
+      ),
+      value: selectedGender,
+      items: items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedGender = value!;
+        });
+      },
     );
   }
 
@@ -225,9 +242,20 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   Widget _buildWeightField() {
     return TextFieldWidget(
-      hint: 'Enter Weight',
+      suffixIcon: IconButton(
+        onPressed: () {
+          setState(() {
+            isLbs = !isLbs; // toggle between lbs and kgs
+          });
+        },
+        icon: Text(
+          isLbs ? 'lbs' : 'kgs',
+          style: TextStyle(color: Colors.grey[600], fontSize: 16),
+        ),
+      ),
+      hint: 'Weight',
       inputType: TextInputType.number,
-      icon: Icons.monitor_weight_outlined,
+      imageIcon: 'assets/icons/Weight.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
@@ -238,9 +266,20 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   Widget _buildHeightField() {
     return TextFieldWidget(
-      hint: 'Enter Height',
+      suffixIcon: IconButton(
+        onPressed: () {
+          setState(() {
+            isCm = !isCm; // toggle between lbs and kgs
+          });
+        },
+        icon: Text(
+          isCm ? 'cm' : 'ft',
+          style: TextStyle(color: Colors.grey[600], fontSize: 16),
+        ),
+      ),
+      hint: 'Height',
       inputType: TextInputType.number,
-      icon: Icons.height_rounded,
+      imageIcon: 'assets/icons/Scale.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
@@ -251,6 +290,20 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   Widget _buildDOBField() {
     return TextFieldWidget(
+      imageIcon: 'assets/icons/Calender2.png',
+      isReadOnly: true,
+      onTap: () async {
+        final DateTime? selectedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+        );
+
+        if (selectedDate != null) {
+          dobController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+        }
+      },
       hint: 'Enter Your Date of Birth',
       inputType: TextInputType.number,
       icon: Icons.calendar_month_rounded,
@@ -261,4 +314,5 @@ class _AddUserScreenState extends State<AddUserScreen> {
       textController: dobController,
     );
   }
+
 }

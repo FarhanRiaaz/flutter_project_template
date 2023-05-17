@@ -26,6 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   ProfileStore _profileStore = getIt<ProfileStore>();
 
+  bool isLbs = true;
+
+  bool isCm = true;
+
   @override
   void initState() {
     _profileStore.getProfile().then((value) {
@@ -76,9 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildBody() {
     return Observer(builder: (context) {
-      _profileStore.isProfileInProcess
-          ? CustomProgressIndicatorWidget()
-          : _buildMainContent();
+      return _profileStore.isProfileInProcess ? CustomProgressIndicatorWidget() : _buildMainContent();
     });
   }
 
@@ -89,25 +91,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           alignment: Alignment.topLeft,
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.35,
-            child: Opacity(
-                opacity: 0.25,
-                child: Image.asset('assets/images/background/bottomRight.png')),
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
           ),
         ),
         Align(
           alignment: Alignment.bottomRight,
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
-            child: Opacity(
-                opacity: 0.25,
-                child: Image.asset('assets/images/background/topLeft.png')),
+            child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 30),
           child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -238,22 +235,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildGenderField() {
-    return TextFieldWidget(
-      hint: 'Enter Your Gender',
-      imageIcon: 'assets/icons/Gender.png',
-      inputType: TextInputType.text,
-      icon: Icons.female_rounded,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      textController: genderController,
+    List<String> items = ['Male', 'Female'];
+    String? selectedGender;
+
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        hintText: 'Gender',
+        hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
+        prefixIcon: Image.asset('assets/icons/Gender.png'),
+      ),
+      value: selectedGender,
+      items: items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedGender = value!;
+        });
+      },
     );
   }
 
   Widget _buildWeightField() {
     return TextFieldWidget(
-      hint: 'Enter Your Weight',
+      hint: 'Weight',
       inputType: TextInputType.number,
       imageIcon: 'assets/icons/Weight.png',
       inputAction: TextInputAction.next,
@@ -261,12 +269,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
       textController: weightController,
+      suffixIcon: IconButton(
+        onPressed: () {
+          setState(() {
+            isLbs = !isLbs; // toggle between lbs and kgs
+          });
+        },
+        icon: Text(
+          isLbs ? 'lbs' : 'kgs',
+          style: TextStyle(color: Colors.grey[600], fontSize: 16),
+        ),
+      ),
     );
   }
 
   Widget _buildHeightField() {
     return TextFieldWidget(
-      hint: 'Enter Your Height',
+
+      hint: 'Height',
       inputType: TextInputType.number,
       icon: Icons.height_rounded,
       imageIcon: 'assets/icons/Scale.png',
@@ -275,6 +295,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
       textController: heightController,
+      suffixIcon: IconButton(
+        onPressed: () {
+          setState(() {
+            isCm = !isCm; // toggle between lbs and kgs
+          });
+        },
+        icon: Text(
+          isCm ? 'cm' : 'ft',
+          style: TextStyle(color: Colors.grey[600], fontSize: 16),
+        ),
+      ),
     );
   }
 

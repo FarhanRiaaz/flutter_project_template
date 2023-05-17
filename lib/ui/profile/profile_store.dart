@@ -13,8 +13,7 @@ abstract class _ProfileStore with Store {
   final Repository _repository;
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<ProfileResponse> emptyProfileResponse =
-  ObservableFuture.value(ProfileResponse());
+  static ObservableFuture<ProfileResponse> emptyProfileResponse = ObservableFuture.value(ProfileResponse());
 
   @observable
   ObservableFuture<ProfileResponse> profileFuture = emptyProfileResponse;
@@ -28,7 +27,7 @@ abstract class _ProfileStore with Store {
   @action
   Future getProfile() async {
     final future = _repository.getProfile();
-     profileFuture = ObservableFuture(future);
+    profileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {
         currentUserProfile = value;

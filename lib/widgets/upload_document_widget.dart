@@ -108,17 +108,27 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
   }
 
   Widget _buildSelectUserField() {
-    return TextFieldWidget(
-      padding: EdgeInsets.zero,
-      hint: 'Select User',
-      imageIcon: 'assets/icons/Person.png',
-      inputType: TextInputType.name,
-      icon: Icons.person_outline_rounded,
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      textController: TextEditingController(),
+    List<String> items = ['User1', 'User2', 'User3'];
+    String? selectedItem;
+
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        hintText: 'Select User',
+        hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
+        prefixIcon: Image.asset('assets/icons/Person.png'),
+      ),
+      value: selectedItem,
+      items: items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedItem = value!;
+        });
+      },
     );
   }
 
