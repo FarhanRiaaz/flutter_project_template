@@ -1,64 +1,49 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
+
+import '../../data/repository/repository.dart';
+import '../../models/profile/profile_response.dart';
+
 part 'profile_store.g.dart';
 
 class ProfileStore = _ProfileStore with _$ProfileStore;
 
 abstract class _ProfileStore with Store {
-  @observable
-  int id;
+  final Repository _repository;
+
+  // empty responses:-----------------------------------------------------------
+  static ObservableFuture<ProfileResponse> emptyProfileResponse =
+  ObservableFuture.value(ProfileResponse());
 
   @observable
-  String name;
+  ObservableFuture<ProfileResponse> profileFuture = emptyProfileResponse;
 
   @observable
-  String email;
+  ProfileResponse? currentUserProfile;
 
-  @observable
-  String profileImg;
-
-  @observable
-  String gender;
-
-  @observable
-  String age;
-
-  @observable
-  String weight;
-
-  @observable
-  String height;
+  @computed
+  bool get isProfileInProcess => profileFuture.status == FutureStatus.pending;
 
   @action
-  Future<void> fetchProfileData() async {
-    final response = await http.get(Uri.parse('https://sop.zpexsolutions.com/patient-app/api/profile'));
-    print('object');
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      id = data['id'];
-      name = data['user']['name'];
-      email = data['user']['email'];
-      profileImg = data['profileImg'];
-      gender = data['gender'];
-      age = data['age'];
-      weight = data['weight'];
-      height = data['height'];
-    } else {
-      throw Exception('Failed to fetch profile data');
-    }
+  Future getProfile() async {
+    final future = _repository.getProfile();
+     profileFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.id != null) {
+        currentUserProfile = value;
+      } else {
+        print('failed to login\nInvalid creds are provided!');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to login\nInvalid creds are provided!\n${e.toString()}');
+      throw e;
+    });
   }
 
-  _ProfileStore({
-    this.id = 0,
-    this.name = '',
-    this.email = '',
-    this.profileImg = '',
-    this.gender = '',
-    this.age = '',
-    this.weight = '',
-    this.height = '',
-  }) {
-    fetchProfileData();
-  }
+  _ProfileStore(
+    Repository repository,
+  ) : this._repository = repository {}
 }

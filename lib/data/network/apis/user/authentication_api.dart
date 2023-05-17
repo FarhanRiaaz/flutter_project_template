@@ -25,8 +25,8 @@ class AuthenticationApi {
     var req = registerRequest.toJson();
     try {
       final res = await _dioClient.post(Endpoints.register, data: req,);
-      if (res != null && RegisterUserResponse.fromJson(res.data).name != null) {
-        return RegisterUserResponse.fromJson(res.data);
+      if (res != null && RegisterUserResponse.fromJson(res).name != null) {
+        return RegisterUserResponse.fromJson(res);
       } else {
         print("Null response received!\nregisterUser()");
         return RegisterUserResponse();
@@ -39,32 +39,17 @@ class AuthenticationApi {
 
   /// method to login user it will respond with token otherwise with an error
   Future<LoginUserResponse> loginUser(LoginRequest request) async {
+    var req = request.toJson();
     try {
-      FormData formData = FormData.fromMap({
-        'email': request.email,
-        'password': request.password,
-      });
-
-      final res = await _dioClient.post(
-
-        Endpoints.login,
-        data: formData,
-        options: Options(
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        ),
-      );
-
-      if (res.statusCode == 200) {
-        return LoginUserResponse.fromJson(res.data);
+      final res = await _dioClient.post(Endpoints.login, data: req);
+      if (res != null) {
+        return LoginUserResponse.fromJson(res);
       } else {
-        throw Exception("Null response received!");
+        throw Future.error(Exception("Null response received!\loginUser()"));
       }
     } catch (e) {
       print(e.toString());
       throw e;
     }
   }
-
 }

@@ -15,4 +15,5 @@ class Endpoints {
   static const String login = baseUrl + "/login";
   static const String logout = baseUrl + "/logout";
   static const String profile = baseUrl + "/profile";
+
 }

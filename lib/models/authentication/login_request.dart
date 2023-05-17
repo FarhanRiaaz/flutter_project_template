@@ -15,4 +15,19 @@ class LoginRequest {
     data['password'] = this.password;
     return data;
   }
+
+  factory LoginRequest.fromMap(Map<String, dynamic> map) {
+    return LoginRequest(
+      email: map['email'],
+      password: map['password'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'email': email,
+      'password': password,
+    };
+  }
 }
+

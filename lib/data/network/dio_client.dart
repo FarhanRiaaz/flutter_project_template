@@ -31,7 +31,7 @@ class DioClient {
   }
 
   // Post:----------------------------------------------------------------------
-  Future<Response> post(
+  Future<dynamic> post(
       String uri, {
         data,
         Map<String, dynamic>? queryParameters,
@@ -50,7 +50,10 @@ class DioClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return response;
+
+
+
+      return response.data;
     } catch (e) {
       throw e;
     }

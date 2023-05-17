@@ -1,6 +1,7 @@
 
 import 'package:second_opinion_app/data/local/datasources/post/post_datasource.dart';
 import 'package:second_opinion_app/data/network/apis/posts/post_api.dart';
+import 'package:second_opinion_app/data/network/apis/profile/profile_api.dart';
 import 'package:second_opinion_app/data/network/dio_client.dart';
 import 'package:second_opinion_app/data/network/rest_client.dart';
 import 'package:second_opinion_app/data/repository/repository.dart';
@@ -15,6 +16,7 @@ import 'package:second_opinion_app/stores/theme/theme_store.dart';
 import 'package:second_opinion_app/stores/user/user_store.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,9 +25,11 @@ import '../../data/network/apis/user/authentication_api.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupLocator() async {
+
   // factories:-----------------------------------------------------------------
   getIt.registerFactory(() => ErrorStore());
   getIt.registerFactory(() => FormStore());
+
 
   // async singletons:----------------------------------------------------------
   getIt.registerSingletonAsync<Database>(() => LocalModule.provideDatabase());
@@ -40,6 +44,7 @@ Future<void> setupLocator() async {
   // api's:---------------------------------------------------------------------
   getIt.registerSingleton(PostApi(getIt<DioClient>(), getIt<RestClient>()));
   getIt.registerSingleton(AuthenticationApi(getIt<DioClient>(), getIt<RestClient>()));
+  getIt.registerSingleton(ProfileApi(getIt<DioClient>()));
 
   // data sources
   getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
@@ -48,6 +53,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(Repository(
     getIt<AuthenticationApi>(),
     getIt<SharedPreferenceHelper>(),
+    getIt<ProfileApi>()
   ));
 
   // stores:--------------------------------------------------------------------
@@ -55,4 +61,5 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(PostStore(getIt<Repository>()));
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   getIt.registerSingleton(UserStore(getIt<Repository>()));
+  getIt.registerSingleton(ProfileStore(getIt<Repository>()));
 }
