@@ -5,7 +5,6 @@ import '../more/more.dart';
 import '../reports/report.dart';
 import '../second_opinion/doctors.dart';
 
-
 class PageViewScreen extends StatefulWidget {
   const PageViewScreen({super.key});
 
@@ -35,9 +34,7 @@ class _PageViewScreenState extends State<PageViewScreen> {
           });
         },
       ),
-      DoctorsScreen(
-
-      ),
+      DoctorsScreen(),
       MoreScreen(
         onBackPressed: () {
           setState(() {
@@ -48,38 +45,46 @@ class _PageViewScreenState extends State<PageViewScreen> {
     ][currentPageIndex];
   }
 
-  List<Widget> _buildDestinationList() {
-    return <Widget>[
-      NavigationDestination(
-        icon: currentPageIndex != 0 ? Icon(Icons.home_max_rounded) : Icon(Icons.home_max_rounded,color: Theme.of(context).primaryColor,),
-        label: 'Home',
-      ),
-      NavigationDestination(
+  List<BottomNavigationBarItem> _buildDestinationList() {
+    return [
+      BottomNavigationBarItem(
+          icon: currentPageIndex != 0
+              ? ImageIcon(AssetImage(
+                  'assets/icons/homeIcon.png',
+                ),size: 40,)
+              : ImageIcon(
+                  AssetImage(
+                    'assets/icons/homeIcon.png',
+                  ),size: 40,
+                  color: Theme.of(context).primaryColor,
+                ),
+          label: 'Home'),
+      BottomNavigationBarItem(
         icon: currentPageIndex != 1
             ? ImageIcon(AssetImage(
-                'assets/icons/unselected_report.png',
-              ))
+                'assets/icons/reportIcon.png',
+              ),size: 40,)
             : ImageIcon(
                 AssetImage(
-                  'assets/icons/unselected_report.png',
-                ),
-                color: Theme.of(context).primaryColor,
+                  'assets/icons/reportIcon.png',
+                ),size: 40,
+                color: Color(0xFF1ce0a3),
               ),
         label: 'Report',
       ),
-      NavigationDestination(
+      BottomNavigationBarItem(
         icon: currentPageIndex != 2
             ? ImageIcon(AssetImage(
-                'assets/icons/unselected_opinion.png',
-              ))
+                'assets/icons/secondOpinionIcon.png',
+              ),size: 40,)
             : ImageIcon(
                 AssetImage(
-                  'assets/icons/unselected_opinion.png',
-                ),
-                color: Theme.of(context).primaryColor),
-        label: 'Second Opinion',
+                  'assets/icons/secondOpinionIcon.png',
+                ),size: 70,
+                color: Color(0xFFec652a)),
+        label: 'Second',
       ),
-      NavigationDestination(
+      BottomNavigationBarItem(
         icon: currentPageIndex != 3
             ? ImageIcon(AssetImage(
                 'assets/icons/More_unselected.png',
@@ -95,14 +100,33 @@ class _PageViewScreenState extends State<PageViewScreen> {
   }
 
   Widget _buildBottomNavBar() {
-    return NavigationBar(
-        elevation: 5,
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        selectedIndex: currentPageIndex,
-        destinations: _buildDestinationList());
+    Color selectedItemColor = Theme.of(context).primaryColor;
+    switch (currentPageIndex) {
+      case 1:
+        selectedItemColor = Color(0xFF1ce0a3);
+        break;
+      case 2:
+        selectedItemColor = Color(0xFFec652a);
+        break;
+      default:
+        selectedItemColor = Theme.of(context).primaryColor;
+    }
+
+    return BottomNavigationBar(
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      unselectedLabelStyle: TextStyle(overflow: TextOverflow.visible),
+      type: BottomNavigationBarType.fixed,
+      elevation: 5,
+      selectedLabelStyle: TextStyle(overflow: TextOverflow.visible),
+      onTap: (int index) {
+        setState(() {
+          currentPageIndex = index;
+        });
+      },
+      currentIndex: currentPageIndex,
+      selectedItemColor: selectedItemColor,
+      items: _buildDestinationList(),
+    );
   }
 }

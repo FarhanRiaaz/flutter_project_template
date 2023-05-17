@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../utils/routes/routes.dart';
 import '../../widgets/textfield_widget.dart';
@@ -49,10 +51,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _buildTitle() {
     return Text(
       'Second Opinion',
-      style: Theme
-          .of(context)
-          .textTheme
-          .headlineMedium,
+      style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
@@ -66,20 +65,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Align(
           alignment: Alignment.topLeft,
           child: SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.35,
+            width: MediaQuery.of(context).size.width * 0.35,
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
           ),
         ),
         Align(
           alignment: Alignment.bottomRight,
           child: SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * 0.7,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
@@ -88,10 +81,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Stack(
             children: [
               SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: MediaQuery
-                    .of(context)
-                    .viewInsets
-                    .bottom),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,15 +105,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               Align(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery
-                      .of(context)
-                      .viewInsets
-                      .bottom + 8),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
                   child: SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.9,
+                    width: MediaQuery.of(context).size.width * 0.9,
                     child: _buildProceedButton(),
                   ),
                 ),
@@ -137,10 +121,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildExpiryField() {
+    final MaskTextInputFormatter maskFormatter =
+        MaskTextInputFormatter(mask: '##/##', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.eager);
+
     return TextFieldWidget(
+
+      inputFormat: [maskFormatter],
       hint: 'Expiry Date',
       imageIcon: 'assets/icons/Calender2.png',
-      inputType: TextInputType.visiblePassword,
+      inputType: TextInputType.number,
       icon: Icons.phone_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
@@ -152,7 +141,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildCvvField() {
+    final MaskTextInputFormatter maskFormatter =
+    MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.eager);
     return TextFieldWidget(
+      inputFormat: [maskFormatter],
       hint: 'CVV',
       imageIcon: 'assets/icons/CreditCard.png',
       inputType: TextInputType.number,
@@ -167,7 +159,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildCardNumberField() {
+    final MaskTextInputFormatter maskFormatter =
+    MaskTextInputFormatter(mask: '####  ####  ####  ####', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.eager);
     return TextFieldWidget(
+      inputFormat: [maskFormatter],
       hint: 'Card Number',
       inputType: TextInputType.number,
       icon: Icons.credit_card,
@@ -177,7 +172,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
       errorText: '',
-      textController: cvvController,
+      textController: cardNumberController,
     );
   }
 
@@ -192,7 +187,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
       errorText: '',
-      textController: cvvController,
+      textController: nameController,
     );
   }
 
@@ -203,9 +198,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Checkbox(
-            activeColor: Theme
-                .of(context)
-                .primaryColor,
+            activeColor: Theme.of(context).primaryColor,
             checkColor: Colors.white,
             value: checked,
             onChanged: (value) {
@@ -214,10 +207,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               });
             },
           ),
-          Text('Save for the future checkouts', style: Theme
-              .of(context)
-              .textTheme
-              .labelSmall),
+          Text('Save for the future checkouts', style: Theme.of(context).textTheme.labelSmall),
         ],
       ),
     );
@@ -229,7 +219,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: ElevatedButton(
         onPressed: () async {
           await showCongradulationsDialog(context);
-          Navigator.pushNamed(context, Routes.home);
+          Navigator.pushNamedAndRemoveUntil(context, Routes.home, (route) => false);
         },
         child: Text('Pay Now'),
       ),
@@ -301,6 +291,39 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class ExpiryDateFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    // Get the new input text and remove any non-numeric characters
+    String newInput = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // If the new input is longer than 4 digits, truncate it to 4 digits
+    if (newInput.length > 4) {
+      newInput = newInput.substring(0, 4);
+    }
+
+    // If the new input has less than 4 digits, return it as is
+    if (newInput.length < 4) {
+      return TextEditingValue(
+        text: newInput,
+        selection: TextSelection.fromPosition(
+          TextPosition(offset: newInput.length),
+        ),
+      );
+    }
+
+    // If the new input has 4 digits, format it as MM/YY
+    String formattedValue = '${newInput.substring(0, 2)}/${newInput.substring(2)}';
+
+    return TextEditingValue(
+      text: formattedValue,
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: formattedValue.length),
+      ),
     );
   }
 }

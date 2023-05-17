@@ -345,7 +345,7 @@ class _RegistrationState extends State<Registration> {
           if (_store.canRegister) {
             DeviceUtils.hideKeyboard(context);
             await _userStore
-                .register(_store.userEmail, _store.confirmPassword, _store.name)
+                .register(_store.userEmail, _store.confirmPassword, _store.name,context)
                 .then((value) {
                   DialogHelper.showRegistrationDialog(context, Strings.congratulations, Strings.continueText, Strings.registerSuccessMessage, () {
                     Navigator.pop(context);

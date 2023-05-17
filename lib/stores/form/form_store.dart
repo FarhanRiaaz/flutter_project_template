@@ -187,7 +187,7 @@ abstract class _FormStore with Store {
   Future login() async {
     loading = true;
 
-    Future.delayed(Duration(milliseconds: 2000)).then((future) {
+    Future.delayed(Duration(milliseconds: 250)).then((future) {
       loading = false;
       success = true;
     }).catchError((e) {

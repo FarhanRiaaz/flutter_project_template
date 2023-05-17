@@ -274,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_store.canLogin) {
             DeviceUtils.hideKeyboard(context);
             await _userStore
-                .login(_store.userEmail, _store.password)
+                .login(_store.userEmail, _store.password,context)
                 .then((value) {
               _store.login();
             });

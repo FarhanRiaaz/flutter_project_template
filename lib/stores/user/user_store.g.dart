@@ -91,17 +91,18 @@ mixin _$UserStore on _UserStore, Store {
       AsyncAction('_UserStore.register', context: context);
 
   @override
-  Future<dynamic> register(String email, String password, String name) {
+  Future<dynamic> register(
+      String email, String password, String name, BuildContext context) {
     return _$registerAsyncAction
-        .run(() => super.register(email, password, name));
+        .run(() => super.register(email, password, name, context));
   }
 
   late final _$loginAsyncAction =
       AsyncAction('_UserStore.login', context: context);
 
   @override
-  Future<dynamic> login(String email, String password) {
-    return _$loginAsyncAction.run(() => super.login(email, password));
+  Future<dynamic> login(String email, String password, BuildContext context) {
+    return _$loginAsyncAction.run(() => super.login(email, password, context));
   }
 
   @override

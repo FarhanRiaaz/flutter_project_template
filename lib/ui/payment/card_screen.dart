@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../utils/routes/routes.dart';
 import '../../widgets/textfield_widget.dart';
@@ -41,7 +42,10 @@ class _CardScreenState extends State<CardScreen> {
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const Icon(Icons.arrow_back_ios_new_rounded,color: Colors.black,),
+      icon: const Icon(
+        Icons.arrow_back_ios_new_rounded,
+        color: Colors.black,
+      ),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -86,7 +90,7 @@ class _CardScreenState extends State<CardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                   // _buildPaymentMethodType(),
+                    // _buildPaymentMethodType(),
                     _buildCreditCard(),
                     SizedBox(
                       height: 20,
@@ -126,7 +130,7 @@ class _CardScreenState extends State<CardScreen> {
               ),
               Align(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: _buildProceedButton(),
@@ -142,10 +146,13 @@ class _CardScreenState extends State<CardScreen> {
   }
 
   Widget _buildExpiryField() {
+    final MaskTextInputFormatter maskFormatter =
+        MaskTextInputFormatter(mask: '##/##', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.eager);
     return TextFieldWidget(
+      inputFormat: [maskFormatter],
       hint: 'Expiry Date',
       imageIcon: 'assets/icons/Calender2.png',
-      inputType: TextInputType.visiblePassword,
+      inputType: TextInputType.number,
       icon: Icons.phone_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
@@ -156,7 +163,11 @@ class _CardScreenState extends State<CardScreen> {
   }
 
   Widget _buildCvvField() {
+    final MaskTextInputFormatter maskFormatter =
+        MaskTextInputFormatter(mask: '###', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.eager);
+
     return TextFieldWidget(
+      inputFormat: [maskFormatter],
       hint: 'CVV',
       imageIcon: 'assets/icons/CreditCard.png',
       inputType: TextInputType.number,
@@ -170,8 +181,12 @@ class _CardScreenState extends State<CardScreen> {
   }
 
   Widget _buildCardNumberField() {
+    final MaskTextInputFormatter maskFormatter = MaskTextInputFormatter(
+        mask: '####  ####  ####  ####', filter: {"#": RegExp(r'[0-9]')}, type: MaskAutoCompletionType.eager);
+
     return Material(
       child: TextFieldWidget(
+        inputFormat: [maskFormatter],
         hint: 'Card Number',
         inputType: TextInputType.number,
         icon: Icons.credit_card,
@@ -180,7 +195,7 @@ class _CardScreenState extends State<CardScreen> {
         autoFocus: false,
         onChanged: (value) {},
         onFieldSubmitted: (value) {},
-        textController: cvvController,
+        textController: cardNumberController,
       ),
     );
   }
@@ -195,7 +210,7 @@ class _CardScreenState extends State<CardScreen> {
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      textController: cvvController,
+      textController: nameController,
     );
   }
 
@@ -329,7 +344,6 @@ class _CardScreenState extends State<CardScreen> {
             ),
             CarouselSlider(
                 options: CarouselOptions(
-
                   aspectRatio: 11 / 9,
                   padEnds: false,
                   viewportFraction: 1,
@@ -353,7 +367,6 @@ class _CardScreenState extends State<CardScreen> {
                       textExpDate: 'Exp. Date',
                       textName: 'Name',
                       textExpiry: 'MM/YY'),
-
                 ]),
           ],
         ),

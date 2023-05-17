@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:second_opinion_app/models/authentication/login_user_response.dart';
 import 'package:second_opinion_app/models/authentication/register_user_response.dart';
 import 'package:second_opinion_app/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
-
+import 'package:another_flushbar/flushbar_helper.dart';
 import '../../data/repository/repository.dart';
+import '../../utils/locale/app_localization.dart';
 import '../form/form_store.dart';
 
 part 'user_store.g.dart';
@@ -44,11 +46,9 @@ abstract class _UserStore with Store {
   }
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<LoginUserResponse> emptyLoginResponse =
-      ObservableFuture.value(LoginUserResponse());
+  static ObservableFuture<LoginUserResponse> emptyLoginResponse = ObservableFuture.value(LoginUserResponse());
 
-  static ObservableFuture<RegisterUserResponse> emptyRegisterResponse =
-      ObservableFuture.value(RegisterUserResponse());
+  static ObservableFuture<RegisterUserResponse> emptyRegisterResponse = ObservableFuture.value(RegisterUserResponse());
 
   // store variables:-----------------------------------------------------------
   @observable
@@ -58,15 +58,13 @@ abstract class _UserStore with Store {
   User currentUser = User();
 
   @observable
-  ObservableFuture<RegisterUserResponse> registerUserFuture =
-      emptyRegisterResponse;
+  ObservableFuture<RegisterUserResponse> registerUserFuture = emptyRegisterResponse;
 
   @observable
   ObservableFuture<LoginUserResponse> loginFuture = emptyLoginResponse;
 
   @computed
-  bool get isRegistrationInProcess =>
-      registerUserFuture.status == FutureStatus.pending;
+  bool get isRegistrationInProcess => registerUserFuture.status == FutureStatus.pending;
 
   @computed
   bool get isLoginInProcess => loginFuture.status == FutureStatus.pending;
@@ -74,7 +72,7 @@ abstract class _UserStore with Store {
   // actions:-------------------------------------------------------------------
 
   @action
-  Future register(String email, String password, String name) async {
+  Future register(String email, String password, String name, BuildContext context) async {
     final future = _repository.register(name, password, email);
     registerUserFuture = ObservableFuture(future);
     await future.then((value) async {
@@ -85,13 +83,18 @@ abstract class _UserStore with Store {
       }
     }).catchError((e) {
       print(e);
+      FlushbarHelper.createError(
+        message: 'Failed to register, Email Already Exists',
+        title: AppLocalizations.of(context).translate('home_tv_error'),
+        duration: Duration(seconds: 3),
+      )..show(context);
       print('failed to register\nEmail already exists!\n ${e.toString()}');
       throw e;
     });
   }
 
   @action
-  Future login(String email, String password) async {
+  Future login(String email, String password, BuildContext context) async {
     final future = _repository.login(email, password);
     loginFuture = ObservableFuture(future);
     await future.then((value) async {
@@ -104,7 +107,11 @@ abstract class _UserStore with Store {
       }
     }).catchError((e) {
       print(e);
-
+      FlushbarHelper.createError(
+        message: 'Invalid Credentials',
+        title: AppLocalizations.of(context).translate('home_tv_error'),
+        duration: Duration(seconds: 3),
+      )..show(context);
       print('failed to login\nInvalid creds are provided!\n${e.toString()}');
       throw e;
     });

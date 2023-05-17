@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final IconData? icon;
@@ -20,12 +21,14 @@ class TextFieldWidget extends StatelessWidget {
   final String? imageIcon;
   final Function? onTap;
   bool isReadOnly ;
+  final List<TextInputFormatter>? inputFormat ;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
       child: TextFormField(
+        inputFormatters: inputFormat ?? [],
         readOnly: isReadOnly,
         onTap: (){
           onTap!();
@@ -75,6 +78,7 @@ class TextFieldWidget extends StatelessWidget {
 
     TextFieldWidget({
     Key? key,
+      this.inputFormat,
     this.icon,
     this.isReadOnly = false,
     this.maxLines = 1,

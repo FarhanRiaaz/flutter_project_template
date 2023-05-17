@@ -25,8 +25,8 @@ class AuthenticationApi {
     var req = registerRequest.toJson();
     try {
       final res = await _dioClient.post(Endpoints.register, data: req,);
-      if (res != null && RegisterUserResponse.fromJson(res).name != null) {
-        return RegisterUserResponse.fromJson(res);
+      if (res != null && RegisterUserResponse.fromJson(res.data).name != null) {
+        return RegisterUserResponse.fromJson(res.data);
       } else {
         print("Null response received!\nregisterUser()");
         return RegisterUserResponse();
@@ -46,6 +46,7 @@ class AuthenticationApi {
       });
 
       final res = await _dioClient.post(
+
         Endpoints.login,
         data: formData,
         options: Options(
@@ -55,8 +56,8 @@ class AuthenticationApi {
         ),
       );
 
-      if (res != null) {
-        return LoginUserResponse.fromJson(res);
+      if (res.statusCode == 200) {
+        return LoginUserResponse.fromJson(res.data);
       } else {
         throw Exception("Null response received!");
       }

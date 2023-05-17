@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       title: Image.asset(
         'assets/icons/icon.png',
-        scale: 3.5,
+        scale: 3,
       ),
       centerTitle: true,
       backgroundColor: Colors.transparent,
