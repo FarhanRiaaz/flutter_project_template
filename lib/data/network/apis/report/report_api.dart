@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:second_opinion_app/models/report/upload_report_response.dart';
 
@@ -9,23 +11,26 @@ class ReportApi {
   // dio instance
   final DioClient _dioClient;
 
-  // rest-client instance
-  final RestClient _restClient;
-
   // injecting dio instance
-  ReportApi(this._dioClient, this._restClient);
+  ReportApi(this._dioClient);
 
-
-
-  Future<UploadReportResponse> uploadDocument(RegistrationRequest registerRequest) async {
+  Future<UploadReportResponse> uploadDocument(String fileName, String fileType,
+      File documentFile, int userId, String token) async {
     try {
-      FormData formData = FormData.fromMap(registerRequest.toJson());
+      FormData formData = FormData.fromMap({
+        'fileName': fileName,
+        'type': fileType,
+        'file':
+            await MultipartFile.fromFile(documentFile.path, filename: fileName),
+        'userId': userId,
+      });
 
       final res = await _dioClient.post(
         Endpoints.uploadDocument,
         data: formData,
         options: Options(
           headers: {
+            'Authorization': 'Token $token',
             'Content-Type': 'multipart/form-data',
           },
         ),
@@ -41,5 +46,4 @@ class ReportApi {
       throw e;
     }
   }
-
 }
