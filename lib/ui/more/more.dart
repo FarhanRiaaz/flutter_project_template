@@ -76,7 +76,7 @@ class _MoreScreenState extends State<MoreScreen> {
                  Navigator.push(context,MaterialPageRoute(builder: (context)=>CardScreen()));
                 }),
                 _buildIconCard('assets/icons/Setting.png', 'Setting', () { Navigator.pushNamed(context, Routes.setting);}),
-                _buildIconCard('assets/icons/info.png', 'About Us', () {Navigator.pushNamed(context, Routes.filter);}),
+                _buildIconCard('assets/icons/info.png', 'About Us', () { }),
               ],
             ),
           ),

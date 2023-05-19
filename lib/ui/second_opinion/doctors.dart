@@ -31,7 +31,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
-      appBar: _buildAppBar(),
+     // appBar: _buildAppBar(),
       floatingActionButton: _buildFloatingActionButton(),
     );
   }
@@ -79,16 +79,27 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: _buildListView(),
+        Column(
+          children: [
+            _buildAppBar(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+              child: _buildSearchBarWithButton(),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: _buildListView(),
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       title: _buildTitle(),
       // actions: _buildAction(),
@@ -100,7 +111,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
       onPressed: () {
-        Navigator.pop(context);
+
       },
     );
   }
@@ -111,11 +122,11 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
-
   Widget _buildSearchBarWithButton() {
     return Container(
+      height: 50,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
         color: Theme.of(context).primaryColor,
       ),
       child: Row(
@@ -124,8 +135,8 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
                 ),
                 color: Colors.white,
               ),
@@ -144,20 +155,25 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
               ),
               color: Theme.of(context).primaryColor,
             ),
             child: IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {},
+              icon: ImageIcon(
+                AssetImage('assets/icons/SettingSlider.png'),
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () {Navigator.pushNamed(context,Routes.filter);},
             ),
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildAddButton() {
     return Padding(
@@ -181,9 +197,16 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     return [_buildAddButton()];
   }
 
- FloatingActionButton _buildFloatingActionButton() {
-
-    return FloatingActionButton(onPressed: (){ Navigator.pushNamed(context, Routes.categories);},child: Icon(Icons.add,color: Colors.white,),backgroundColor: Color(0xFFec652a),);
-
- }
+  FloatingActionButton _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.pushNamed(context, Routes.categories);
+      },
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+      backgroundColor: Color(0xFFec652a),
+    );
+  }
 }

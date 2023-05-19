@@ -48,52 +48,36 @@ class _PageViewScreenState extends State<PageViewScreen> {
   List<BottomNavigationBarItem> _buildDestinationList() {
     return [
       BottomNavigationBarItem(
-          icon: currentPageIndex != 0
-              ? ImageIcon(AssetImage(
-                  'assets/icons/homeIcon.png',
-                ),size: 40,)
-              : ImageIcon(
-                  AssetImage(
-                    'assets/icons/homeIcon.png',
-                  ),size: 40,
-                  color: Theme.of(context).primaryColor,
-                ),
+          icon: ImageIcon(
+            AssetImage(
+              'assets/icons/Selected_home.png',
+            ),
+            color: Theme.of(context).primaryColor,
+          ),
           label: 'Home'),
       BottomNavigationBarItem(
-        icon: currentPageIndex != 1
-            ? ImageIcon(AssetImage(
-                'assets/icons/reportIcon.png',
-              ),size: 40,)
-            : ImageIcon(
-                AssetImage(
-                  'assets/icons/reportIcon.png',
-                ),size: 40,
-                color: Color(0xFF1ce0a3),
-              ),
+        icon: ImageIcon(
+          AssetImage(
+            'assets/icons/unselected_report.png',
+          ),
+          color: Color(0xFF1ce0a3),
+        ),
         label: 'Report',
       ),
       BottomNavigationBarItem(
-        icon: currentPageIndex != 2
-            ? ImageIcon(AssetImage(
-                'assets/icons/secondOpinionIcon.png',
-              ),size: 40,)
-            : ImageIcon(
-                AssetImage(
-                  'assets/icons/secondOpinionIcon.png',
-                ),size: 50,
-                color: Color(0xFFec652a)),
-        label: 'Second',
+        icon: ImageIcon(
+            AssetImage(
+              'assets/icons/unselected_opinion.png',
+            ),
+            color: Color(0xFFec652a)),
+        label: 'Second Opinion',
       ),
       BottomNavigationBarItem(
-        icon: currentPageIndex != 3
-            ? ImageIcon(AssetImage(
-                'assets/icons/More_unselected.png',
-              ))
-            : ImageIcon(
-                AssetImage(
-                  'assets/icons/More_unselected.png',
-                ),
-                color: Theme.of(context).primaryColor),
+        icon: ImageIcon(
+            AssetImage(
+              'assets/icons/More_unselected.png',
+            ),
+            color: Theme.of(context).primaryColor),
         label: 'More',
       ),
     ];
@@ -113,8 +97,8 @@ class _PageViewScreenState extends State<PageViewScreen> {
     }
 
     return BottomNavigationBar(
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
+      backgroundColor: Color(0xFF202a2b),
+      unselectedItemColor: Colors.white,
       unselectedLabelStyle: TextStyle(overflow: TextOverflow.visible),
       type: BottomNavigationBarType.fixed,
       elevation: 5,

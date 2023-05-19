@@ -98,7 +98,8 @@ class _IntroScreenState extends State<IntroScreen> {
                         height: 30,
                       ),
                       Text(
-                        'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
+                        'Welcome to Second Opinion! We\'re here to give you peace of mind, addressing your concerns and providing support for you and your loved ones.',
+
                       ),
                       SizedBox(
                         height: 10,
@@ -141,7 +142,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         height: 30,
                       ),
                       Text(
-                        'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
+                        'Our team of doctors, located across different geographical areas, carefully reviews every assessment, ensuring a diverse range of perspectives for your diagnosis.',
                       ),
                       SizedBox(
                         height: 10,
@@ -184,7 +185,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         height: 30,
                       ),
                       Text(
-                        'Welcome to Second Opinion app. We will provide you assistance in all health related problems',
+                        'Gain multiple perspectives on your diagnosis with Second Opinion. We offer peace of mind and help you make informed decisions about your health, empowering you with knowledge and confidence.',
                       ),
                       SizedBox(
                         height: 10,

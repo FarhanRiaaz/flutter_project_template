@@ -50,7 +50,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget _buildTitle() {
     return Text(
-      'Second Opinion',
+      'Card Details',
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
@@ -268,7 +268,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                     const SizedBox(height: 20.0),
                     const Text(
-                      "You have successfully made second opinion with us",
+                      "Your information has been forwarded to the doctors. We'll notify you shortly with their expert opinions.",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16.0, color: Color(0xFFBEBEBE)),
                     ),

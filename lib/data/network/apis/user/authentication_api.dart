@@ -45,7 +45,6 @@ class AuthenticationApi {
     }
   }
 
-
   /// method to login user it will respond with token otherwise with an error
   Future<LoginUserResponse> loginUser(LoginRequest request) async {
     try {

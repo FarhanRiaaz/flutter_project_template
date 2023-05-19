@@ -148,7 +148,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
   }
 
   Widget _buildFileTypeField() {
-    List<String> items = ['Test Report', 'Prescription', 'Medical certificate'];
+    List<String> items = ['Test Report', 'Prescription', 'Medical Report'];
     String? selectedItem;
 
     return DropdownButtonFormField<String>(

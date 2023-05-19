@@ -10,6 +10,7 @@ import 'package:second_opinion_app/utils/device/device_utils.dart';
 import 'package:second_opinion_app/utils/locale/app_localization.dart';
 import 'package:second_opinion_app/widgets/app_icon_widget.dart';
 import 'package:second_opinion_app/widgets/empty_app_bar_widget.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 import 'package:second_opinion_app/widgets/progress_indicator_widget.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 import 'package:second_opinion_app/widgets/textfield_widget.dart';
@@ -70,19 +71,14 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.35,
-              child: Opacity(
-                  opacity: 0.25,
-                  child:
-                      Image.asset('assets/images/background/bottomRight.png')),
+              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/bottomRight.png')),
             ),
           ),
           Align(
             alignment: Alignment.bottomRight,
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
-              child: Opacity(
-                  opacity: 0.25,
-                  child: Image.asset('assets/images/background/topLeft.png')),
+              child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
             ),
           ),
           MediaQuery.of(context).orientation == Orientation.landscape
@@ -101,9 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
               : Center(child: _buildRightSide()),
           Observer(
             builder: (context) {
-              return _store.success
-                  ? navigate(context)
-                  : _showErrorMessage(_store.errorStore.errorMessage);
+              return _store.success ? navigate(context) : _showErrorMessage(_store.errorStore.errorMessage);
             },
           ),
           Observer(
@@ -209,8 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onPasswordToggle: () {
             _store.toggleShowPassword();
           },
-          hint:
-              AppLocalizations.of(context).translate('login_et_user_password'),
+          hint: AppLocalizations.of(context).translate('login_et_user_password'),
           isObscure: _store.showPassword,
           imageIcon: 'assets/icons/Key.png',
           padding: EdgeInsets.only(top: 16.0),
@@ -234,12 +227,14 @@ class _LoginScreenState extends State<LoginScreen> {
         // padding: EdgeInsets.all(0.0),
         child: Text(
           AppLocalizations.of(context).translate('login_btn_forgot_password'),
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: Color(0xFF16CAEA)),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
         ),
-        onPressed: () {},
+        onPressed: () {
+          DialogHelper.showRegistrationDialog(
+              context, 'Email Sent', 'OK', 'Please check your email for password reset instructions. Thank you!', () {
+            Navigator.pop(context);
+          });
+        },
       ),
     );
   }
@@ -250,12 +245,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextButton(
         // padding: EdgeInsets.all(0.0),
         child: Text(
-          AppLocalizations.of(context)
-              .translate('login_btn_dont_have_an_account'),
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: Color(0xFF16CAEA)),
+          AppLocalizations.of(context).translate('login_btn_dont_have_an_account'),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xFF16CAEA)),
         ),
         onPressed: () {
           Navigator.pushReplacementNamed(context, Routes.registration);
@@ -273,9 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () async {
           if (_store.canLogin) {
             DeviceUtils.hideKeyboard(context);
-            await _userStore
-                .login(_store.userEmail, _store.password,context)
-                .then((value) {
+            await _userStore.login(_store.userEmail, _store.password, context).then((value) {
               _store.login();
             });
           } else {
@@ -292,8 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.home, (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (Route<dynamic> route) => false);
     });
 
     return Container();

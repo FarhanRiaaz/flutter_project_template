@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../utils/routes/routes.dart';
 import '../../widgets/prescription_widget.dart';
 import '../../widgets/upload_document_widget.dart';
 
@@ -45,9 +46,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
-      appBar: _buildAppBar(),
+      //appBar: _buildAppBar(),
       floatingActionButton: _buildFloatingActionButton(),
-
     );
   }
 
@@ -92,9 +92,20 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: _buildListView(),
+        Column(
+          children: [
+            _buildAppBar(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+              child: _buildSearchBarWithButton(),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: _buildListView(),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -104,6 +115,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     return AppBar(
       // leading: _buildLeadingButton(),
       title: _buildTitle(),
+      backgroundColor: Colors.transparent,
       centerTitle: true,
       //actions: _buildActions(),
     );
@@ -129,6 +141,65 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     return Text(
       'Reports',
       style: Theme.of(context).textTheme.headlineMedium,
+    );
+  }
+
+  Widget _buildSearchBarWithButton() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).primaryColor,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
+                color: Colors.white,
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Color(0xFFCCD2D8),
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
+              color: Colors.white,
+            ),
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, Routes.filter);
+              },
+              child: Container(
+                width: 30,
+                height: 30,
+                child: ImageIcon(
+                  AssetImage('assets/icons/SettingSlider.png'),
+                  color: Theme.of(context).primaryColor,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -161,7 +232,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   }
 
   FloatingActionButton _buildFloatingActionButton() {
-    return FloatingActionButton(backgroundColor: Color(0xFF1ce0a3),
+    return FloatingActionButton(
+      backgroundColor: Color(0xFF1ce0a3),
       onPressed: () {
         showModalBottomSheet(
             isScrollControlled: true,
