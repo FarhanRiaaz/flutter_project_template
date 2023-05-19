@@ -43,9 +43,8 @@ abstract class _ProfileStore with Store {
     });
   }
 
-
   @action
-  Future updateProfile(String gender,int age,File profileImage) async {
+  Future updateProfile(String gender, int age, File profileImage) async {
     final future = _repository.updateProfile(gender, age, profileImage);
     profileFuture = ObservableFuture(future);
     await future.then((value) async {

@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../../di/components/service_locator.dart';
 import '../../widgets/progress_indicator_widget.dart';
 import '../../widgets/textfield_widget.dart';
@@ -18,13 +20,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
-  TextEditingController genderController = TextEditingController();
+
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
   ProfileStore _profileStore = getIt<ProfileStore>();
+
+  File? _image;
+
+  List<String> items = ['Male', 'Female'];
+  String? selectedGender;
 
   bool isLbs = true;
 
@@ -153,7 +160,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: RoundedButtonWidget(
                     buttonText: 'Save',
                     buttonColor: Theme.of(context).primaryColor,
-                    onPressed: () {},
+                    onPressed: () {
+                      _profileStore.updateProfile('male', int.parse('2'), _image!);
+                    },
                   ),
                 )
               ],
@@ -164,29 +173,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
   Widget _buildPictureWidget() {
-    return Container(
-      width: 90,
-      height: 90,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: AssetImage('assets/images/profilePicture.png'),
-          fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return SafeArea(
+              child: Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Choose from gallery'),
+                    onTap: () {
+                      _getImage(ImageSource.gallery);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera_alt),
+                    title: const Text('Take a photo'),
+                    onTap: () {
+                      _getImage(ImageSource.camera);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
         ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Icon(
-              Icons.camera_alt,
-              color: Colors.white,
-              size: 24,
+        child: Stack(
+          children: [
+            if (_image != null)
+              Image.file(
+                width: 90,
+                _image!,
+                fit: BoxFit.fitWidth,
+              ),
+            if (_image == null && _profileStore.currentUserProfile?.profileImg == null)
+              Image.asset(
+                width: 90,
+                'assets/images/profilePicture.png',
+                fit: BoxFit.fitWidth,
+              )
+            else if (_profileStore.currentUserProfile?.profileImg != null)
+              Image.network(_profileStore.currentUserProfile!.profileImg!),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -201,6 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         autoFocus: false,
         onChanged: (value) {},
         onFieldSubmitted: (value) {},
+        onTap: () {},
         textController: nameController,
       ),
     );
@@ -227,7 +288,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       icon: Icons.phone_outlined,
       imageIcon: 'assets/icons/Call.png',
       inputAction: TextInputAction.next,
-      autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
       textController: mobileController,
@@ -235,9 +295,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildGenderField() {
-    List<String> items = ['Male', 'Female'];
-    String? selectedGender;
-
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         hintText: 'Gender',
@@ -254,6 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onChanged: (value) {
         setState(() {
           selectedGender = value!;
+          print(value);
         });
       },
     );
@@ -285,7 +343,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildHeightField() {
     return TextFieldWidget(
-
       hint: 'Height',
       inputType: TextInputType.number,
       icon: Icons.height_rounded,
@@ -316,18 +373,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       icon: Icons.person_outline_rounded,
       textController: ageController,
       inputAction: TextInputAction.next,
-      autoFocus: false,
+      onTap: () {},
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
     );
   }
 
   Future<void> popUpTheData() async {
-    nameController.text = _profileStore.currentUserProfile?.name ?? "";
-    emailController.text = _profileStore.currentUserProfile?.email ?? "";
-    genderController.text = _profileStore.currentUserProfile?.gender ?? "";
-    ageController.text = _profileStore.currentUserProfile?.age ?? "";
-    heightController.text = _profileStore.currentUserProfile?.height ?? "";
-    weightController.text = _profileStore.currentUserProfile?.weight ?? "";
+    print('object');
+    nameController = TextEditingController(text: _profileStore.currentUserProfile?.name ?? "");
+    ;
+    emailController = TextEditingController(text: _profileStore.currentUserProfile?.email ?? "");
+    ;
+
+    ageController = TextEditingController(text: _profileStore.currentUserProfile?.age ?? "");
+    ;
+    heightController = TextEditingController(text: _profileStore.currentUserProfile?.height ?? "");
+    ;
+    weightController = TextEditingController(text: _profileStore.currentUserProfile?.weight ?? "");
+    setState(() {});
   }
 }

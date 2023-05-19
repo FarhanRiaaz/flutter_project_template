@@ -1,7 +1,7 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
+import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/stores/report/report_store.dart';
 import '../../utils/routes/routes.dart';
 import '../../widgets/prescription_widget.dart';
 import '../../widgets/upload_document_widget.dart';
@@ -15,6 +15,8 @@ class ReportsScreen extends StatefulWidget {
 }
 
 class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProviderStateMixin {
+  ReportStore _reportStore = getIt<ReportStore>();
+
   late AnimationController _animationController;
 
   List<Map<String, dynamic>> prescriptionList = List.generate(15, (index) {
@@ -146,8 +148,9 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   Widget _buildSearchBarWithButton() {
     return Container(
+      height: 50,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
         color: Theme.of(context).primaryColor,
       ),
       child: Row(
@@ -156,8 +159,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  bottomLeft: Radius.circular(8),
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
                 ),
                 color: Colors.white,
               ),
@@ -174,28 +177,22 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
             ),
           ),
           Container(
-            width: 60,
-            height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(8),
-                bottomRight: Radius.circular(8),
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
               ),
-              color: Colors.white,
+              color: Theme.of(context).primaryColor,
             ),
-            child: InkWell(
-              onTap: () {
+            child: IconButton(
+              icon: ImageIcon(
+                AssetImage('assets/icons/SettingSlider.png'),
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () {
                 Navigator.pushNamed(context, Routes.filter);
               },
-              child: Container(
-                width: 30,
-                height: 30,
-                child: ImageIcon(
-                  AssetImage('assets/icons/SettingSlider.png'),
-                  color: Theme.of(context).primaryColor,
-                  size: 30,
-                ),
-              ),
             ),
           ),
         ],
@@ -217,7 +214,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                       height: MediaQuery.of(context).size.height * 0.85,
                       child: Padding(
                         padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.15),
-                        child: const UploadDocumentWidget(),
+                        child:   UploadDocumentWidget(reportStore:  _reportStore,),
                       ),
                     ));
           },

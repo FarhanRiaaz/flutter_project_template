@@ -55,6 +55,8 @@ class ProfileApi {
         options: Options(
           headers: {
             'Authorization': 'Token $token',
+            'Content-Type': 'multipart/form-data',
+
           },
         ),
       );

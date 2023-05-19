@@ -1,10 +1,19 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/widgets/roundedRectangle_widget.dart';
 import 'package:second_opinion_app/widgets/textfield_widget.dart';
 
+import '../di/components/service_locator.dart';
+import '../stores/report/report_store.dart';
+
 class UploadDocumentWidget extends StatefulWidget {
+  final ReportStore? reportStore;
+
   const UploadDocumentWidget({
     Key? key,
+    this.reportStore,
   }) : super(key: key);
 
   @override
@@ -13,6 +22,8 @@ class UploadDocumentWidget extends StatefulWidget {
 
 class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
   List<Map<String, dynamic>> certificateList = [{}];
+
+  FilePickerResult? result;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +95,15 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       width: MediaQuery.of(context).size.width * 0.4,
       height: MediaQuery.of(context).size.height * 0.15,
       child: InkWell(
-        onTap: () {},
+        onTap: () async {
+          result = await FilePicker.platform.pickFiles();
+
+          if (result != null) {
+            File file = File(result!.files.single.path!);
+          } else {
+            // User canceled the picker
+          }
+        },
         child: RoundedRectangularWidget(
             dashPattern: [5, 3],
             child: Column(

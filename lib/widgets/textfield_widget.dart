@@ -29,22 +29,22 @@ class TextFieldWidget extends StatelessWidget {
     return Padding(
       padding: padding,
       child: TextFormField(
-        inputFormatters: inputFormat ?? [],
-        readOnly: isReadOnly,
-        onTap: (){
-          onTap!();
-        },
+       // inputFormatters: inputFormat ?? [],
+        //readOnly: isReadOnly,
+        // onTap: (){
+        //   //onTap!();
+        // },
         controller: textController,
-        focusNode: focusNode,
 
-        onFieldSubmitted: onFieldSubmitted,
-        onChanged: onChanged,
-        autofocus: autoFocus,
-        textInputAction: inputAction,
-        obscureText: this.isObscure,
-        maxLength: 40,
-        maxLines: this.maxLines,
-        keyboardType: this.inputType,
+
+       // onFieldSubmitted: onFieldSubmitted,
+       // onChanged: onChanged,
+       // autofocus: autoFocus,
+       // textInputAction: inputAction,
+       //  obscureText: this.isObscure,
+       //  maxLength: 40,
+       //  maxLines: this.maxLines,
+       //  keyboardType: this.inputType,
         style: Theme.of(context).textTheme.bodyLarge,
         decoration: errorText != null
             ? InputDecoration(
