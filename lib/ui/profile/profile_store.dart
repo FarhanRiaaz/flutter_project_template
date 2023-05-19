@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
 
@@ -38,6 +39,25 @@ abstract class _ProfileStore with Store {
       print(e);
 
       print('failed to login\nInvalid creds are provided!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+
+  @action
+  Future updateProfile(String gender,int age,File profileImage) async {
+    final future = _repository.updateProfile(gender, age, profileImage);
+    profileFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.id != null) {
+        currentUserProfile = value;
+      } else {
+        print('failed to updateProfile\nData not found!');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to updateProfile\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }

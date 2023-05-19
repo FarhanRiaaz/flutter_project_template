@@ -36,4 +36,37 @@ class ProfileApi {
     }
   }
 
+  /// Method to update user profile
+  Future<ProfileResponse> updateProfile(
+      String token, String gender, int age, File profileImage) async {
+    try {
+      String fileName = profileImage.path.split('/').last;
+
+      FormData formData = FormData.fromMap({
+        'gender': gender,
+        'age': age,
+        'profileImg':
+            await MultipartFile.fromFile(profileImage.path, filename: fileName),
+      });
+
+      final res = await _dioClient.patch(
+        Endpoints.profile,
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+          },
+        ),
+      );
+      if (res != null) {
+        return ProfileResponse.fromJson(res);
+      } else {
+        print("Null response received!\ngetUserProfile()");
+        return ProfileResponse();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
 }

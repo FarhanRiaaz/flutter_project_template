@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:second_opinion_app/data/network/apis/profile/profile_api.dart';
 import 'package:second_opinion_app/data/network/apis/user/authentication_api.dart';
 import 'package:second_opinion_app/data/sharedpref/shared_preference_helper.dart';
@@ -56,6 +57,12 @@ class Repository {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getProfile$authToken");
     return await _profileApi.getUserProfile(authToken!);
+  }
+
+  Future<ProfileResponse> updateProfile(String gender, int age, File profileImage) async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("updateProfile$authToken");
+    return await _profileApi.updateProfile(authToken!,gender,age,profileImage);
   }
 
   Future<void> saveIsLoggedIn(bool value) => _sharedPrefsHelper.saveIsLoggedIn(value);
