@@ -2,6 +2,7 @@
 import 'package:second_opinion_app/data/local/datasources/post/post_datasource.dart';
 import 'package:second_opinion_app/data/network/apis/posts/post_api.dart';
 import 'package:second_opinion_app/data/network/apis/profile/profile_api.dart';
+import 'package:second_opinion_app/data/network/apis/report/report_api.dart';
 import 'package:second_opinion_app/data/network/dio_client.dart';
 import 'package:second_opinion_app/data/network/rest_client.dart';
 import 'package:second_opinion_app/data/repository/repository.dart';
@@ -21,6 +22,8 @@ import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/network/apis/user/authentication_api.dart';
+import '../../data/repository/report_repository.dart';
+import '../../stores/report/report_store.dart';
 
 final getIt = GetIt.instance;
 
@@ -45,6 +48,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(PostApi(getIt<DioClient>(), getIt<RestClient>()));
   getIt.registerSingleton(AuthenticationApi(getIt<DioClient>(), getIt<RestClient>()));
   getIt.registerSingleton(ProfileApi(getIt<DioClient>()));
+  getIt.registerSingleton(ReportApi(getIt<DioClient>()));
 
   // data sources
   getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
@@ -56,10 +60,16 @@ Future<void> setupLocator() async {
     getIt<ProfileApi>()
   ));
 
+  getIt.registerSingleton(ReportRepository(
+      getIt<ReportApi>(),
+      getIt<SharedPreferenceHelper>(),
+  ));
+
   // stores:--------------------------------------------------------------------
   getIt.registerSingleton(LanguageStore(getIt<Repository>()));
   getIt.registerSingleton(PostStore(getIt<Repository>()));
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   getIt.registerSingleton(UserStore(getIt<Repository>()));
   getIt.registerSingleton(ProfileStore(getIt<Repository>()));
+  getIt.registerSingleton(ReportStore(getIt<Repository>()));
 }
