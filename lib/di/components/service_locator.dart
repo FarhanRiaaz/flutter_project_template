@@ -71,5 +71,5 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   getIt.registerSingleton(UserStore(getIt<Repository>()));
   getIt.registerSingleton(ProfileStore(getIt<Repository>()));
-  getIt.registerSingleton(ReportStore(getIt<Repository>()));
+  getIt.registerSingleton(ReportStore(getIt<ReportRepository>()));
 }
