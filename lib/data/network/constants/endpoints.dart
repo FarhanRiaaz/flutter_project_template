@@ -16,4 +16,7 @@ class Endpoints {
   static const String logout = baseUrl + "/logout";
   static const String profile = baseUrl + "/profile";
 
+  static const String subProfile = baseUrl + "/subprofiles";
+  static const String getFormByCatId = baseUrl + "/forms";
+  static const String getHomeData = baseUrl + "/home";
 }
