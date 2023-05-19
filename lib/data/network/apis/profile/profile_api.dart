@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_list.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 
 import '../../../../models/profile/profile_response.dart';
 import '../../constants/endpoints.dart';
@@ -65,6 +67,29 @@ class ProfileApi {
       } else {
         print("Null response received!\ngetUserProfile()");
         return ProfileResponse();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  /// Method to get sub profile
+  Future<SubProfileList> getSubUserProfile(String token) async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.subProfile,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+          },
+        ),
+      );
+      if (res != null) {
+        return SubProfileList.fromJson(res);
+      } else {
+        print("Null response received!\ngetSubUserProfile()");
+        return SubProfileList();
       }
     } catch (e) {
       print(e.toString());

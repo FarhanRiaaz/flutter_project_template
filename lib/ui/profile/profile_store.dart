@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 
 import '../../data/repository/repository.dart';
 import '../../models/profile/profile_response.dart';
+import '../../models/profile/sub_profile_list.dart';
 
 part 'profile_store.g.dart';
 
@@ -14,16 +16,29 @@ abstract class _ProfileStore with Store {
   final Repository _repository;
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<ProfileResponse> emptyProfileResponse = ObservableFuture.value(ProfileResponse());
+  static ObservableFuture<ProfileResponse> emptyProfileResponse =
+      ObservableFuture.value(ProfileResponse());
+  static ObservableFuture<SubProfileList> emptySubProfileResponse =
+      ObservableFuture.value(SubProfileList());
 
   @observable
   ObservableFuture<ProfileResponse> profileFuture = emptyProfileResponse;
 
   @observable
+  ObservableFuture<SubProfileList> subProfileFuture = emptySubProfileResponse;
+
+  @observable
   ProfileResponse? currentUserProfile;
+
+  @observable
+  SubProfileList? currentSubUserProfile;
 
   @computed
   bool get isProfileInProcess => profileFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isSubProfileInProcess =>
+      subProfileFuture.status == FutureStatus.pending;
 
   @action
   Future getProfile() async {
@@ -39,6 +54,25 @@ abstract class _ProfileStore with Store {
       print(e);
 
       print('failed to login\nInvalid creds are provided!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future getSubUserProfiles() async {
+    final future = _repository.getSubUserProfile();
+    subProfileFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.subProfile != null) {
+        currentSubUserProfile = value;
+      } else {
+        print('failed to getSubUserProfile\nSomething went wrong!');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to getSubUserProfile\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }

@@ -8,6 +8,9 @@ import 'package:second_opinion_app/models/authentication/login_user_response.dar
 import 'package:second_opinion_app/models/authentication/register_user_response.dart';
 import 'package:second_opinion_app/models/authentication/registration_request.dart';
 import 'package:second_opinion_app/models/profile/profile_response.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
+
+import '../../models/profile/sub_profile_list.dart';
 
 class Repository {
   // api objects
@@ -63,6 +66,12 @@ class Repository {
     final authToken = await _sharedPrefsHelper.authToken;
     print("updateProfile$authToken");
     return await _profileApi.updateProfile(authToken!,gender,age,profileImage);
+  }
+
+  Future<SubProfileList> getSubUserProfile() async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("getSubUserProfile$authToken");
+    return await _profileApi.getSubUserProfile(authToken!);
   }
 
   Future<void> saveIsLoggedIn(bool value) => _sharedPrefsHelper.saveIsLoggedIn(value);
