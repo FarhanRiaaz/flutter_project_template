@@ -1,4 +1,5 @@
 import 'package:second_opinion_app/data/network/apis/category/catergory_api.dart';
+import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/all_category_response.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 
@@ -14,7 +15,7 @@ class CategoryRepository {
   // constructor
   CategoryRepository(this._categoryApi, this._sharedPrefsHelper);
 
-  Future<GetAllCategoryResponse> getAllCategories() async {
+  Future<AllCategoryList> getAllCategories() async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getAllCategories$authToken");
     return await _categoryApi.getALlCategories(authToken!);

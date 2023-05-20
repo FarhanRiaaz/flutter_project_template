@@ -5,6 +5,7 @@ import 'package:second_opinion_app/models/authentication/login_request.dart';
 import 'package:second_opinion_app/models/authentication/login_user_response.dart';
 import 'package:second_opinion_app/models/authentication/register_user_response.dart';
 import 'package:second_opinion_app/models/authentication/registration_request.dart';
+import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/all_category_response.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 
@@ -19,7 +20,7 @@ class CategoryApi {
 
   /// Method to get list of categories
   ///
-  Future<GetAllCategoryResponse> getALlCategories(String authToken) async {
+  Future<AllCategoryList> getALlCategories(String authToken) async {
     try {
       final res = await _dioClient.get(
         Endpoints.getCategories,
@@ -32,7 +33,7 @@ class CategoryApi {
       );
 
       if (res != null) {
-        return GetAllCategoryResponse.fromJson(res);
+        return AllCategoryList.fromJson(res);
       } else {
         throw Exception("Null response received!");
       }

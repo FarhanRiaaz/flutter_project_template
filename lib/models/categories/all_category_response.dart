@@ -15,6 +15,13 @@ class GetAllCategoryResponse {
     image = data['image'];
   }
 
+  factory GetAllCategoryResponse.fromMap(Map<String, dynamic> json) =>
+      GetAllCategoryResponse(
+        id: json['id'],
+        title: json['title'],
+        image: json['image'],
+      );
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
