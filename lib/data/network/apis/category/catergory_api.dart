@@ -20,10 +20,36 @@ class CategoryApi {
 
   /// Method to get list of categories
   ///
-  Future<AllCategoryList> getALlCategories(String authToken) async {
+  Future<AllCategoryList> getAllCategories(String authToken) async {
     try {
       final res = await _dioClient.get(
         Endpoints.getCategories,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $authToken',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (res != null) {
+        return AllCategoryList.fromJson(res);
+      } else {
+        throw Exception("Null response received!");
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  /// Method to get list of categories filtered
+  ///
+  Future<AllCategoryList> getFilteredCategories(
+      String authToken, String searchText) async {
+    try {
+      final res = await _dioClient.get(
+        "${Endpoints.getFilteredCategories}$searchText",
         options: Options(
           headers: {
             'Authorization': 'Token $authToken',

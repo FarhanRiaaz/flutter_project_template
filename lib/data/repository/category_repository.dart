@@ -18,7 +18,13 @@ class CategoryRepository {
   Future<AllCategoryList> getAllCategories() async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getAllCategories$authToken");
-    return await _categoryApi.getALlCategories(authToken!);
+    return await _categoryApi.getAllCategories(authToken!);
+  }
+
+  Future<AllCategoryList> getFilteredCategories(String searchString) async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("getFilteredCategories$authToken");
+    return await _categoryApi.getFilteredCategories(authToken!,searchString);
   }
 
   Future<CategoryInstanceResponse> getFormByCategory(int catType) async {

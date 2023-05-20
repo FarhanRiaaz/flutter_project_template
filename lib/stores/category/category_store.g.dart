@@ -104,8 +104,9 @@ mixin _$CategoryStore on _CategoryStore, Store {
       AsyncAction('_CategoryStore.getFormByCategory', context: context);
 
   @override
-  Future<dynamic> getFormByCategory() {
-    return _$getFormByCategoryAsyncAction.run(() => super.getFormByCategory());
+  Future<dynamic> getFormByCategory(int catId) {
+    return _$getFormByCategoryAsyncAction
+        .run(() => super.getFormByCategory(catId));
   }
 
   @override

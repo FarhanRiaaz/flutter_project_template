@@ -60,6 +60,25 @@ abstract class _CategoryStore with Store {
   }
 
   @action
+  Future getFilteredCategories(String searchText) async {
+    final future = _categoryRepository.getFilteredCategories(searchText);
+    allCategoryFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.allCategoryList != null) {
+        allCategoryList = value;
+      } else {
+        print('failed to getFilteredCategories\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to getFilteredCategories\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
   Future getFormByCategory(int catId) async {
     final future = _categoryRepository.getFormByCategory(catId);
     allCategoryInstanceFuture = ObservableFuture(future);

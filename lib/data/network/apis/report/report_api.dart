@@ -26,7 +26,7 @@ class ReportApi {
       });
 
       final res = await _dioClient.post(
-        Endpoints.uploadDocument,
+        Endpoints.documents,
         data: formData,
         options: Options(
           headers: {
