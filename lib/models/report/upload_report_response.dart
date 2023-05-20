@@ -28,7 +28,6 @@ class UploadReportResponse {
     Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['user'] = this.user;
-
     data['type'] = this.type;
     data['fileName'] = this.fileName;
     data['file'] = this.file;
@@ -36,6 +35,25 @@ class UploadReportResponse {
 
     return data;
   }
+
+  factory UploadReportResponse.fromMap(Map<String, dynamic> data) =>
+      UploadReportResponse(
+        id: data['id'],
+        user: data['user'],
+        type: data['type'],
+        fileName: data['fileName'],
+        file: data['file'],
+        createdDate: data['createdDate'],
+      );
+
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'user': user,
+        'type': type,
+        'fileName': fileName,
+        'file': file,
+        'createdDate': createdDate,
+      };
 
   UploadReportResponse copyWith({
     int? id,

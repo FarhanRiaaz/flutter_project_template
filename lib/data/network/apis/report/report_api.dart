@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:second_opinion_app/models/report/get_all_document_response.dart';
 import 'package:second_opinion_app/models/report/upload_report_response.dart';
 
 import '../../constants/endpoints.dart';
 import '../../dio_client.dart';
-import '../../rest_client.dart';
 
 class ReportApi {
   // dio instance
@@ -14,6 +14,8 @@ class ReportApi {
   // injecting dio instance
   ReportApi(this._dioClient);
 
+
+  // method to upload documents
   Future<UploadReportResponse> uploadDocument(String fileName, String fileType,
       File documentFile, int userId, String token) async {
     try {
@@ -49,7 +51,8 @@ class ReportApi {
 
   //todo imp farhan here to look after the response type here
 
-  Future<UploadReportResponse> getFilteredDocumentList(String sortFilter,
+  // method to get filtered documents
+  Future<GetAllDocumentResponse> getFilteredDocumentList(String sortFilter,
       String userName, String reportType, String token) async {
     try {
       final res = await _dioClient.get(
@@ -63,7 +66,33 @@ class ReportApi {
       );
 
       if (res != null) {
-        return UploadReportResponse.fromJson(res);
+        return GetAllDocumentResponse.fromJson(res);
+      } else {
+        throw Exception("Null response received!");
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+
+
+  // method to get all documents list
+  Future<GetAllDocumentResponse> getAllDocumentList(String token) async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.documents,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (res != null) {
+        return GetAllDocumentResponse.fromJson(res);
       } else {
         throw Exception("Null response received!");
       }
