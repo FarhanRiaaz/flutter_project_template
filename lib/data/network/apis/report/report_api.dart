@@ -14,7 +14,6 @@ class ReportApi {
   // injecting dio instance
   ReportApi(this._dioClient);
 
-
   // method to upload documents
   Future<UploadReportResponse> uploadDocument(String fileName, String fileType,
       File documentFile, int userId, String token) async {
@@ -76,8 +75,6 @@ class ReportApi {
     }
   }
 
-
-
   // method to get all documents list
   Future<GetAllDocumentResponse> getAllDocumentList(String token) async {
     try {
@@ -94,6 +91,31 @@ class ReportApi {
       if (res != null) {
         return GetAllDocumentResponse.fromJson(res);
       } else {
+        throw Exception("Null response received!");
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  // method to get all documents list
+  Future<bool> deleteDocument(String token, int id) async {
+    try {
+      final res = await _dioClient.delete(
+        "${Endpoints.documents}$id",
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (res == null) {
+        return true;
+      } else {
+        print("Response: ${res['detail'].toString()}");
         throw Exception("Null response received!");
       }
     } catch (e) {
