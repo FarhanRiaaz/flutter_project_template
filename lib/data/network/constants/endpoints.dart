@@ -19,4 +19,5 @@ class Endpoints {
   static const String subProfile = baseUrl + "/subprofiles";
   static const String getFormByCatId = baseUrl + "/forms";
   static const String getHomeData = baseUrl + "/home";
+  static const String getCategories = baseUrl + "/categories/";
 }

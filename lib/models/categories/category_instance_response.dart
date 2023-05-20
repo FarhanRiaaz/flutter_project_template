@@ -1,8 +1,8 @@
 class CategoryInstanceResponse {
-  final int? id;
-  final int? category;
-  final String? title;
-  final List<Question>? questions;
+  int? id;
+  int? category;
+  String? title;
+  List<Question>? questions;
 
   CategoryInstanceResponse({
     this.id,
@@ -10,6 +10,23 @@ class CategoryInstanceResponse {
     this.title,
     this.questions,
   });
+
+  CategoryInstanceResponse.fromJson(Map<String, dynamic> data) {
+    id = data['id'];
+    title = data['title'];
+    category = data['category'];
+    questions = data['questions'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['id'] = this.id;
+    data['title'] = this.title;
+    data['category'] = this.category;
+    data['questions'] = this.questions;
+    return data;
+  }
 
   CategoryInstanceResponse copyWith({
     int? id,
@@ -26,10 +43,10 @@ class CategoryInstanceResponse {
 }
 
 class Question {
-  final int? id;
-  final String? type;
-  final String? question;
-  final List<Option>? options;
+  int? id;
+  String? type;
+  String? question;
+  List<Option>? options;
 
   Question({
     this.id,
@@ -37,6 +54,23 @@ class Question {
     this.question,
     this.options,
   });
+
+  Question.fromJson(Map<String, dynamic> data) {
+    id = data['id'];
+    type = data['type'];
+    options = data['options'];
+    question = data['question'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['id'] = this.id;
+    data['type'] = this.type;
+    data['options'] = this.options;
+    data['question'] = this.question;
+    return data;
+  }
 
   Question copyWith({
     int? id,
@@ -53,13 +87,26 @@ class Question {
 }
 
 class Option {
-  final String? option;
-  final int? question;
+  String? option;
+  int? question;
 
   Option({
     this.option,
     this.question,
   });
+
+  Option.fromJson(Map<String, dynamic> data) {
+    option = data['option'];
+    question = data['question'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['option'] = this.option;
+    data['question'] = this.question;
+    return data;
+  }
 
   Option copyWith({
     String? option,
