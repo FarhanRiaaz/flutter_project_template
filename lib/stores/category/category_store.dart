@@ -60,8 +60,8 @@ abstract class _CategoryStore with Store {
   }
 
   @action
-  Future getFormByCategory() async {
-    final future = _categoryRepository.getFormByCategory();
+  Future getFormByCategory(int catId) async {
+    final future = _categoryRepository.getFormByCategory(catId);
     allCategoryInstanceFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value != null) {
