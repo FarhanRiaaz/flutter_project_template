@@ -14,23 +14,36 @@ abstract class _ReportStore with Store {
 
   // empty responses:-----------------------------------------------------------
   static ObservableFuture<UploadReportResponse> emptyUploadReportResponse =
-      ObservableFuture.value(UploadReportResponse());  
-  
+      ObservableFuture.value(UploadReportResponse());
+
   static ObservableFuture<GetAllDocumentResponse> emptyGetAllDocumentResponse =
       ObservableFuture.value(GetAllDocumentResponse());
+
+  static ObservableFuture<bool> emptyDeleteDocumentResponse =
+      ObservableFuture.value(false);
 
   @observable
   ObservableFuture<UploadReportResponse> reportFuture =
       emptyUploadReportResponse;
+
+  @observable
+  ObservableFuture<bool> deleteDocumentFuture = emptyDeleteDocumentResponse;
+
   @observable
   ObservableFuture<GetAllDocumentResponse> getAllDocumentResponseFuture =
       emptyGetAllDocumentResponse;
 
   @observable
-  UploadReportResponse? currentReportResponse;  
-  
+  UploadReportResponse? currentReportResponse;
+
   @observable
   GetAllDocumentResponse? getAllDocumentResponseList;
+
+  @observable
+  int? currentDocumentToDelete;
+
+  @observable
+  bool? isDocumentDeleted = false;
 
   @observable
   String? fileName;
@@ -43,10 +56,12 @@ abstract class _ReportStore with Store {
 
   @computed
   bool get isUploadInProcess => reportFuture.status == FutureStatus.pending;
-  
-  @computed
-  bool get isFetchDocumentInProcess => getAllDocumentResponseFuture.status == FutureStatus.pending;
 
+  @computed
+  bool get isFetchDocumentInProcess =>
+      getAllDocumentResponseFuture.status == FutureStatus.pending;
+
+  /// method to uploadReport via api fill the fields  and check the response of currentReportResponse
   @action
   Future uploadReport() async {
     final future = _reportRepository.uploadDocument(
@@ -66,12 +81,13 @@ abstract class _ReportStore with Store {
     });
   }
 
+  /// method to get all document via api just run and check the response of getAllDocumentResponseList
   @action
   Future getAllDocumentList() async {
     final future = _reportRepository.getAllDocumentList();
     getAllDocumentResponseFuture = ObservableFuture(future);
     await future.then((value) async {
-      if (value.getAllDocResponses != null) {
+      if (value.count != null) {
         getAllDocumentResponseList = value;
       } else {
         print('failed to getAllDocumentList\nSomething went wrong');
@@ -79,18 +95,21 @@ abstract class _ReportStore with Store {
     }).catchError((e) {
       print(e);
 
-      print('failed to getAllDocumentList\nSomething went wrong!\n${e.toString()}');
+      print(
+          'failed to getAllDocumentList\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
 
-
+  /// method to get filtered document via api just pass the args and check the response of getAllDocumentResponseList
   @action
-  Future getFilteredDocumentList(String sortFilter,String userName, String reportType) async {
-    final future = _reportRepository.getFilteredDocumentList(sortFilter, userName, reportType);
+  Future getFilteredDocumentList(
+      String sortFilter, String userName, String reportType) async {
+    final future = _reportRepository.getFilteredDocumentList(
+        sortFilter, userName, reportType);
     getAllDocumentResponseFuture = ObservableFuture(future);
     await future.then((value) async {
-      if (value.getAllDocResponses != null) {
+      if (value.count != null) {
         getAllDocumentResponseList = value;
       } else {
         print('failed to getFilteredDocumentList\nSomething went wrong');
@@ -98,7 +117,28 @@ abstract class _ReportStore with Store {
     }).catchError((e) {
       print(e);
 
-      print('failed to getFilteredDocumentList\nSomething went wrong!\n${e.toString()}');
+      print(
+          'failed to getFilteredDocumentList\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  /// method to delete document via api just pass the document id currentDocumentToDelete just check the response of isDocumentDeleted
+  @action
+  Future deleteDocument() async {
+    final future =
+        _reportRepository.deleteDocument(currentDocumentToDelete ?? 0);
+    deleteDocumentFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value) {
+        isDocumentDeleted = value;
+      } else {
+        print('failed to deleteDocument\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to deleteDocument\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }

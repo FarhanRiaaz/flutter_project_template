@@ -47,5 +47,12 @@ class ReportRepository {
     return await _reportApi.getAllDocumentList(authToken!);
   }
 
+  Future<bool> deleteDocument(
+      int id) async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("getAllDocumentList$authToken");
+    return await _reportApi.deleteDocument(authToken!,id);
+  }
+
   Future<String?> get authToken async => await _sharedPrefsHelper.authToken;
 }

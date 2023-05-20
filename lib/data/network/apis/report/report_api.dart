@@ -99,7 +99,7 @@ class ReportApi {
     }
   }
 
-  // method to get all documents list
+  // method to get delete a documents
   Future<bool> deleteDocument(String token, int id) async {
     try {
       final res = await _dioClient.delete(
@@ -116,10 +116,12 @@ class ReportApi {
         return true;
       } else {
         print("Response: ${res['detail'].toString()}");
+        return false;
         throw Exception("Null response received!");
       }
     } catch (e) {
       print(e.toString());
+      return false;
       throw e;
     }
   }
