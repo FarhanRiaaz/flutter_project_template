@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:mobx/mobx.dart';
 import 'package:second_opinion_app/data/repository/report_repository.dart';
+import 'package:second_opinion_app/models/report/get_all_document_response.dart';
 import 'package:second_opinion_app/models/report/upload_report_response.dart';
 
 part 'report_store.g.dart';
@@ -13,14 +14,23 @@ abstract class _ReportStore with Store {
 
   // empty responses:-----------------------------------------------------------
   static ObservableFuture<UploadReportResponse> emptyUploadReportResponse =
-      ObservableFuture.value(UploadReportResponse());
+      ObservableFuture.value(UploadReportResponse());  
+  
+  static ObservableFuture<GetAllDocumentResponse> emptyGetAllDocumentResponse =
+      ObservableFuture.value(GetAllDocumentResponse());
 
   @observable
   ObservableFuture<UploadReportResponse> reportFuture =
       emptyUploadReportResponse;
+  @observable
+  ObservableFuture<GetAllDocumentResponse> getAllDocumentResponseFuture =
+      emptyGetAllDocumentResponse;
 
   @observable
-  UploadReportResponse? currentReportResponse;
+  UploadReportResponse? currentReportResponse;  
+  
+  @observable
+  GetAllDocumentResponse? getAllDocumentResponseList;
 
   @observable
   String? fileName;
@@ -33,6 +43,9 @@ abstract class _ReportStore with Store {
 
   @computed
   bool get isUploadInProcess => reportFuture.status == FutureStatus.pending;
+  
+  @computed
+  bool get isFetchDocumentInProcess => getAllDocumentResponseFuture.status == FutureStatus.pending;
 
   @action
   Future uploadReport() async {
@@ -49,6 +62,43 @@ abstract class _ReportStore with Store {
       print(e);
 
       print('failed to uploadReport\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future getAllDocumentList() async {
+    final future = _reportRepository.getAllDocumentList();
+    getAllDocumentResponseFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.getAllDocResponses != null) {
+        getAllDocumentResponseList = value;
+      } else {
+        print('failed to getAllDocumentList\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to getAllDocumentList\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+
+  @action
+  Future getFilteredDocumentList(String sortFilter,String userName, String reportType) async {
+    final future = _reportRepository.getFilteredDocumentList(sortFilter, userName, reportType);
+    getAllDocumentResponseFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value.getAllDocResponses != null) {
+        getAllDocumentResponseList = value;
+      } else {
+        print('failed to getFilteredDocumentList\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to getFilteredDocumentList\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
