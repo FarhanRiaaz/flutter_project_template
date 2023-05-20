@@ -1,4 +1,3 @@
-
 import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/stores/post/post_store.dart';
 
@@ -11,6 +10,10 @@ import '../../di/components/service_locator.dart';
 import '../home/categories_widget.dart';
 
 class CategoriesScreen extends StatefulWidget {
+  final bool? autoFocus;
+
+  const CategoriesScreen({super.key, this.autoFocus = false});
+
   @override
   _CategoriesScreenState createState() => _CategoriesScreenState();
 }
@@ -24,9 +27,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   static const placeholderImage =
       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
 
+  final focusNode = FocusNode();
 
   @override
   void initState() {
+    print(widget.autoFocus);
     super.initState();
   }
 
@@ -44,14 +49,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: _buildAppBar(),
-      body: _buildBody(),
+      body: WillPopScope(
+        onWillPop: () async {
+          _categoryStore.getAllCategories();
+          return true;
+        },
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -60,19 +69,25 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return AppBar(
       leading: _buildLeadingButton(),
       centerTitle: true,
-      title: _buildTitle (),
+      title: _buildTitle(),
       actions: _buildActions(context),
     );
   }
 
-  Widget _buildTitle (){
-    return Text('Categories',style: Theme.of(context).textTheme.headlineMedium,);
+  Widget _buildTitle() {
+    return Text(
+      'Categories',
+      style: Theme.of(context).textTheme.headlineMedium,
+    );
   }
 
   Widget _buildLeadingButton() {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
-      onPressed: () {Navigator.pop(context);},
+      onPressed: () {
+        _categoryStore.getAllCategories();
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -105,7 +120,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   Widget _buildSearchBar() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      FocusScope.of(context).autofocus(focusNode);
+    });
+
     return TextField(
+      focusNode: widget.autoFocus! ? focusNode : null,
+      onChanged: (value) {
+        _categoryStore.getFilteredCategories(value);
+      },
       decoration: InputDecoration(
         hintText: 'Search',
         prefixIcon: Icon(
@@ -206,6 +229,4 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
     );
   }
-
-
 }

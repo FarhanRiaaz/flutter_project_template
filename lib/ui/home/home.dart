@@ -1,9 +1,11 @@
+import 'package:animations/animations.dart';
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/models/home/home_api_response.dart';
 import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/ui/add_user.dart';
+import 'package:second_opinion_app/ui/categories/categories.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/stores/language/language_store.dart';
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     _categoryStore.getAllCategories();
     _profileStore.getProfile();
+    _profileStore.getSubUserProfiles();
     super.initState();
   }
 
@@ -142,17 +145,40 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSearchBar() {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: 'Search',
-        prefixIcon: Icon(
-          Icons.search,
-          color: Color(0xFFCCD2D8),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
+    return OpenContainer(
+      transitionDuration: Duration(milliseconds: 300),
+      middleColor: Colors.white,
+      transitionType: ContainerTransitionType.fade,
+      closedElevation: 0,
+      closedShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
+      closedColor: Colors.white,
+      openBuilder: (BuildContext context, VoidCallback _) {
+        // Replace the return statement with the desired widget to be shown when opened (e.g., another page)
+        return CategoriesScreen(
+          autoFocus: true,
+        );
+      },
+      closedBuilder: (BuildContext context, VoidCallback openContainer) {
+        return GestureDetector(
+          onTap: openContainer,
+          child: TextField(
+            readOnly: true,
+            onTap: openContainer,
+            decoration: InputDecoration(
+              hintText: 'Search',
+              prefixIcon: Icon(
+                Icons.search,
+                color: Color(0xFFCCD2D8),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -391,10 +417,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+
             SizedBox(
               width: 2,
             ),
-            Expanded(child: Container()),
+
             Column(
               children: [
                 GestureDetector(

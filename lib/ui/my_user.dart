@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
+
+import '../di/components/service_locator.dart';
 
 class MyUsers extends StatefulWidget {
   const MyUsers({Key? key}) : super(key: key);
@@ -9,23 +12,7 @@ class MyUsers extends StatefulWidget {
 }
 
 class _MyUsersState extends State<MyUsers> {
-  List<Map<String, String>> users = [
-    {
-      'name': 'John Doe',
-      'relationship': 'Me',
-
-    },
-    {
-      'name': 'Jane Smith',
-      'relationship': 'Daughter',
-
-    },
-    {
-      'name': 'Bob Johnson',
-      'relationship': 'Son',
-
-    },
-  ];
+   ProfileStore _profileStore = getIt<ProfileStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +57,7 @@ class _MyUsersState extends State<MyUsers> {
               SizedBox(
                 height: 10,
               ),
-              _buildCardList(),
+              Expanded(child: _buildCardList()),
             ],
           ),
         ),
@@ -149,9 +136,9 @@ class _MyUsersState extends State<MyUsers> {
   Widget _buildCardList() {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: users.length,
+      itemCount: _profileStore.currentSubUserProfile?.subProfile?.length??0,
       itemBuilder: (BuildContext context, int index) {
-        return _buildUserWidget(users[index]['name']!, users[index]['relationship']! );
+        return _buildUserWidget(_profileStore.currentSubUserProfile!.subProfile![index].name!, _profileStore.currentSubUserProfile!.subProfile![index].gender! );
       },
 
     );
