@@ -5,11 +5,11 @@ class MedicalFieldGridTile extends StatefulWidget {
   const MedicalFieldGridTile({
     super.key,
     required this.title,
-    required this.path,
+    required this.url,
   });
 
   final String title;
-  final String path;
+  final String url;
 
   @override
   State<MedicalFieldGridTile> createState() => _MedicalFieldGridTileState();
@@ -33,8 +33,8 @@ class _MedicalFieldGridTileState extends State<MedicalFieldGridTile> {
               SizedBox(
                   height: 40,
                   width: 40,
-                  child: Image.asset(
-                    widget.path,
+                  child: Image.network(
+                    widget.url,
                     fit: BoxFit.fitHeight,
                   )),
               Padding(

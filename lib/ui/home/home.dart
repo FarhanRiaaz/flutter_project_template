@@ -1,6 +1,10 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
+import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/models/home/home_api_response.dart';
+import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/ui/add_user.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/stores/language/language_store.dart';
 import 'package:second_opinion_app/stores/post/post_store.dart';
@@ -25,8 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
   late ThemeStore _themeStore;
   late LanguageStore _languageStore;
 
+  CategoryStore _categoryStore = getIt<CategoryStore>();
+  ProfileStore _profileStore = getIt<ProfileStore>();
+
   @override
   void initState() {
+    _categoryStore.getAllCategories();
+    _profileStore.getProfile();
     super.initState();
   }
 
@@ -45,33 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  static const List<Map<String, dynamic>> gridItems = [
-    {
-      'name': 'Cardiologist',
-      'imagePath': 'assets/images/organs/heart.png',
-    },
-    {
-      'name': 'Dentist',
-      'imagePath': 'assets/images/organs/tooth.png',
-    },
-    {
-      'name': 'Hepatologist',
-      'imagePath': 'assets/images/organs/liver.png',
-    },
-    {
-      'name': 'Nephrologists',
-      'imagePath': 'assets/images/organs/kidney.png',
-    },
-    {
-      'name': 'Pulmonologist',
-      'imagePath': 'assets/images/organs/lungs.png',
-    },
-    {
-      'name': 'Neurologists',
-      'imagePath': 'assets/images/organs/brain.png',
-    },
-    // add more items as needed
-  ];
+  static const placeholderImage =
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +111,11 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         customBorder: CircleBorder(),
         child: CircleAvatar(
+          backgroundColor: Colors.transparent,
           radius: 18,
-          backgroundImage: AssetImage('assets/images/circleAvatar.png'),
+          backgroundImage: NetworkImage(
+            _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
+          ),
         ),
       ),
     );
@@ -144,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
         ),
         Text(
-          'Muhammad',
+          _profileStore.currentUserProfile?.name ?? '',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -255,20 +242,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 ))
           ],
         ),
-        GridView.count(
+        GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 3,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          children: gridItems
-              .take(6)
-              .map((item) => MedicalFieldGridTile(
-                    title: item['name'],
-                    path: item['imagePath'],
-                  ))
-              .toList(),
-        ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: _categoryStore.allCategoryList == null ? 0 : _categoryStore.allCategoryList?.allCategoryList?.length,
+          itemBuilder: (context, index) => MedicalFieldGridTile(
+            title: _categoryStore.allCategoryList!.allCategoryList![index].title!,
+            url: _categoryStore.allCategoryList!.allCategoryList![index].image ?? placeholderImage,
+          ),
+        )
       ],
     );
   }
@@ -335,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 12.0,right:12,bottom: 18),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12, bottom: 18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -383,18 +370,16 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             GestureDetector(
-              onTap: (){
-                
+              onTap: () {
                 Navigator.pushNamed(context, Routes.myUsers);
-                
               },
               child: Column(
                 children: [
                   CircleAvatar(
                     backgroundColor: Colors.transparent,
                     radius: 18,
-                    child: Image.asset(
-                      'assets/images/circleAvatar.png',
+                    backgroundImage: NetworkImage(
+                      _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
                     ),
                   ),
                   Text(

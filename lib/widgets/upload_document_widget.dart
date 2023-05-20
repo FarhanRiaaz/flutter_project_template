@@ -9,11 +9,11 @@ import '../di/components/service_locator.dart';
 import '../stores/report/report_store.dart';
 
 class UploadDocumentWidget extends StatefulWidget {
-  final ReportStore? reportStore;
+
 
   const UploadDocumentWidget({
     Key? key,
-    this.reportStore,
+
   }) : super(key: key);
 
   @override
@@ -21,9 +21,15 @@ class UploadDocumentWidget extends StatefulWidget {
 }
 
 class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
+
+  ReportStore _reportStore = getIt<ReportStore>();
+
   List<Map<String, dynamic>> certificateList = [{}];
 
   FilePickerResult? result;
+  File? file;
+
+  TextEditingController fileNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +105,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
           result = await FilePicker.platform.pickFiles();
 
           if (result != null) {
-            File file = File(result!.files.single.path!);
+            _reportStore.documentFile = File(result!.files.single.path!);
           } else {
             // User canceled the picker
           }
@@ -160,9 +166,11 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       icon: Icons.file_present_rounded,
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {
+        _reportStore.fileName = value;
+      },
       onFieldSubmitted: (value) {},
-      textController: TextEditingController(),
+      textController: fileNameController,
     );
   }
 
@@ -185,7 +193,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       }).toList(),
       onChanged: (value) {
         setState(() {
-          selectedItem = value!;
+          _reportStore.fileType = value;
         });
       },
     );
@@ -195,7 +203,12 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () async {
+          print(_reportStore.fileName);
+          print(_reportStore.fileType);
+
+          await _reportStore.uploadReport();
+        },
         child: Text('Upload'),
       ),
     );

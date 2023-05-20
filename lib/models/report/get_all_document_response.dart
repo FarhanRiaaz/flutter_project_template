@@ -17,7 +17,9 @@ class GetAllDocumentResponse {
     count = data['count'];
     next = data['next'];
     previous = data['previous'];
-    results = data['results'];
+    results = List<Result>.from(
+      data['results'].map((item) => Result.fromJson(item)),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -64,7 +66,7 @@ class Result {
   String? fileName;
   String? file;
   User? user;
-  DateTime? createdDate;
+  String? createdDate;
 
   Result({
     this.id,
@@ -77,7 +79,7 @@ class Result {
 
   Result.fromJson(Map<String, dynamic> data) {
     id = data['id'];
-    user = data['user'];
+    user = User.fromJson(data['user']);
     type = data['type'];
     fileName = data['fileName'];
     file = data['file'];
@@ -120,7 +122,7 @@ class Result {
     String? fileName,
     String? file,
     User? user,
-    DateTime? createdDate,
+    String? createdDate,
   }) =>
       Result(
         id: id ?? this.id,

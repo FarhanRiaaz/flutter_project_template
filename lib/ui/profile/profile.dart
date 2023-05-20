@@ -235,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fit: BoxFit.fitWidth,
               )
             else if (_profileStore.currentUserProfile?.profileImg != null)
-              Image.network(_profileStore.currentUserProfile!.profileImg!),
+              Image.network(width: 90,fit: BoxFit.fitWidth,_profileStore.currentUserProfile!.profileImg!),
             Positioned(
               bottom: 10,
               right: 10,

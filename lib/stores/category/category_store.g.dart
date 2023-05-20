@@ -100,6 +100,15 @@ mixin _$CategoryStore on _CategoryStore, Store {
     return _$getAllCategoriesAsyncAction.run(() => super.getAllCategories());
   }
 
+  late final _$getFilteredCategoriesAsyncAction =
+      AsyncAction('_CategoryStore.getFilteredCategories', context: context);
+
+  @override
+  Future<dynamic> getFilteredCategories(String searchText) {
+    return _$getFilteredCategoriesAsyncAction
+        .run(() => super.getFilteredCategories(searchText));
+  }
+
   late final _$getFormByCategoryAsyncAction =
       AsyncAction('_CategoryStore.getFormByCategory', context: context);
 

@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/stores/report/report_store.dart';
 import '../../utils/routes/routes.dart';
 import '../../widgets/prescription_widget.dart';
+import '../../widgets/progress_indicator_widget.dart';
 import '../../widgets/upload_document_widget.dart';
 
 class ReportsScreen extends StatefulWidget {
@@ -30,6 +32,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   @override
   void initState() {
+    _reportStore.getAllDocumentList();
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -54,27 +57,32 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   }
 
   Widget _buildListView() {
-    return ListView.separated(
-      padding: EdgeInsets.only(bottom: 80),
-      itemCount: prescriptionList.length,
-      itemBuilder: (BuildContext context, int index) {
-        final Map<String, dynamic> prescription = prescriptionList[index];
-        final DateTime dateTime = prescription['dateTime'] ?? DateTime.now();
-        final String doctorName = prescription['doctorName'] ?? '';
-        final String symptoms = prescription['symptoms'] ?? '';
+    return Observer(builder: (context) {
+      return !_reportStore.isFetchDocumentInProcess || _reportStore.getAllDocumentResponseList?.results?.length!=0
+          ? ListView.separated(
+              padding: EdgeInsets.only(bottom: 80),
+              itemCount: _reportStore.getAllDocumentResponseList?.results?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                final Map<String, dynamic> prescription = prescriptionList[index];
 
-        return PrescriptionWidget(
-          symptoms: symptoms,
-          dateTime: dateTime,
-          doctorName: doctorName,
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 8,
-        );
-      },
-    );
+                final String doctorName = prescription['doctorName'] ?? '';
+
+                return PrescriptionWidget(
+                  symptoms: _reportStore.getAllDocumentResponseList?.results?[index].fileName ?? '',
+                  dateTime: _reportStore.getAllDocumentResponseList?.results?[index].createdDate ?? '',
+                  doctorName: doctorName,
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: 8,
+                );
+              },
+            )
+          : CustomProgressIndicatorWidget(
+              color: Colors.white,
+            );
+    });
   }
 
   Widget _buildBody() {
@@ -214,7 +222,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                       height: MediaQuery.of(context).size.height * 0.85,
                       child: Padding(
                         padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.15),
-                        child:   UploadDocumentWidget(reportStore:  _reportStore,),
+                        child: UploadDocumentWidget(),
                       ),
                     ));
           },

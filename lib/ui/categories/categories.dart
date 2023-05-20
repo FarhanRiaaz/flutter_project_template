@@ -1,10 +1,13 @@
 
+import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/stores/post/post_store.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 
+import '../../di/components/service_locator.dart';
 import '../home/categories_widget.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -15,6 +18,12 @@ class CategoriesScreen extends StatefulWidget {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   //stores:---------------------------------------------------------------------
   late PostStore _postStore;
+  CategoryStore _categoryStore = getIt<CategoryStore>();
+  ProfileStore _profileStore = getIt<ProfileStore>();
+
+  static const placeholderImage =
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
+
 
   @override
   void initState() {
@@ -35,33 +44,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-  static const List<Map<String, dynamic>> gridItems = [
-    {
-      'name': 'Cardiologist',
-      'imagePath': 'assets/images/organs/heart.png',
-    },
-    {
-      'name': 'Dentist',
-      'imagePath': 'assets/images/organs/tooth.png',
-    },
-    {
-      'name': 'Hepatologist',
-      'imagePath': 'assets/images/organs/liver.png',
-    },
-    {
-      'name': 'Nephrologists',
-      'imagePath': 'assets/images/organs/kidney.png',
-    },
-    {
-      'name': 'Pulmonologist',
-      'imagePath': 'assets/images/organs/lungs.png',
-    },
-    {
-      'name': 'Neurologists',
-      'imagePath': 'assets/images/organs/brain.png',
-    },
-    // add more items as needed
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +94,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         },
         customBorder: CircleBorder(),
         child: CircleAvatar(
+          backgroundColor: Colors.transparent,
           radius: 18,
-          backgroundImage: AssetImage('assets/images/circleAvatar.png'),
+          backgroundImage: NetworkImage(
+            _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
+          ),
         ),
       ),
     );
@@ -137,7 +123,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return IconButton(
       icon: Stack(
         children: const [
-          Icon(Icons.notifications_none_rounded),
+          ImageIcon(AssetImage(
+            'assets/icons/BellIcon.png',
+          )),
           Positioned(
             top: 0,
             right: 0,
@@ -204,7 +192,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   Widget _buildGridView() {
     return GridView.builder(
-      itemCount: gridItems.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -212,14 +199,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
-      itemBuilder: (BuildContext context, int index) => _buildGridItem(index),
+      itemCount: _categoryStore.allCategoryList == null ? 0 : _categoryStore.allCategoryList?.allCategoryList?.length,
+      itemBuilder: (context, index) => MedicalFieldGridTile(
+        title: _categoryStore.allCategoryList!.allCategoryList![index].title!,
+        url: _categoryStore.allCategoryList!.allCategoryList![index].image ?? placeholderImage,
+      ),
     );
   }
 
-  Widget _buildGridItem(int index) {
-    return MedicalFieldGridTile(
-      title: gridItems[index]['name'],
-      path: gridItems[index]['imagePath'],
-    );
-  }
+
 }

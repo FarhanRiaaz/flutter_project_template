@@ -7,7 +7,7 @@ class PrescriptionWidget extends StatelessWidget {
 
   final String symptoms;
   final String doctorName;
-  final DateTime dateTime;
+  final String dateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class PrescriptionWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                   Text(
-                    DateFormat('MMMM d, y').format(dateTime),
+                    dateTime,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                 ],

@@ -4,7 +4,7 @@ class UploadReportResponse {
   String? fileName;
   String? file;
   User? user;
-  DateTime? createdDate;
+  String? createdDate;
 
   UploadReportResponse({
     this.id,
@@ -17,7 +17,7 @@ class UploadReportResponse {
 
   UploadReportResponse.fromJson(Map<String, dynamic> data) {
     id = data['id'];
-    user = data['user'];
+    user = User.fromJson(data['user']);
     type = data['type'];
     fileName = data['fileName'];
     file = data['file'];
@@ -61,7 +61,7 @@ class UploadReportResponse {
     String? fileName,
     String? file,
     User? user,
-    DateTime? createdDate,
+    String? createdDate,
   }) =>
       UploadReportResponse(
         id: id ?? this.id,
