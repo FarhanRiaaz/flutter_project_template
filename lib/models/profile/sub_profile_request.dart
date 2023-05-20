@@ -1,6 +1,8 @@
+import 'dart:io';
+
 class SubProfileRequest {
   final String? name;
-  final dynamic profileImg;
+  final File? profileImg;
   final String? age;
   final String? color;
   final String? gender;
@@ -32,7 +34,7 @@ class SubProfileRequest {
 
   SubProfileRequest copyWith({
     String? name,
-    dynamic profileImg,
+    File? profileImg,
     String? age,
     String? color,
     String? gender,
