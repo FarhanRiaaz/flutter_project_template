@@ -46,4 +46,30 @@ class ReportApi {
       throw e;
     }
   }
+
+  //todo imp farhan here to look after the response type here
+
+  Future<UploadReportResponse> getFilteredDocumentList(String sortFilter,
+      String userName, String reportType, String token) async {
+    try {
+      final res = await _dioClient.get(
+        "${Endpoints.filteredDocuments}&sort=$sortFilter&user=$userName&type=$reportType",
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (res != null) {
+        return UploadReportResponse.fromJson(res);
+      } else {
+        throw Exception("Null response received!");
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
 }
