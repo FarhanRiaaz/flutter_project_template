@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_request.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 
 import '../../data/repository/repository.dart';
@@ -20,6 +21,8 @@ abstract class _ProfileStore with Store {
       ObservableFuture.value(ProfileResponse());
   static ObservableFuture<SubProfileList> emptySubProfileResponse =
       ObservableFuture.value(SubProfileList());
+  static ObservableFuture<SubProfileResponse> emptyAddSubProfileResponse =
+      ObservableFuture.value(SubProfileResponse());
 
   @observable
   ObservableFuture<ProfileResponse> profileFuture = emptyProfileResponse;
@@ -28,13 +31,27 @@ abstract class _ProfileStore with Store {
   ObservableFuture<SubProfileList> subProfileFuture = emptySubProfileResponse;
 
   @observable
+  ObservableFuture<SubProfileResponse> addSubProfileFuture =
+      emptyAddSubProfileResponse;
+
+  @observable
   ProfileResponse? currentUserProfile;
+
+  @observable
+  SubProfileResponse? currentAddSubUserProfile;
+
+  @observable
+  SubProfileRequest? subProfileRequest;
 
   @observable
   SubProfileList? currentSubUserProfile;
 
   @computed
   bool get isProfileInProcess => profileFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isSubProfileAddInProcess =>
+      addSubProfileFuture.status == FutureStatus.pending;
 
   @computed
   bool get isSubProfileInProcess =>
@@ -73,6 +90,26 @@ abstract class _ProfileStore with Store {
 
       print(
           'failed to getSubUserProfile\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future addSubUserProfile() async {
+    final future =
+        _repository.addSubUserProfile(subProfileRequest ?? SubProfileRequest());
+    addSubProfileFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value != null) {
+        currentAddSubUserProfile = value;
+      } else {
+        print('failed to addSubUserProfile\nSomething went wrong!');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to addSubUserProfile\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }

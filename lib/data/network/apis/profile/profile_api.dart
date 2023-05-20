@@ -5,6 +5,7 @@ import 'package:second_opinion_app/models/profile/sub_profile_list.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 
 import '../../../../models/profile/profile_response.dart';
+import '../../../../models/profile/sub_profile_request.dart';
 import '../../constants/endpoints.dart';
 import '../../dio_client.dart';
 
@@ -58,7 +59,6 @@ class ProfileApi {
           headers: {
             'Authorization': 'Token $token',
             'Content-Type': 'multipart/form-data',
-
           },
         ),
       );
@@ -90,6 +90,34 @@ class ProfileApi {
       } else {
         print("Null response received!\ngetSubUserProfile()");
         return SubProfileList();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  /// Method to add sub profile
+  Future<SubProfileResponse> addSubUserProfile(
+      SubProfileRequest request, String token) async {
+    try {
+      FormData formData = FormData.fromMap(request.toJson());
+
+      final res = await _dioClient.post(
+        Endpoints.subProfile,
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+      if (res != null) {
+        return SubProfileResponse.fromJson(res);
+      } else {
+        print("Null response received!\naddSubUserProfile()");
+        return SubProfileResponse();
       }
     } catch (e) {
       print(e.toString());
