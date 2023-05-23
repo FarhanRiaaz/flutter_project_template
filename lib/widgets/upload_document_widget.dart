@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/widgets/roundedRectangle_widget.dart';
 import 'package:second_opinion_app/widgets/textfield_widget.dart';
 
@@ -9,11 +11,8 @@ import '../di/components/service_locator.dart';
 import '../stores/report/report_store.dart';
 
 class UploadDocumentWidget extends StatefulWidget {
-
-
   const UploadDocumentWidget({
     Key? key,
-
   }) : super(key: key);
 
   @override
@@ -21,13 +20,16 @@ class UploadDocumentWidget extends StatefulWidget {
 }
 
 class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
-
   ReportStore _reportStore = getIt<ReportStore>();
+
+  ProfileStore _profileStore = getIt<ProfileStore>();
 
   List<Map<String, dynamic>> certificateList = [{}];
 
   FilePickerResult? result;
   File? file;
+
+  SubProfileResponse? selectedItem;
 
   TextEditingController fileNameController = TextEditingController();
 
@@ -133,25 +135,24 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
   }
 
   Widget _buildSelectUserField() {
-    List<String> items = ['User1', 'User2', 'User3'];
-    String? selectedItem;
-
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<SubProfileResponse>(
       decoration: InputDecoration(
         hintText: 'Select User',
         hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
         prefixIcon: Image.asset('assets/icons/Person.png'),
       ),
       value: selectedItem,
-      items: items.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items:
+          _profileStore.currentSubUserProfile!.subProfile!.map<DropdownMenuItem<SubProfileResponse>>((SubProfileResponse value) {
+        return DropdownMenuItem<SubProfileResponse>(
           value: value,
-          child: Text(value),
+          child: Text(value.name!),
         );
       }).toList(),
       onChanged: (value) {
         setState(() {
           selectedItem = value!;
+          _reportStore.userId = value.id;
         });
       },
     );
@@ -202,12 +203,12 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
   Widget _buildButton() {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
+      height: 50,
       child: ElevatedButton(
         onPressed: () async {
-          print(_reportStore.fileName);
-          print(_reportStore.fileType);
+          _reportStore.uploadReport();
 
-          await _reportStore.uploadReport();
+          Navigator.pop(context);
         },
         child: Text('Upload'),
       ),

@@ -6,16 +6,16 @@ import '../../utils/routes/routes.dart';
 import '../../widgets/textfield_widget.dart';
 import 'package:awesome_card/awesome_card.dart';
 
-class CardScreen extends StatefulWidget {
-  const CardScreen({
+class PaymentScreen extends StatefulWidget {
+  const PaymentScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CardScreen> createState() => _CardScreenState();
+  State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _CardScreenState extends State<CardScreen> {
+class _PaymentScreenState extends State<PaymentScreen> {
   TextEditingController cardNumberController = TextEditingController();
   TextEditingController cardExpiryController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
@@ -27,13 +27,13 @@ class _CardScreenState extends State<CardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: _buildAppBar(),
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
+      backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -44,7 +44,6 @@ class _CardScreenState extends State<CardScreen> {
     return IconButton(
       icon: const Icon(
         Icons.arrow_back_ios_new_rounded,
-        color: Colors.black,
       ),
       onPressed: () {
         Navigator.pop(context);
@@ -55,7 +54,7 @@ class _CardScreenState extends State<CardScreen> {
   Widget _buildTitle() {
     return Text(
       'Payments',
-      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+      style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
@@ -80,66 +79,73 @@ class _CardScreenState extends State<CardScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Stack(
                   children: [
-                    // _buildPaymentMethodType(),
-                    _buildCreditCard(),
-                    SizedBox(
-                      height: 20,
+                    SingleChildScrollView(
+                      padding: EdgeInsets.only(top: 10, bottom: 100),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // _buildPaymentMethodType(),
+                          _buildCreditCard(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Card Details',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          _buildCardNumberField(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(child: _buildExpiryField()),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(child: _buildCvvField()),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          _buildNameField(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          _buildCheckBox()
+                        ],
+                      ),
                     ),
-                    Text(
-                      'Card Details',
-                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    _buildCardNumberField(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: _buildExpiryField()),
-                        SizedBox(
-                          width: 10,
+                    Align(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: _buildProceedButton(),
                         ),
-                        Expanded(child: _buildCvvField()),
-                      ],
+                      ),
+                      alignment: Alignment.bottomCenter,
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    _buildNameField(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    _buildCheckBox()
                   ],
                 ),
               ),
-              Align(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: _buildProceedButton(),
-                  ),
-                ),
-                alignment: Alignment.bottomCenter,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -242,7 +248,7 @@ class _CardScreenState extends State<CardScreen> {
       child: ElevatedButton(
         onPressed: () async {
           await showCongradulationsDialog(context);
-          Navigator.pushNamed(context, Routes.home);
+          Navigator.pushNamedAndRemoveUntil(context, Routes.home, (route) => false);
         },
         child: Text('Pay Now'),
       ),
@@ -332,10 +338,12 @@ class _CardScreenState extends State<CardScreen> {
                 children: [
                   Text(
                     'My Card',
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.addPayment);
+                    },
                     icon: Icon(Icons.add_circle_outline_rounded),
                     label: Text('Add New'),
                   )

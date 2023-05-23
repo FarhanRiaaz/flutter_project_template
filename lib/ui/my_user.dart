@@ -1,5 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/models/home/home_api_response.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
+import 'package:second_opinion_app/ui/sub_user_profile.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 
 import '../di/components/service_locator.dart';
@@ -12,7 +16,19 @@ class MyUsers extends StatefulWidget {
 }
 
 class _MyUsersState extends State<MyUsers> {
-   ProfileStore _profileStore = getIt<ProfileStore>();
+  ProfileStore _profileStore = getIt<ProfileStore>();
+
+  static const placeholderImage =
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
+
+
+  @override
+  void initState() {
+    _profileStore.getSubUserProfiles();
+    super.initState();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +85,6 @@ class _MyUsersState extends State<MyUsers> {
     return IconButton(
       icon: const Icon(
         Icons.arrow_back_ios_new_rounded,
-        color: Colors.black,
       ),
       onPressed: () {
         Navigator.pop(context);
@@ -79,8 +94,8 @@ class _MyUsersState extends State<MyUsers> {
 
   Widget _buildTitle() {
     return Text(
-      'Chat',
-      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+      'Sub User',
+      style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
@@ -89,7 +104,6 @@ class _MyUsersState extends State<MyUsers> {
       height: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-
       ),
       child: Row(
         children: [
@@ -114,12 +128,13 @@ class _MyUsersState extends State<MyUsers> {
               ),
             ),
           ),
-          SizedBox(width: 5,),
+          SizedBox(
+            width: 5,
+          ),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-
+                Radius.circular(10),
               ),
               color: Theme.of(context).primaryColor,
             ),
@@ -136,16 +151,28 @@ class _MyUsersState extends State<MyUsers> {
   Widget _buildCardList() {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: _profileStore.currentSubUserProfile?.subProfile?.length??0,
+      itemCount: _profileStore.currentSubUserProfile?.subProfile?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
-        return _buildUserWidget(_profileStore.currentSubUserProfile!.subProfile![index].name!, _profileStore.currentSubUserProfile!.subProfile![index].gender! );
+        return _buildUserWidget(
+            _profileStore.currentSubUserProfile!.subProfile![index].name!,
+            _profileStore.currentSubUserProfile!.subProfile![index].gender!,
+            _profileStore.currentSubUserProfile?.subProfile?[index].profileImg ?? placeholderImage,
+            _profileStore.currentSubUserProfile!.subProfile![index]);
       },
-
     );
   }
 
-  Widget _buildUserWidget(String name, String relation ) {
-    return InkWell(onTap: (){Navigator.pushNamed(context,Routes.profile);},
+  Widget _buildUserWidget(String name, String relation, String imageUrl, SubProfileResponse subProfileResponse) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SubUserProfile(
+                      subProfileResponse: subProfileResponse,
+                    )));
+        //Todo change to SubUser Profile
+      },
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -154,14 +181,13 @@ class _MyUsersState extends State<MyUsers> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/images/profilePicture.png',
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
                   width: 50,
                   height: 50,
                   fit: BoxFit.cover,
                 ),
               ),
-
               SizedBox(
                 width: 12,
               ),
@@ -189,7 +215,6 @@ class _MyUsersState extends State<MyUsers> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildActionWidget(icon: Icons.delete_outline, onPressed: () {}, context: context),
-
                 ],
               ),
             ],

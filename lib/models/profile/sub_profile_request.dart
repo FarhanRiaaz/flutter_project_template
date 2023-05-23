@@ -1,13 +1,13 @@
 import 'dart:io';
 
 class SubProfileRequest {
-  final String? name;
-  final File? profileImg;
-  final String? age;
-  final String? color;
-  final String? gender;
-  final String? weight;
-  final String? height;
+   String? name;
+   File? profileImg;
+   String? age;
+   String? color;
+   String? gender;
+   String? weight;
+   String? height;
 
   SubProfileRequest({
     this.name,

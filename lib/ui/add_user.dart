@@ -1,8 +1,18 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_request.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart' as flex;
 import '../../widgets/textfield_widget.dart';
+import '../models/profile/sub_profile_response.dart';
+
+//Todo Profile Image
 
 class AddUserScreen extends StatefulWidget {
   const AddUserScreen({Key? key}) : super(key: key);
@@ -13,7 +23,7 @@ class AddUserScreen extends StatefulWidget {
 
 class _AddUserScreenState extends State<AddUserScreen> {
   TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController colorController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController weightController = TextEditingController();
@@ -25,10 +35,18 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   bool isLbs = true;
 
+  ProfileStore _profileStore = getIt<ProfileStore>();
+  File? _image;
+
+  @override
+  void initState() {
+    _profileStore.subProfileRequest = SubProfileRequest();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
       resizeToAvoidBottomInset: false,
       body: _buildBody(),
     );
@@ -80,92 +98,157 @@ class _AddUserScreenState extends State<AddUserScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 30),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildPictureWidget(),
-                SizedBox(
-                  height: 20,
-                ),
-                _buildNameField(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildColorField(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildGenderField(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildRelationshipField(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildDOBField(),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(child: _buildWeightField()),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(child: _buildHeightField()),
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: RoundedButtonWidget(
-                    buttonText: 'Save',
-                    buttonColor: Theme.of(context).primaryColor,
-                    onPressed: () {},
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 30),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildPictureWidget(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _buildNameField(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildColorField(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildGenderField(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildRelationshipField(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildDOBField(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: _buildWeightField()),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(child: _buildHeightField()),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: RoundedButtonWidget(
+                          buttonText: 'Save',
+                          buttonColor: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            _profileStore.addSubUserProfile();
+                          },
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
   }
 
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        _profileStore.subProfileRequest?.profileImg = _image;
+      });
+    }
+  }
+
   Widget _buildPictureWidget() {
-    return Container(
-      width: 90,
-      height: 90,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: AssetImage('assets/images/profilePicture.png'),
-          fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return SafeArea(
+              child: Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Choose from gallery'),
+                    onTap: () {
+                      _getImage(ImageSource.gallery);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera_alt),
+                    title: const Text('Take a photo'),
+                    onTap: () {
+                      _getImage(ImageSource.camera);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
         ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Icon(
-              Icons.camera_alt,
-              color: Colors.white,
-              size: 24,
+        child: Stack(
+          children: [
+            if (_image == null && _profileStore.subProfileRequest?.profileImg == null)
+              Image.asset(
+                width: 90,
+                'assets/images/profilePicture.png',
+                fit: BoxFit.fitWidth,
+              )
+            else if (_profileStore.subProfileRequest?.profileImg != null)
+              CachedNetworkImage(
+                imageUrl: _profileStore.subProfileRequest!.profileImg!.path,
+                width: 90,
+                fit: BoxFit.fitWidth,
+              ),
+            if (_image != null)
+              Image.file(
+                width: 90,
+                _image!,
+                fit: BoxFit.fitWidth,
+              ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -178,17 +261,28 @@ class _AddUserScreenState extends State<AddUserScreen> {
         icon: Icons.person_outline_rounded,
         inputAction: TextInputAction.next,
         autoFocus: false,
-        onChanged: (value) {},
+        onChanged: (value) {
+          _profileStore.subProfileRequest!.name = value;
+        },
         onFieldSubmitted: (value) {},
         textController: nameController,
       ),
     );
   }
 
+  Color selectedColor = Color(0xFFFFFFFF);
+
   Widget _buildColorField() {
     return TextFieldWidget(
-      onTap: () {
-        flex.showColorPickerDialog(context, Color(0xFFFFFFFF));
+      onTap: () async {
+        final pickedColor = await flex.showColorPickerDialog(context, selectedColor);
+        if (pickedColor != null) {
+          setState(() {
+            selectedColor = pickedColor;
+            colorController.text = pickedColor.hex.toString();
+            _profileStore.subProfileRequest!.color = colorController.text;
+          });
+        }
       },
       hint: 'Select the Color for name',
       inputType: TextInputType.emailAddress,
@@ -196,9 +290,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
       icon: Icons.color_lens_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.color = value;
+      },
       onFieldSubmitted: (value) {},
-      textController: emailController,
+      textController: colorController,
+      textStyle: TextStyle(color: selectedColor),
     );
   }
 
@@ -222,6 +319,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       onChanged: (value) {
         setState(() {
           selectedGender = value!;
+          _profileStore.subProfileRequest!.gender = value;
         });
       },
     );
@@ -258,7 +356,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
       imageIcon: 'assets/icons/Weight.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.weight = value;
+      },
       onFieldSubmitted: (value) {},
       textController: weightController,
     );
@@ -282,7 +382,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
       imageIcon: 'assets/icons/Scale.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.height = value;
+      },
       onFieldSubmitted: (value) {},
       textController: heightController,
     );
@@ -302,6 +404,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
         if (selectedDate != null) {
           dobController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+          _profileStore.subProfileRequest!.age = dobController.text;
         }
       },
       hint: 'Enter Your Date of Birth',
@@ -314,5 +417,4 @@ class _AddUserScreenState extends State<AddUserScreen> {
       textController: dobController,
     );
   }
-
 }

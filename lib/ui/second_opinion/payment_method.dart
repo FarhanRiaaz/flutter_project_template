@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 
@@ -95,7 +96,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   children: [
                     SizedBox(
                       height: 20,
-                      child: Image.network('https://assets.stickpng.com/images/5847e97bcef1014c0b5e4824.png'),
+                      child: CachedNetworkImage(imageUrl: 'https://assets.stickpng.com/images/5847e97bcef1014c0b5e4824.png'),
                     ),
                     SizedBox(width: 12.0),
                     Text('Apple Pay'),
@@ -125,8 +126,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   children: [
                     SizedBox(
                       height: 20,
-                      child: Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/1200px-Google_Pay_Logo.svg.png'),
+                      child: CachedNetworkImage(imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/1200px-Google_Pay_Logo.svg.png'),
                     ),
                     SizedBox(width: 8.0),
                     Text('Google Pay'),
@@ -176,7 +176,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         child: ElevatedButton(
             onPressed: () {
               if (_selectedOption == 'Card') {
-                Navigator.pushNamed(context, Routes.payment);
+                Navigator.pushNamed(context, Routes.addPayment);
               }
             },
             child: Text('Continue')),

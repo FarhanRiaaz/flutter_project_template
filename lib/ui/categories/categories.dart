@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/stores/post/post_store.dart';
 
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 
 import '../../di/components/service_locator.dart';
+import '../../utils/routes/routes.dart';
 import '../home/categories_widget.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -28,6 +30,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
 
   final focusNode = FocusNode();
+
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -53,7 +57,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: _buildAppBar(),
+
       body: WillPopScope(
         onWillPop: () async {
           _categoryStore.getAllCategories();
@@ -66,7 +70,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   // app bar methods:-----------------------------------------------------------
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -93,8 +97,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   List<Widget> _buildActions(BuildContext context) {
     return <Widget>[
-      _buildNotificationButton(),
-      _buildAvatarButton(),
+      //_buildNotificationButton(),
+      //_buildAvatarButton(),
       // _buildThemeButton(),
       //_buildLogoutButton(),
     ];
@@ -111,14 +115,71 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 18,
-          backgroundImage: NetworkImage(
+          backgroundImage: CachedNetworkImageProvider(
             _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
           ),
         ),
       ),
     );
   }
-
+  Widget _buildSearchBarWithButton() {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        color: Theme.of(context).primaryColor,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+                color: Colors.white,
+              ),
+              child: TextField(
+                 controller: _searchController,
+                onChanged: (value) {},
+                onEditingComplete: () {
+                  _categoryStore.getFilteredCategories(_searchController.text);
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Color(0xFFCCD2D8),
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: IconButton(
+              icon: ImageIcon(
+                AssetImage('assets/icons/SettingSlider.png'),
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.filter);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildSearchBar() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       FocusScope.of(context).autofocus(focusNode);
@@ -194,18 +255,23 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSearchBar(),
-                  SizedBox(
-                    height: 20,
+            Column(
+              children: [
+                _buildAppBar(),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSearchBarWithButton(),
+
+                        _buildGridView(),
+                      ],
+                    ),
                   ),
-                  _buildGridView(),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         );

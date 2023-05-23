@@ -15,7 +15,7 @@ class CategoryInstanceResponse {
     id = data['id'];
     title = data['title'];
     category = data['category'];
-    questions = data['questions'];
+    questions = (data['questions'] as List<dynamic>).map((item) => Question.fromJson(item)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -42,9 +42,14 @@ class CategoryInstanceResponse {
       );
 }
 
+enum QuestionType {
+  MCQ,
+  EditText,
+}
+
 class Question {
   int? id;
-  String? type;
+  QuestionType? type; // Updated type to use enum
   String? question;
   List<Option>? options;
 
@@ -57,8 +62,8 @@ class Question {
 
   Question.fromJson(Map<String, dynamic> data) {
     id = data['id'];
-    type = data['type'];
-    options = data['options'];
+    type = _parseQuestionType(data['type']); // Parse string to enum
+    options = (data['options'] as List<dynamic>).map((item) => Option.fromJson(item)).toList();
     question = data['question'];
   }
 
@@ -66,7 +71,7 @@ class Question {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
     data['id'] = this.id;
-    data['type'] = this.type;
+    data['type'] = _getQuestionTypeString(this.type); // Convert enum to string
     data['options'] = this.options;
     data['question'] = this.question;
     return data;
@@ -74,7 +79,7 @@ class Question {
 
   Question copyWith({
     int? id,
-    String? type,
+    QuestionType? type,
     String? question,
     List<Option>? options,
   }) =>
@@ -84,7 +89,30 @@ class Question {
         question: question ?? this.question,
         options: options ?? this.options,
       );
+
+  // Helper function to parse string to enum
+  static QuestionType? _parseQuestionType(String? type) {
+    if (type == 'MCQ') {
+      return QuestionType.MCQ;
+    } else if (type == 'EditText') {
+      return QuestionType.EditText;
+    }
+    return null; // Handle unrecognized types
+  }
+
+  // Helper function to convert enum to string
+  static String? _getQuestionTypeString(QuestionType? type) {
+    switch (type) {
+      case QuestionType.MCQ:
+        return 'MCQ';
+      case QuestionType.EditText:
+        return 'EditText';
+      default:
+        return null; // Handle unrecognized types
+    }
+  }
 }
+
 
 class Option {
   String? option;

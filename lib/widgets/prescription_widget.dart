@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:second_opinion_app/stores/report/report_store.dart';
+import 'package:second_opinion_app/ui/pdf_view.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 
 class PrescriptionWidget extends StatelessWidget {
-  const PrescriptionWidget({Key? key, required this.symptoms, required this.doctorName, required this.dateTime})
+  const PrescriptionWidget(
+      {Key? key,
+      required this.symptoms,
+      required this.doctorName,
+      required this.dateTime,
+      required this.id,
+      required this.reportStore,
+      required this.pdfUrl})
       : super(key: key);
 
+  final int id;
   final String symptoms;
   final String doctorName;
   final String dateTime;
+  final ReportStore reportStore;
+  final String pdfUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +34,6 @@ class PrescriptionWidget extends StatelessWidget {
         child: Row(
           children: [
             Container(
-
               decoration: BoxDecoration(
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(8.0),
@@ -62,9 +74,30 @@ class PrescriptionWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildActionWidget(icon: Icons.remove_red_eye_outlined, onPressed: () {}, context: context),
-                    SizedBox(height: 8,),
-                    _buildActionWidget(icon: Icons.delete_outline, onPressed: () {}, context: context),
+                    _buildActionWidget(
+                        icon: Icons.remove_red_eye_outlined,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewPDF(
+                                        pdfURL: pdfUrl,
+                                      )));
+                        },
+                        context: context),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    _buildActionWidget(
+                        icon: Icons.delete_outline,
+                        onPressed: () {
+                          DialogHelper.showDeleteConfirmationDialog(context, symptoms, () async {
+                            reportStore.currentDocumentToDelete = id;
+                            reportStore.deleteDocument();
+                            Navigator.pop(context);
+                          });
+                        },
+                        context: context),
                   ],
                 )),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({
@@ -14,13 +15,13 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
+      backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -64,24 +65,41 @@ class _SettingScreenState extends State<SettingScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildIconCard('assets/icons/Person.png', 'Profile', () {}),
-                _buildIconCard('assets/icons/BellIcon.png', 'Notifications', () {
-                  Navigator.pushNamed(context, Routes.notification);
-                }),
-                _buildIconCard('assets/icons/Headphones.png', 'Help and Support', () {Navigator.pushNamed(context,Routes.support);}),
-                _buildIconCard('assets/icons/info.png', 'Privacy and Security', () {}),
-                _buildIconCard('assets/icons/Key.png', 'Change Password', () {Navigator.pushNamed(context,Routes.change_password);}),
-              ],
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildIconCard('assets/icons/Person.png', 'Profile', () {
+                        Navigator.pushNamed(context, Routes.profile);
+                      }),
+                      _buildIconCard('assets/icons/BellIcon.png', 'Notifications', () {
+                        Navigator.pushNamed(context, Routes.notification);
+                      }),
+                      _buildIconCard('assets/icons/Headphones.png', 'Help and Support', () {
+                        Navigator.pushNamed(context, Routes.support);
+                      }),
+                      _buildIconCard('assets/icons/info.png', 'Privacy and Security', () {
+                        DialogHelper.showPrivacyDialog(context, () {
+                          Navigator.pop(context);
+                        });
+                      }),
+                      _buildIconCard('assets/icons/Key.png', 'Change Password', () {
+                        Navigator.pushNamed(context, Routes.change_password);
+                      }),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );

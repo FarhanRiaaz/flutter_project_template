@@ -2,7 +2,7 @@ import 'package:second_opinion_app/models/report/upload_report_response.dart';
 
 class GetAllDocumentResponse {
   int? count;
-  int? next;
+  String? next;
   int? previous;
   List<Result>? results;
 
@@ -48,7 +48,7 @@ class GetAllDocumentResponse {
 
   GetAllDocumentResponse copyWith({
     int? count,
-    int? next,
+    String? next,
     int? previous,
     List<Result>? results,
   }) =>

@@ -2,54 +2,63 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_request.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../di/components/service_locator.dart';
-import '../../widgets/progress_indicator_widget.dart';
+import 'package:flex_color_picker/flex_color_picker.dart' as flex;
 import '../../widgets/textfield_widget.dart';
+import '../models/profile/sub_profile_response.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+//Todo Profile Image
+
+class SubUserProfile extends StatefulWidget {
+  const SubUserProfile({Key? key, required this.subProfileResponse}) : super(key: key);
+  final SubProfileResponse subProfileResponse;
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<SubUserProfile> createState() => _SubUserProfileState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _SubUserProfileState extends State<SubUserProfile> {
+  List<String> items = ['MALE', 'FEMALE'];
+  String? selectedGender;
+  Color selectedColor = Color(0xFFFFFFFF);
   TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
-
+  TextEditingController colorController = TextEditingController();
+  TextEditingController relationshipController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
-  ProfileStore _profileStore = getIt<ProfileStore>();
-
-  File? _image;
-
-  List<String> items = ['Male', 'Female'];
-  String? selectedGender;
+  bool isCm = true;
 
   bool isLbs = true;
 
-  bool isCm = true;
+  ProfileStore _profileStore = getIt<ProfileStore>();
+  File? _image;
 
-  @override
-  void initState() {
-    _profileStore.getProfile().then((value) {
-      popUpTheData().then((value) {});
+  void initializeScreen() {
+    setState(() {
+      nameController.text = widget.subProfileResponse.name ?? '';
+      colorController.text = widget.subProfileResponse.color ?? '';
+      if (widget.subProfileResponse.color != null || widget.subProfileResponse.color!.isNotEmpty)
+        selectedColor = Color(int.parse('0xFF${widget.subProfileResponse.color!}'));
+      selectedGender = widget.subProfileResponse.gender?.toUpperCase() ?? 'MALE';
+      dobController.text = widget.subProfileResponse.age ?? '';
+      weightController.text = widget.subProfileResponse.weight ?? '';
+      heightController.text = widget.subProfileResponse.height ?? '';
     });
-    super.initState();
   }
 
   @override
-  void didChangeDependencies() async {
-    popUpTheData();
-    super.didChangeDependencies();
+  void initState() {
+    initializeScreen();
+    _profileStore.subProfileRequest = SubProfileRequest();
+    super.initState();
   }
 
   @override
@@ -62,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.white10.withOpacity(0.1),
+      backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -80,15 +89,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildTitle() {
     return Text(
-      'Profile',
+      'Sub User',
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
   Widget _buildBody() {
-    return Observer(builder: (context) {
-      return _profileStore.isProfileInProcess ? CustomProgressIndicatorWidget() : _buildMainContent();
-    });
+    return _buildMainContent();
   }
 
   Widget _buildMainContent() {
@@ -128,11 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      _buildEmailField(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _buildPhoneField(),
+                      _buildColorField(),
                       SizedBox(
                         height: 15,
                       ),
@@ -140,7 +143,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      _buildAgeField(),
+                      _buildRelationshipField(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildDOBField(),
                       SizedBox(
                         height: 15,
                       ),
@@ -156,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -165,12 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           buttonText: 'Save',
                           buttonColor: Theme.of(context).primaryColor,
                           onPressed: () {
-                            _profileStore.updateProfile(
-                                selectedGender ?? _profileStore.currentUserProfile!.gender!,
-                                int.parse(
-                                    ageController.text.isEmpty ? _profileStore.currentUserProfile!.age! : ageController.text),
-                                _image ?? null);
-
+                            Navigator.pop(context);
                           },
                         ),
                       )
@@ -191,78 +193,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        _profileStore.subProfileRequest?.profileImg = _image;
       });
     }
   }
 
   Widget _buildPictureWidget() {
-    return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return SafeArea(
-              child: Wrap(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.photo_library),
-                    title: const Text('Choose from gallery'),
-                    onTap: () {
-                      _getImage(ImageSource.gallery);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.camera_alt),
-                    title: const Text('Take a photo'),
-                    onTap: () {
-                      _getImage(ImageSource.camera);
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-      child: Container(
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Stack(
-          children: [
-            if (_image == null && _profileStore.currentUserProfile?.profileImg == null)
-              Image.asset(
-                width: 90,
-                'assets/images/profilePicture.png',
-                fit: BoxFit.fitWidth,
-              )
-            else if (_profileStore.currentUserProfile?.profileImg != null)
-              CachedNetworkImage(
-                imageUrl: _profileStore.currentUserProfile!.profileImg!,
-                width: 90,
-                fit: BoxFit.fitWidth,
-              ),
-            if (_image != null)
-              Image.file(
-                width: 90,
-                _image!,
-                fit: BoxFit.fitWidth,
-              ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: Icon(
-                Icons.camera_alt,
-                color: Colors.white,
-                size: 24,
-              ),
+    return Container(
+      width: 90,
+      height: 90,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Stack(
+        children: [
+          if (widget.subProfileResponse.profileImg == null)
+            Image.asset(
+              width: 90,
+              'assets/images/profilePicture.png',
+              fit: BoxFit.fitWidth,
+            )
+          else if (widget.subProfileResponse.profileImg != null)
+            CachedNetworkImage(
+              imageUrl: widget.subProfileResponse.profileImg!,
+              width: 90,
+              fit: BoxFit.fitWidth,
             ),
-          ],
-        ),
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: Icon(
+              Icons.camera_alt,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -270,43 +236,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildNameField() {
     return Container(
       child: TextFieldWidget(
+        isReadOnly: true,
         hint: 'Enter Your Name',
         inputType: TextInputType.name,
         icon: Icons.person_outline_rounded,
         inputAction: TextInputAction.next,
         autoFocus: false,
-        onChanged: (value) {},
+        onChanged: (value) {
+          _profileStore.subProfileRequest!.name = value;
+        },
         onFieldSubmitted: (value) {},
-        onTap: () {},
         textController: nameController,
       ),
     );
   }
 
-  Widget _buildEmailField() {
+  Widget _buildColorField() {
     return TextFieldWidget(
-      hint: 'Enter Your Email',
+      onTap: () async {},
+      hint: 'Select the Color for name',
       inputType: TextInputType.emailAddress,
-      icon: Icons.email_outlined,
+      isReadOnly: true,
+      icon: Icons.color_lens_outlined,
       inputAction: TextInputAction.next,
       autoFocus: false,
-      imageIcon: 'assets/icons/Mail.png',
-      onChanged: (value) {},
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.color = value;
+      },
       onFieldSubmitted: (value) {},
-      textController: emailController,
-    );
-  }
-
-  Widget _buildPhoneField() {
-    return TextFieldWidget(
-      hint: 'Enter Your Mobile Number',
-      inputType: TextInputType.phone,
-      icon: Icons.phone_outlined,
-      imageIcon: 'assets/icons/Call.png',
-      inputAction: TextInputAction.next,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      textController: mobileController,
+      textController: colorController,
+      textStyle: TextStyle(color: selectedColor),
     );
   }
 
@@ -321,28 +280,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
       items: items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(value,style: Theme.of(context).textTheme.bodyLarge,),
         );
       }).toList(),
       onChanged: (value) {
         setState(() {
           selectedGender = value!;
-          print(value);
+          _profileStore.subProfileRequest!.gender = value;
         });
       },
     );
   }
 
-  Widget _buildWeightField() {
+  Widget _buildRelationshipField() {
     return TextFieldWidget(
-      hint: 'Weight',
-      inputType: TextInputType.number,
-      imageIcon: 'assets/icons/Weight.png',
+      isReadOnly: true,
+      hint: 'Enter Relationship',
+      inputType: TextInputType.text,
+      icon: Icons.person_outline_rounded,
       inputAction: TextInputAction.next,
       autoFocus: false,
       onChanged: (value) {},
       onFieldSubmitted: (value) {},
-      textController: weightController,
+      textController: relationshipController,
+    );
+  }
+
+  Widget _buildWeightField() {
+    return TextFieldWidget(
+      isReadOnly: true,
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
@@ -354,20 +320,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),
+      hint: 'Weight',
+      inputType: TextInputType.number,
+      imageIcon: 'assets/icons/Weight.png',
+      inputAction: TextInputAction.next,
+      autoFocus: false,
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.weight = value;
+      },
+      onFieldSubmitted: (value) {},
+      textController: weightController,
     );
   }
 
   Widget _buildHeightField() {
     return TextFieldWidget(
-      hint: 'Height',
-      inputType: TextInputType.number,
-      icon: Icons.height_rounded,
-      imageIcon: 'assets/icons/Scale.png',
-      inputAction: TextInputAction.next,
-      autoFocus: false,
-      onChanged: (value) {},
-      onFieldSubmitted: (value) {},
-      textController: heightController,
+      isReadOnly: true,
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
@@ -379,42 +347,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),
+      hint: 'Height',
+      inputType: TextInputType.number,
+      imageIcon: 'assets/icons/Scale.png',
+      inputAction: TextInputAction.next,
+      autoFocus: false,
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.height = value;
+      },
+      onFieldSubmitted: (value) {},
+      textController: heightController,
     );
   }
 
-  Widget _buildAgeField() {
-    return Observer(builder: (context) {
-      return TextFieldWidget(
-        hint: 'Age',
-        inputType: TextInputType.number,
-        icon: Icons.person_outline_rounded,
-        textController: ageController,
-        inputAction: TextInputAction.next,
-        onTap: () {},
-        onChanged: (value) {},
-        onFieldSubmitted: (value) {},
-      );
-    });
-  }
+  Widget _buildDOBField() {
+    return TextFieldWidget(
+      imageIcon: 'assets/icons/Calender2.png',
+      isReadOnly: true,
+      onTap: () async {
+        final DateTime? selectedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+        );
 
-  Future<void> popUpTheData() async {
-    print('object');
-    if (_profileStore.isProfileInProcess)
-      nameController = TextEditingController(text: _profileStore.currentUserProfile?.name ?? "");
-    ;
-    emailController = TextEditingController(text: _profileStore.currentUserProfile?.email ?? "");
-    ;
-    if (_profileStore.isProfileInProcess) {
-      selectedGender = _profileStore.currentUserProfile?.gender!;
-    }
-    if (_profileStore.isProfileInProcess)
-      ageController = TextEditingController(text: _profileStore.currentUserProfile?.age ?? "");
-    ;
-    if (_profileStore.isProfileInProcess)
-      heightController = TextEditingController(text: _profileStore.currentUserProfile?.height ?? "");
-    ;
-    if (_profileStore.isProfileInProcess)
-      weightController = TextEditingController(text: _profileStore.currentUserProfile?.weight ?? "");
-    setState(() {});
+        if (selectedDate != null) {
+          dobController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+          _profileStore.subProfileRequest!.age = dobController.text;
+        }
+      },
+      hint: 'Enter Your Date of Birth',
+      inputType: TextInputType.number,
+      icon: Icons.calendar_month_rounded,
+      inputAction: TextInputAction.next,
+      autoFocus: false,
+      onChanged: (value) {},
+      onFieldSubmitted: (value) {},
+      textController: dobController,
+    );
   }
 }

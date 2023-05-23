@@ -15,7 +15,6 @@ abstract class _FormStore with Store {
   // store for handling error messages
   final ErrorStore errorStore = ErrorStore();
 
-
   _FormStore() {
     _setupValidations();
   }
@@ -147,8 +146,9 @@ abstract class _FormStore with Store {
       formErrorStore.password = "Password can't be empty";
     } else if (password.length < 8) {
       formErrorStore.password = "Password must be at least 8 characters long";
-    } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$').hasMatch(password)) {
-      formErrorStore.password = "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number";
+    } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]?)[a-zA-Z\d@#$%^&+=]{8,}$').hasMatch(password)) {
+      formErrorStore.password =
+      "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and may include special characters";
     } else {
       formErrorStore.password = null;
     }

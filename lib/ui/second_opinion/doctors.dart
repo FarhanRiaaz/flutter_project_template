@@ -100,7 +100,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(backgroundColor: Colors.transparent,
-      leading: _buildLeadingButton(),
+     // leading: _buildLeadingButton(),
       title: _buildTitle(),
       // actions: _buildAction(),
       centerTitle: true,

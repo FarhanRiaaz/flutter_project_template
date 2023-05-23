@@ -31,13 +31,13 @@ class _SupportScreenState extends State<SupportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: _buildAppBar(),
+
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
       title: _buildTitle(),
       centerTitle: true,
       leading: _buildLeadingButton(),
@@ -61,22 +61,29 @@ class _SupportScreenState extends State<SupportScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildSearchBarWithButton(),
-              SizedBox(
-                height: 10,
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildSearchBarWithButton(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      color: Colors.white,
+                      child: _buildCardList(),
+                    ),
+                  ],
+                ),
               ),
-              Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                color: Colors.white,
-                child: _buildCardList(),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -86,7 +93,7 @@ class _SupportScreenState extends State<SupportScreen> {
     return IconButton(
       icon: const Icon(
         Icons.arrow_back_ios_new_rounded,
-        color: Colors.black,
+
       ),
       onPressed: () {
         Navigator.pop(context);
@@ -96,8 +103,8 @@ class _SupportScreenState extends State<SupportScreen> {
 
   Widget _buildTitle() {
     return Text(
-      'Chat',
-      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+      'Help and Support',
+      style: Theme.of(context).textTheme.headlineMedium ,
     );
   }
 

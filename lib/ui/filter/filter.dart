@@ -39,17 +39,27 @@ class _FilterScreenState extends State<FilterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
-      appBar: _buildAppBar(),
+
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
+      leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
     );
   }
 
+
+  Widget _buildLeadingButton() {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  }
   Widget _buildBody() {
     return _buildMainContent();
   }
@@ -107,32 +117,39 @@ class _FilterScreenState extends State<FilterScreen> {
             )),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildStatusFilter(),
-                SizedBox(
-                  height: 15,
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildStatusFilter(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildPaymentFilter(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildArrangeByFilter(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildDateFilter(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildCategoryFilter(),
+                    ],
+                  ),
                 ),
-                _buildPaymentFilter(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildArrangeByFilter(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildDateFilter(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildCategoryFilter(),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );

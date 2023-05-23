@@ -26,13 +26,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: _buildAppBar(),
+
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -76,37 +76,42 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _buildCurrentPassword(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildNewPassword(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildConfirmPassword(),
-                ],
-              ),
-              Align(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: _buildProceedButton(),
-                  ),
+        Column(
+          children: [
+
+            _buildAppBar(),
+            SizedBox(height: 10,),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _buildCurrentPassword(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _buildNewPassword(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _buildConfirmPassword(),
+                  ],
                 ),
-                alignment: Alignment.bottomCenter,
               ),
-            ],
+            ),
+          ],
+        ),
+        Align(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: _buildProceedButton(),
+            ),
           ),
+          alignment: Alignment.bottomCenter,
         ),
       ],
     );

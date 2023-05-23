@@ -19,13 +19,13 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
+      backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -35,7 +35,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildLeadingButton() {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -69,8 +71,10 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         Column(
           children: [
+            _buildAppBar(),
             Expanded(
-              child: ListView.builder(padding: EdgeInsets.symmetric(vertical: 20),
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 20),
                 itemCount: _messages.length,
                 itemBuilder: (BuildContext context, int index) {
                   final message = _messages[index];
@@ -89,8 +93,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     flex: 12,
                     child: SizedBox(
                       height: 50,
-                      child: Material(elevation: 2,
-                        child: TextField( 
+                      child: Material(
+                        elevation: 2,
+                        child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Write a message',
                             suffixIcon: IconButton(
@@ -104,7 +109,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Expanded(
                     flex: 2,
                     child: SizedBox(
@@ -126,7 +133,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ],
               ),
-
             ),
           ],
         ),
@@ -141,7 +147,7 @@ class Message {
   final DateTime dateTime;
   final bool isRead;
 
-  Message({required this.dateTime, required this.text, required this.isMe,required this.isRead});
+  Message({required this.dateTime, required this.text, required this.isMe, required this.isRead});
 }
 
 class MessageBubble extends StatelessWidget {
@@ -157,7 +163,8 @@ class MessageBubble extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!message.isMe)
                 SizedBox(
@@ -201,9 +208,14 @@ class MessageBubble extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                DateFormat('d MMM y hh:mm a').format(message.dateTime),style: TextStyle(fontSize: 12),
+                                DateFormat('d MMM y hh:mm a').format(message.dateTime),
+                                style: TextStyle(fontSize: 12),
                               ),
-                              if(message.isMe)Icon(Icons.check,color: message.isRead?Color(0xFF16caea):Colors.blueGrey.shade200,)
+                              if (message.isMe)
+                                Icon(
+                                  Icons.check,
+                                  color: message.isRead ? Color(0xFF16caea) : Colors.blueGrey.shade200,
+                                )
                             ],
                           ),
                         ],

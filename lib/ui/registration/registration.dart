@@ -336,7 +336,7 @@ class _RegistrationState extends State<Registration> {
   }
 
   Widget _buildSignInButton() {
-    return SizedBox(
+    return SizedBox(height: 50,
       child: RoundedButtonWidget(
         buttonText: 'Sign Up',
         buttonColor: Colors.orangeAccent,

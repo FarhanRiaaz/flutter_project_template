@@ -51,12 +51,12 @@ class NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: _buildAppBar(),
+
         body: RefreshIndicator(onRefresh: () async {}, child: _buildBody()));
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -66,7 +66,7 @@ class NotificationScreenState extends State<NotificationScreen> {
   Widget _buildTitle() {
     return Text(
       'Notifications',
-      style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+      style: Theme.of(context).textTheme.headlineMedium
     );
   }
 
@@ -74,7 +74,7 @@ class NotificationScreenState extends State<NotificationScreen> {
     return IconButton(
       icon: const Icon(
         Icons.arrow_back_ios_new_rounded,
-        color: Colors.black,
+
       ),
       onPressed: () {
         Navigator.pop(context);
@@ -99,17 +99,24 @@ class NotificationScreenState extends State<NotificationScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        ListView.builder(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          itemCount: notificationData.length,
-          itemBuilder: (context, index) {
-            return NotificationsTile(
-              label: notificationData[index]['label'],
-              description: notificationData[index]['description'],
-              timeStamp: notificationData[index]['timeago'],
-              iconData: Icons.notifications_rounded,
-            );
-          },
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics( ),
+                itemCount: notificationData.length,
+                itemBuilder: (context, index) {
+                  return NotificationsTile(
+                    label: notificationData[index]['label'],
+                    description: notificationData[index]['description'],
+                    timeStamp: notificationData[index]['timeago'],
+                    iconData: Icons.notifications_rounded,
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -154,7 +161,9 @@ class NotificationsTile extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold,fontSize: 18),
+
+
                     ),
                     SizedBox(
                       height: 5,

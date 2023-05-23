@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/models/home/home_api_response.dart';
@@ -71,9 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
   // app bar methods:-----------------------------------------------------------
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: Image.asset(
-        'assets/icons/icon.png',
-        scale: 3,
+      title: Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Image.asset(
+          'assets/icons/icon.png',
+          scale: 3.1,
+        ),
       ),
       centerTitle: true,
       backgroundColor: Colors.transparent,
@@ -116,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 18,
-          backgroundImage: NetworkImage(
+          backgroundImage: CachedNetworkImageProvider(
             _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
           ),
         ),
@@ -184,40 +188,110 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildCard() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.20,
-      child: Card(
-        color: const Color(0xFFDCF1F5),
-        elevation: 0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 6,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    Text('You need our best consultancy and assistance ',
-                        style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
+        height: MediaQuery.of(context).size.height * 0.20,
+        child: PageView(allowImplicitScrolling: true,
+          children: [
+            Card(
+              color: const Color(0xFFDCF1F5),
+              elevation: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  children: [
+                    //Todo Change to Image slider . Only URL images full card
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text('You need our best consultancy and assistance ',
+                              style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Image.asset(
+                          'assets/images/doctor_image.png',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Expanded(
-                flex: 4,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.asset(
-                    'assets/images/doctor_image.png',
-                    fit: BoxFit.fitWidth,
-                  ),
+            ),
+            Card(
+              color: const Color(0xFFDCF1F5),
+              elevation: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  children: [
+                    //Todo Change to Image slider . Only URL images full card
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text('You need our best consultancy and assistance ',
+                              style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Image.asset(
+                          'assets/images/doctor_image.png',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+            Card(
+              color: const Color(0xFFDCF1F5),
+              elevation: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  children: [
+                    //Todo Change to Image slider . Only URL images full card
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text('You need our best consultancy and assistance ',
+                              style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Image.asset(
+                          'assets/images/doctor_image.png',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget _buildNotificationButton() {
@@ -244,7 +318,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, Routes.notification);
+      },
     );
   }
 
@@ -399,42 +475,88 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.pushNamed(context, Routes.myUsers);
               },
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    radius: 18,
-                    backgroundImage: NetworkImage(
-                      _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
+              child: Container(
+                height: 70,
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 18,
+                      backgroundImage: CachedNetworkImageProvider(
+                        _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'You',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  )
-                ],
+                    Text(
+                      'You',
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-
+            SizedBox(
+              width: 6,
+            ),
+            Expanded(
+                child: Container(
+              height: 70,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: _profileStore.currentSubUserProfile?.subProfile?.length != null
+                    ? _profileStore.currentSubUserProfile?.subProfile?.length.clamp(0, 3)
+                    : 0,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.myUsers);
+                    },
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          radius: 18,
+                          backgroundImage: CachedNetworkImageProvider(
+                              _profileStore.currentSubUserProfile?.subProfile?[index].profileImg ?? placeholderImage),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: Center(
+                            child: Text(
+                              _profileStore.currentSubUserProfile!.subProfile![index].name!.split(' ').first,
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            )),
             SizedBox(
               width: 2,
             ),
-
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AddUserScreen()));
-                  },
-                  child: CircleAvatar(
-                    radius: 18,
-                    child: Icon(Icons.add),
+            SizedBox(
+              height: 70,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddUserScreen()));
+                    },
+                    child: CircleAvatar(
+                      radius: 18,
+                      child: Icon(Icons.add),
+                    ),
                   ),
-                ),
-                Text('', style: TextStyle(fontSize: 12)),
-              ],
+                  Text('', style: TextStyle(fontSize: 12)),
+                ],
+              ),
             ),
           ],
         )

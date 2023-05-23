@@ -52,7 +52,7 @@ class _PageViewScreenState extends State<PageViewScreen> {
             AssetImage(
               'assets/icons/Selected_home.png',
             ),
-            color: Theme.of(context).primaryColor,
+            color: currentPageIndex ==0?Theme.of(context).primaryColor:Colors.white,
           ),
           label: 'Home'),
       BottomNavigationBarItem(
@@ -60,7 +60,7 @@ class _PageViewScreenState extends State<PageViewScreen> {
           AssetImage(
             'assets/icons/unselected_report.png',
           ),
-          color: Color(0xFF1ce0a3),
+          color: currentPageIndex ==1?Color(0xFF1ce0a3):Colors.white,
         ),
         label: 'Report',
       ),
@@ -69,7 +69,7 @@ class _PageViewScreenState extends State<PageViewScreen> {
             AssetImage(
               'assets/icons/unselected_opinion.png',
             ),
-            color: Color(0xFFec652a)),
+            color: currentPageIndex ==2?Color(0xFFec652a):Colors.white),
         label: 'Second Opinion',
       ),
       BottomNavigationBarItem(
@@ -77,11 +77,12 @@ class _PageViewScreenState extends State<PageViewScreen> {
             AssetImage(
               'assets/icons/More_unselected.png',
             ),
-            color: Theme.of(context).primaryColor),
+            color: currentPageIndex ==3?Theme.of(context).primaryColor:Colors.white),
         label: 'More',
       ),
     ];
   }
+
 
   Widget _buildBottomNavBar() {
     Color selectedItemColor = Theme.of(context).primaryColor;

@@ -6,38 +6,37 @@ import 'package:second_opinion_app/widgets/upload_document_widget.dart';
 import '../../widgets/textfield_widget.dart';
 
 class SecondOpinionScreen extends StatefulWidget {
-  const SecondOpinionScreen({Key? key, }) : super(key: key);
-
+  const SecondOpinionScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SecondOpinionScreen> createState() => _SecondOpinionScreenState();
 }
 
 class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
-
   TextEditingController diseaseController = TextEditingController();
 
   TextEditingController descriptionController = TextEditingController();
 
-
-
-   @override
+  @override
   void dispose() {
-   diseaseController.dispose();
-   descriptionController.dispose();
+    diseaseController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: _buildAppBar(),
+
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -81,30 +80,37 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    'Please Answer Following Questions',
-                    style: TextStyle(fontSize: 12),
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: Text(
+                          'Please Answer Following Questions',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      _buildDiseaseField(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _buildDescriptionField(),
+                      _buildUploadWidget(),
+                    ],
                   ),
                 ),
-                _buildDiseaseField(),
-                SizedBox(
-                  height: 15,
-                ),
-                _buildDescriptionField(),
-                _buildUploadWidget(),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -130,7 +136,8 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
                   height: MediaQuery.of(context).size.width * 0.12,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.payment_method);
+                      Navigator.pushNamed(context, Routes.payment);
+
                     },
                     child: Text('Next'),
                   ),

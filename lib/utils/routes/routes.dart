@@ -5,6 +5,7 @@ import 'package:second_opinion_app/ui/into/intro.dart';
 import 'package:second_opinion_app/ui/login/login.dart';
 import 'package:second_opinion_app/ui/filter/filter.dart';
 import 'package:second_opinion_app/ui/my_user.dart';
+import 'package:second_opinion_app/ui/payment/card_screen.dart';
 import 'package:second_opinion_app/ui/payment/payment.dart';
 import 'package:second_opinion_app/ui/profile/profile.dart';
 import 'package:second_opinion_app/ui/registration/registration.dart';
@@ -32,7 +33,7 @@ class Routes {
   static const String categories = '/categories';
   static const String profile = '/profile';
   static const String registration = '/registration';
-  static const String payment = '/payment';
+  static const String addPayment = '/addPayment';
   static const String question = '/question';
   static const String intro = '/intro';
   static const String doctors = '/doctors';
@@ -46,6 +47,7 @@ class Routes {
   static const String filter = '/filter';
   static const String chat = '/chat';
   static const String myUsers = '/myUsers';
+  static const String payment = '/payment';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -54,7 +56,7 @@ class Routes {
     categories: (BuildContext context) => CategoriesScreen(),
     profile: (BuildContext context) => ProfileScreen(),
     registration: (BuildContext context) => Registration(),
-    payment: (BuildContext context) => PaymentScreen(),
+    addPayment: (BuildContext context) => AddPaymentScreen(),
     question: (BuildContext context) => QuestionsScreen(),
     intro: (BuildContext context) => IntroScreen(),
     doctors: (BuildContext context) => DoctorsScreen(),
@@ -68,5 +70,8 @@ class Routes {
     filter: (BuildContext context) => FilterScreen(),
     chat: (BuildContext context) => ChatScreen(),
     myUsers: (BuildContext context) => MyUsers(),
+    payment: (BuildContext context) => PaymentScreen(),
+
+
   };
 }

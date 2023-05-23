@@ -21,14 +21,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   late AnimationController _animationController;
 
-  List<Map<String, dynamic>> prescriptionList = List.generate(15, (index) {
-    final random = Random();
-    final date = DateTime.now().subtract(Duration(days: random.nextInt(30)));
-    final doctorName =
-        'Dr. ${String.fromCharCode(random.nextInt(26) + 65)}. ${String.fromCharCode(random.nextInt(26) + 97)}. ${String.fromCharCode(random.nextInt(26) + 97)}';
-    final symptoms = ['Fever', 'Cough', 'Headache', 'Sore Throat', 'Fatigue'][random.nextInt(5)];
-    return {'date': date, 'doctorName': doctorName, 'symptoms': symptoms};
-  });
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -50,27 +43,26 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _buildBody(),
-      //appBar: _buildAppBar(),
       floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
   Widget _buildListView() {
     return Observer(builder: (context) {
-      return !_reportStore.isFetchDocumentInProcess || _reportStore.getAllDocumentResponseList?.results?.length!=0
+      return !_reportStore.isFetchDocumentInProcess && !_reportStore.isDeletedInProcess
           ? ListView.separated(
               padding: EdgeInsets.only(bottom: 80),
               itemCount: _reportStore.getAllDocumentResponseList?.results?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
-                final Map<String, dynamic> prescription = prescriptionList[index];
-
-                final String doctorName = prescription['doctorName'] ?? '';
-
                 return PrescriptionWidget(
+                  pdfUrl: _reportStore.getAllDocumentResponseList!.results![index].file!,
+                  reportStore: _reportStore,
+                  id: _reportStore.getAllDocumentResponseList!.results![index].id!,
                   symptoms: _reportStore.getAllDocumentResponseList?.results?[index].fileName ?? '',
                   dateTime: _reportStore.getAllDocumentResponseList?.results?[index].createdDate ?? '',
-                  doctorName: doctorName,
+                  doctorName: 'Dr Sanuke',
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
@@ -137,13 +129,10 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   Widget _buildLeadingButton() {
     return IconButton(
-      icon: const ImageIcon(
-        AssetImage(
-          'assets/icons/Headphones.png',
-        ),
-        color: Colors.black,
-      ),
-      onPressed: () {},
+      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+      onPressed: () {
+        widget.onBackPressed();
+      },
     );
   }
 
@@ -173,6 +162,11 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                 color: Colors.white,
               ),
               child: TextField(
+                controller: _searchController,
+                onChanged: (value) {},
+                onEditingComplete: () {
+                  _reportStore.getFilteredDocumentList('dsc', '', _searchController.text);
+                },
                 decoration: InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(

@@ -74,11 +74,11 @@ class CategoryApi {
       String authToken, int catType) async {
     try {
       final res = await _dioClient.get(
-        Endpoints.getFormByCatId,
+        '${Endpoints.getFormByCatId}/$catType/',
         options: Options(
           headers: {
             'Authorization': 'Token $authToken',
-            'Content-Type': 'multipart/form-data',
+
           },
         ),
       );

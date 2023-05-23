@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/data/sharedpref/shared_preference_helper.dart';
 import 'package:second_opinion_app/ui/payment/card_screen.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({Key? key, required this.onBackPressed}) : super(key: key);
@@ -14,14 +17,14 @@ class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      leading: _buildLeadingButton(),
+    return AppBar(backgroundColor: Colors.transparent,
+     // leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
     );
@@ -64,22 +67,44 @@ class _MoreScreenState extends State<MoreScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildIconCard('assets/icons/CreditCard.png', 'Payment', () {
-                 Navigator.push(context,MaterialPageRoute(builder: (context)=>CardScreen()));
-                }),
-                _buildIconCard('assets/icons/Setting.png', 'Setting', () { Navigator.pushNamed(context, Routes.setting);}),
-                _buildIconCard('assets/icons/info.png', 'About Us', () { }),
-              ],
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildIconCard('assets/icons/CreditCard.png', 'Payment', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen()));
+                      }),
+                      _buildIconCard('assets/icons/Setting.png', 'Setting', () {
+                        Navigator.pushNamed(context, Routes.setting);
+                      }),
+                      _buildIconCard('assets/icons/info.png', 'About Us', () {
+                        DialogHelper.showAboutUsDialog(context, () {
+                          Navigator.pop(context);
+                        });
+                      }),
+                      _buildIconCard('assets/icons/logout.png', 'Logout', () {
+                        DialogHelper.showLogoutDialog(context, () async {
+                          SharedPreferences shared = await SharedPreferences.getInstance();
+                          Navigator.pop(context);
+                          SharedPreferenceHelper(shared).removeAuthToken();
+                          SharedPreferenceHelper(shared).saveIsLoggedIn(false);
+                          Navigator.pushNamed(context, Routes.login);
+                        });
+                      }),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );

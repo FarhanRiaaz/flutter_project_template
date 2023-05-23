@@ -22,6 +22,9 @@ class TextFieldWidget extends StatelessWidget {
   final String? imageIcon;
   final Function? onTap;
   bool isReadOnly;
+  final TextStyle? textStyle;
+
+
 
   final List<TextInputFormatter>? inputFormat;
 
@@ -46,7 +49,7 @@ class TextFieldWidget extends StatelessWidget {
         maxLength: 40,
         maxLines: this.maxLines,
         keyboardType: this.inputType,
-        style: Theme.of(context).textTheme.bodyLarge,
+        style:textStyle?? Theme.of(context).textTheme.bodyLarge,
         decoration: errorText != null
             ? InputDecoration(
                 prefixIcon: this.imageIcon == null
@@ -100,7 +103,7 @@ class TextFieldWidget extends StatelessWidget {
     this.autoFocus = false,
     this.inputAction,
     this.imageIcon,
-    this.onTap,
+    this.onTap, this.textStyle,
   }) : super(key: key);
 }
 

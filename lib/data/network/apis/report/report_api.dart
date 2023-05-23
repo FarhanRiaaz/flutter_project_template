@@ -103,7 +103,7 @@ class ReportApi {
   Future<bool> deleteDocument(String token, int id) async {
     try {
       final res = await _dioClient.delete(
-        "${Endpoints.documents}$id",
+        "${Endpoints.documents}$id/",
         options: Options(
           headers: {
             'Authorization': 'Token $token',

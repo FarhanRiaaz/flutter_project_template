@@ -17,12 +17,9 @@ abstract class _ProfileStore with Store {
   final Repository _repository;
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<ProfileResponse> emptyProfileResponse =
-      ObservableFuture.value(ProfileResponse());
-  static ObservableFuture<SubProfileList> emptySubProfileResponse =
-      ObservableFuture.value(SubProfileList());
-  static ObservableFuture<SubProfileResponse> emptyAddSubProfileResponse =
-      ObservableFuture.value(SubProfileResponse());
+  static ObservableFuture<ProfileResponse> emptyProfileResponse = ObservableFuture.value(ProfileResponse());
+  static ObservableFuture<SubProfileList> emptySubProfileResponse = ObservableFuture.value(SubProfileList());
+  static ObservableFuture<SubProfileResponse> emptyAddSubProfileResponse = ObservableFuture.value(SubProfileResponse());
 
   @observable
   ObservableFuture<ProfileResponse> profileFuture = emptyProfileResponse;
@@ -31,8 +28,7 @@ abstract class _ProfileStore with Store {
   ObservableFuture<SubProfileList> subProfileFuture = emptySubProfileResponse;
 
   @observable
-  ObservableFuture<SubProfileResponse> addSubProfileFuture =
-      emptyAddSubProfileResponse;
+  ObservableFuture<SubProfileResponse> addSubProfileFuture = emptyAddSubProfileResponse;
 
   @observable
   ProfileResponse? currentUserProfile;
@@ -50,12 +46,10 @@ abstract class _ProfileStore with Store {
   bool get isProfileInProcess => profileFuture.status == FutureStatus.pending;
 
   @computed
-  bool get isSubProfileAddInProcess =>
-      addSubProfileFuture.status == FutureStatus.pending;
+  bool get isSubProfileAddInProcess => addSubProfileFuture.status == FutureStatus.pending;
 
   @computed
-  bool get isSubProfileInProcess =>
-      subProfileFuture.status == FutureStatus.pending;
+  bool get isSubProfileInProcess => subProfileFuture.status == FutureStatus.pending;
 
   @action
   Future getProfile() async {
@@ -88,16 +82,14 @@ abstract class _ProfileStore with Store {
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to getSubUserProfile\nSomething went wrong!\n${e.toString()}');
+      print('failed to getSubUserProfile\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
 
   @action
   Future addSubUserProfile() async {
-    final future =
-        _repository.addSubUserProfile(subProfileRequest ?? SubProfileRequest());
+    final future = _repository.addSubUserProfile(subProfileRequest ?? SubProfileRequest());
     addSubProfileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value != null) {
@@ -108,15 +100,14 @@ abstract class _ProfileStore with Store {
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to addSubUserProfile\nSomething went wrong!\n${e.toString()}');
+      print('failed to addSubUserProfile\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
 
   @action
-  Future updateProfile(String gender, int age, File profileImage) async {
-    final future = _repository.updateProfile(gender, age, profileImage);
+  Future updateProfile(String gender, int age, File? profileImage) async {
+    final future = _repository.updateProfile(gender, age, profileImage ?? null);
     profileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {

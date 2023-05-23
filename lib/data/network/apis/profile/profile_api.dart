@@ -40,16 +40,14 @@ class ProfileApi {
   }
 
   /// Method to update user profile
-  Future<ProfileResponse> updateProfile(
-      String token, String gender, int age, File profileImage) async {
+  Future<ProfileResponse> updateProfile(String token, String gender, int age, File? profileImage) async {
     try {
-      String fileName = profileImage.path.split('/').last;
+      String? fileName = profileImage?.path.split('/').last ?? null;
 
       FormData formData = FormData.fromMap({
         'gender': gender,
         'age': age,
-        'profileImg':
-            await MultipartFile.fromFile(profileImage.path, filename: fileName),
+        if (profileImage?.path != null) 'profileImg': await MultipartFile.fromFile(profileImage?.path ?? '', filename: fileName),
       });
 
       final res = await _dioClient.patch(
@@ -98,11 +96,19 @@ class ProfileApi {
   }
 
   /// Method to add sub profile
-  Future<SubProfileResponse> addSubUserProfile(
-      SubProfileRequest request, String token) async {
+  Future<SubProfileResponse> addSubUserProfile(SubProfileRequest request, String token) async {
     try {
-      FormData formData = FormData.fromMap(request.toJson());
-
+      FormData formData = FormData.fromMap({
+        'name': request.name,
+        'gender': request.gender,
+        'age': request.age,
+        'weight': request.weight,
+        'color': request.color,
+        'height': request.height,
+        if (request.profileImg?.path != null)
+          'profileImg': await MultipartFile.fromFile(request.profileImg!.path   ),
+      });
+print(formData.fields);
       final res = await _dioClient.post(
         Endpoints.subProfile,
         data: formData,

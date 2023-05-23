@@ -5,16 +5,18 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../utils/routes/routes.dart';
 import '../../widgets/textfield_widget.dart';
 
-class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({
+class AddPaymentScreen extends StatefulWidget {
+  const AddPaymentScreen({
     Key? key,
   }) : super(key: key);
 
+
+
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<AddPaymentScreen> createState() => _AddPaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _AddPaymentScreenState extends State<AddPaymentScreen> {
   TextEditingController cardNumberController = TextEditingController();
   TextEditingController cardExpiryController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
@@ -26,13 +28,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: _buildAppBar(),
+
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+    return AppBar(backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -76,45 +78,52 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Stack(
                   children: [
-                    _buildCardNumberField(),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: _buildExpiryField()),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(child: _buildCvvField()),
-                      ],
+                    SingleChildScrollView(
+                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildCardNumberField(),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(child: _buildExpiryField()),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(child: _buildCvvField()),
+                            ],
+                          ),
+                          _buildNameField(),
+                          _buildCheckBox()
+                        ],
+                      ),
                     ),
-                    _buildNameField(),
-                    _buildCheckBox()
+                    Align(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: _buildProceedButton(),
+                        ),
+                      ),
+                      alignment: Alignment.bottomCenter,
+                    ),
                   ],
                 ),
               ),
-              Align(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: MediaQuery.of(context).viewInsets.bottom + 8),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: _buildProceedButton(),
-                  ),
-                ),
-                alignment: Alignment.bottomCenter,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -218,81 +227,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
       height: 50,
       child: ElevatedButton(
         onPressed: () async {
-          await showCongradulationsDialog(context);
-          Navigator.pushNamedAndRemoveUntil(context, Routes.home, (route) => false);
+
         },
         child: Text('Pay Now'),
       ),
     );
   }
 
-  Future<void> showCongradulationsDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            height: 311,
-            width: 290,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              image: const DecorationImage(
-                image: AssetImage("assets/images/background/backgroundPopUp.png"),
-                fit: BoxFit.contain,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 60,
-                      child: Image.asset(
-                        'assets/images/background/tick-icon.png',
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Center(
-                      child: Text(
-                        "Thank You!",
-                        style: TextStyle(fontSize: 18.0, color: Color(0xFF222B2C)),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Text(
-                      "Your information has been forwarded to the doctors. We'll notify you shortly with their expert opinions.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16.0, color: Color(0xFFBEBEBE)),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Continue",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+
 }
 
 class ExpiryDateFormatter extends TextInputFormatter {

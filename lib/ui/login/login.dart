@@ -1,7 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:second_opinion_app/constants/assets.dart';
 import 'package:second_opinion_app/data/sharedpref/constants/preferences.dart';
-import 'package:second_opinion_app/models/authentication/login_user_response.dart';
 import 'package:second_opinion_app/stores/user/user_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/stores/form/form_store.dart';
@@ -256,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildSignInButton() {
-    return SizedBox(
+    return SizedBox(height: 50,
       child: RoundedButtonWidget(
         buttonText: AppLocalizations.of(context).translate('login_btn_sign_in'),
         buttonColor: Colors.orangeAccent,
@@ -266,6 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
             DeviceUtils.hideKeyboard(context);
             await _userStore.login(_store.userEmail, _store.password, context).then((value) {
               _store.login();
+
             });
           } else {
             _showErrorMessage('Please fill in all fields');
