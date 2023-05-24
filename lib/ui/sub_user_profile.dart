@@ -46,7 +46,7 @@ class _SubUserProfileState extends State<SubUserProfile> {
       nameController.text = widget.subProfileResponse.name ?? '';
       colorController.text = widget.subProfileResponse.color ?? '';
       if (widget.subProfileResponse.color != null || widget.subProfileResponse.color!.isNotEmpty)
-        selectedColor = Color(int.parse('0xFF${widget.subProfileResponse.color!}'));
+        selectedColor = Color(int.parse(widget.subProfileResponse.color!.contains("#")?'0XFF2d2d2d': '0xFF${widget.subProfileResponse.color!}'));
       selectedGender = widget.subProfileResponse.gender?.toUpperCase() ?? 'MALE';
       dobController.text = widget.subProfileResponse.age ?? '';
       weightController.text = widget.subProfileResponse.weight ?? '';
@@ -139,7 +139,7 @@ class _SubUserProfileState extends State<SubUserProfile> {
                       SizedBox(
                         height: 15,
                       ),
-                      _buildGenderField(),
+                     // _buildGenderField(),
                       SizedBox(
                         height: 15,
                       ),
