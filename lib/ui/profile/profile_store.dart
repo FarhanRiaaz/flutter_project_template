@@ -107,7 +107,7 @@ abstract class _ProfileStore with Store {
 
   @action
   Future updateProfile(String gender, int age, File? profileImage) async {
-    final future = _repository.updateProfile(gender, age, profileImage ?? null);
+    final future = _repository.updateProfile(currentUserProfile!, profileImage ?? null);
     profileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {

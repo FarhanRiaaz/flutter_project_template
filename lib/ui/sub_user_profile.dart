@@ -46,8 +46,13 @@ class _SubUserProfileState extends State<SubUserProfile> {
       nameController.text = widget.subProfileResponse.name ?? '';
       colorController.text = widget.subProfileResponse.color ?? '';
       if (widget.subProfileResponse.color != null || widget.subProfileResponse.color!.isNotEmpty)
-        selectedColor = Color(int.parse('0xFF${widget.subProfileResponse.color!}'));
-      selectedGender = widget.subProfileResponse.gender?.toUpperCase() ?? 'MALE';
+        selectedColor = Color(
+            int.parse('0xFF${widget.subProfileResponse.color!.contains('#') ? '000000' : widget.subProfileResponse.color!}'));
+      if (widget.subProfileResponse.gender!.isNotEmpty) {
+        selectedGender = widget.subProfileResponse.gender?.toUpperCase() ?? 'MALE';
+      } else {
+        selectedGender = 'MALE';
+      }
       dobController.text = widget.subProfileResponse.age ?? '';
       weightController.text = widget.subProfileResponse.weight ?? '';
       heightController.text = widget.subProfileResponse.height ?? '';
@@ -280,7 +285,10 @@ class _SubUserProfileState extends State<SubUserProfile> {
       items: items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value,style: Theme.of(context).textTheme.bodyLarge,),
+          child: Text(
+            value,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         );
       }).toList(),
       onChanged: (value) {

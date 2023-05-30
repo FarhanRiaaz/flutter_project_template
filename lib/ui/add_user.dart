@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_request.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
+import 'package:second_opinion_app/widgets/progress_indicator_widget.dart';
 import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart' as flex;
 import '../../widgets/textfield_widget.dart';
@@ -22,6 +24,8 @@ class AddUserScreen extends StatefulWidget {
 }
 
 class _AddUserScreenState extends State<AddUserScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   TextEditingController nameController = TextEditingController();
   TextEditingController colorController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
@@ -48,7 +52,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: _buildBody(),
+      body: Observer(
+        builder: (context) {
+          return _buildBody();
+        }
+      ),
     );
   }
 
@@ -78,7 +86,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   }
 
   Widget _buildBody() {
-    return _buildMainContent();
+    return !_profileStore.isSubProfileAddInProcess? _buildMainContent():CustomProgressIndicatorWidget();
   }
 
   Widget _buildMainContent() {
@@ -106,60 +114,66 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 30),
                 child: SingleChildScrollView(
                   padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildPictureWidget(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildNameField(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _buildColorField(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _buildGenderField(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _buildRelationshipField(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _buildDOBField(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: _buildWeightField()),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(child: _buildHeightField()),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: RoundedButtonWidget(
-                          buttonText: 'Save',
-                          buttonColor: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            _profileStore.addSubUserProfile();
-                          },
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildPictureWidget(),
+                        SizedBox(
+                          height: 20,
                         ),
-                      )
-                    ],
+                        _buildNameField(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _buildColorField(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _buildGenderField(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _buildRelationshipField(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _buildDOBField(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: _buildWeightField()),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(child: _buildHeightField()),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: RoundedButtonWidget(
+                            buttonText: 'Save',
+                            buttonColor: Theme.of(context).primaryColor,
+                            onPressed: () async {
+                              if (( formKey.currentState!.validate())) {
+                               await _profileStore.addSubUserProfile();
+                               Navigator.pop(context);
+                              }
+                            },
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -256,6 +270,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget _buildNameField() {
     return Container(
       child: TextFieldWidget(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your name';
+          }
+          return null; // Return null if the value is valid
+        },
         hint: 'Enter Your Name',
         inputType: TextInputType.name,
         icon: Icons.person_outline_rounded,

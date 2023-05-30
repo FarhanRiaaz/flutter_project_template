@@ -63,7 +63,7 @@ class PrescriptionWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                   Text(
-                    dateTime,
+                    DateFormat('MMMM d, yyyy').format(DateTime.parse(dateTime)),
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                 ],
@@ -81,6 +81,7 @@ class PrescriptionWidget extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ViewPDF(
+                                    fileName:symptoms,
                                         pdfURL: pdfUrl,
                                       )));
                         },

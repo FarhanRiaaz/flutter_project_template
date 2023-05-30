@@ -20,6 +20,8 @@ class UploadDocumentWidget extends StatefulWidget {
 }
 
 class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   ReportStore _reportStore = getIt<ReportStore>();
 
   ProfileStore _profileStore = getIt<ProfileStore>();
@@ -35,64 +37,67 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Container(
-                        width: 50,
-                        height: 50,
-                        child: Icon(
-                          Icons.arrow_back_ios_rounded,
-                          color: Theme.of(context).primaryColor,
+    return Form(
+      key: formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Container(
+                          width: 50,
+                          height: 50,
+                          child: Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const Center(
-                  child: Text(
-                    'Document Type',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  const Center(
+                    child: Text(
+                      'Document Type',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Expanded(child: Container())
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildUploadWidget(),
-                  _buildSelectUserField(),
-                  _buildFileNameField(),
-                  _buildFileTypeField(),
-                  _buildButton()
+                  Expanded(child: Container())
                 ],
               ),
-            )
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildUploadWidget(),
+                    _buildSelectUserField(),
+                    _buildFileNameField(),
+                    _buildFileTypeField(),
+                    _buildButton()
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -136,6 +141,12 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
 
   Widget _buildSelectUserField() {
     return DropdownButtonFormField<SubProfileResponse>(
+      validator: (value) {
+        if (value == null) {
+          return 'Please select user';
+        }
+        return null; // Return null if the value is valid
+      },
       decoration: InputDecoration(
         hintText: 'Select User',
         hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
@@ -160,6 +171,12 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
 
   Widget _buildFileNameField() {
     return TextFieldWidget(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter file name';
+        }
+        return null; // Return null if the value is valid
+      },
       padding: EdgeInsets.zero,
       hint: 'File Name',
       imageIcon: 'assets/icons/File.png',
@@ -180,6 +197,15 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
     String? selectedItem;
 
     return DropdownButtonFormField<String>(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please select file type';
+        }
+        else if(_reportStore.documentFile == null){
+          return 'Please upload a file';
+        }
+        return null; // Return null if the value is valid
+      },
       decoration: InputDecoration(
         hintText: 'File Type',
         hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
@@ -194,7 +220,9 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       }).toList(),
       onChanged: (value) {
         setState(() {
-          _reportStore.fileType = value;
+
+            _reportStore.fileType = value;
+
         });
       },
     );
@@ -206,9 +234,11 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       height: 50,
       child: ElevatedButton(
         onPressed: () async {
-          _reportStore.uploadReport();
+          if ((formKey.currentState!.validate())) {
+            _reportStore.uploadReport();
 
-          Navigator.pop(context);
+            Navigator.pop(context);
+          }
         },
         child: Text('Upload'),
       ),

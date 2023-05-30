@@ -68,11 +68,11 @@ class Repository {
   }
 
   Future<ProfileResponse> updateProfile(
-      String gender, int age, File? profileImage) async {
+      ProfileResponse currentProfile, File? profileImage) async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("updateProfile$authToken");
     return await _profileApi.updateProfile(
-        authToken!, gender, age, profileImage);
+        authToken!,  profileImage,currentProfile);
   }
 
   Future<SubProfileList> getSubUserProfile() async {

@@ -92,10 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
         'assets/icons/Headphones.png',
       )),
       onPressed: () {
-        SharedPreferences.getInstance().then((preference) {
-          preference.setBool(Preferences.is_logged_in, false);
-          Navigator.of(context).pushReplacementNamed(Routes.login);
-        });
+
+          Navigator.of(context).pushNamed(Routes.support);
+
       },
     );
   }
@@ -189,7 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildCard() {
     return SizedBox(
         height: MediaQuery.of(context).size.height * 0.20,
-        child: PageView(allowImplicitScrolling: true,
+        child: PageView(
+          allowImplicitScrolling: true,
           children: [
             Card(
               color: const Color(0xFFDCF1F5),

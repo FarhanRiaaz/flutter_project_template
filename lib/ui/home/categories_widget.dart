@@ -48,6 +48,7 @@ class _MedicalFieldGridTileState extends State<MedicalFieldGridTile> {
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Text(
                   widget.title,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 11),
                 ),
               ),

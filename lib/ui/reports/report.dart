@@ -62,7 +62,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                   id: _reportStore.getAllDocumentResponseList!.results![index].id!,
                   symptoms: _reportStore.getAllDocumentResponseList?.results?[index].fileName ?? '',
                   dateTime: _reportStore.getAllDocumentResponseList?.results?[index].createdDate ?? '',
-                  doctorName: 'Dr Sanuke',
+                  doctorName: _reportStore.getAllDocumentResponseList?.results?[index].user?.name??'',
                 );
               },
               separatorBuilder: (BuildContext context, int index) {

@@ -228,6 +228,7 @@ class _FilterScreenState extends State<FilterScreen> {
               onSelected: (selected) {
                 setState(() {
                   if (selected) {
+                    selectedPaymentCategories=[];
                     selectedPaymentCategories.add(category);
                   } else {
                     selectedPaymentCategories.remove(category);
@@ -271,6 +272,7 @@ class _FilterScreenState extends State<FilterScreen> {
               onSelected: (selected) {
                 setState(() {
                   if (selected) {
+                    selectedArrangedByCategories=[];
                     selectedArrangedByCategories.add(category);
                   } else {
                     selectedArrangedByCategories.remove(category);
