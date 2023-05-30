@@ -8,6 +8,8 @@ class SubProfileRequest {
    String? gender;
    String? weight;
    String? height;
+   String? heightUnit ;
+   String? weightUnit ;
 
   SubProfileRequest({
     this.name,
@@ -17,6 +19,8 @@ class SubProfileRequest {
     this.gender,
     this.weight,
     this.height,
+    this.heightUnit='foot',
+    this.weightUnit='kg'
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +33,8 @@ class SubProfileRequest {
     data['weight'] = this.weight;
     data['color'] = this.color;
     data['height'] = this.height;
+    data['height_unit'] = this.heightUnit;
+    data['weight_unit'] = this.weightUnit;
     return data;
   }
 
@@ -40,6 +46,8 @@ class SubProfileRequest {
     String? gender,
     String? weight,
     String? height,
+    String? heightUnit,
+    String? weightUnit,
   }) =>
       SubProfileRequest(
         name: name ?? this.name,
@@ -49,5 +57,7 @@ class SubProfileRequest {
         gender: gender ?? this.gender,
         weight: weight ?? this.weight,
         height: height ?? this.height,
+        heightUnit: heightUnit??this.heightUnit,
+        weightUnit: weightUnit??this.weightUnit,
       );
 }

@@ -94,6 +94,7 @@ abstract class _ProfileStore with Store {
     await future.then((value) async {
       if (value != null) {
         currentAddSubUserProfile = value;
+        getSubUserProfiles();
       } else {
         print('failed to addSubUserProfile\nSomething went wrong!');
       }

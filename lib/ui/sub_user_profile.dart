@@ -23,7 +23,7 @@ class SubUserProfile extends StatefulWidget {
 }
 
 class _SubUserProfileState extends State<SubUserProfile> {
-  List<String> items = ['MALE', 'FEMALE'];
+  List<String> items = ['Male', 'Female'];
   String? selectedGender;
   Color selectedColor = Color(0xFFFFFFFF);
   TextEditingController nameController = TextEditingController();
@@ -34,9 +34,6 @@ class _SubUserProfileState extends State<SubUserProfile> {
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
-  bool isCm = true;
-
-  bool isLbs = true;
 
   ProfileStore _profileStore = getIt<ProfileStore>();
   File? _image;
@@ -48,11 +45,22 @@ class _SubUserProfileState extends State<SubUserProfile> {
       if (widget.subProfileResponse.color != null || widget.subProfileResponse.color!.isNotEmpty)
         selectedColor = Color(
             int.parse('0xFF${widget.subProfileResponse.color!.contains('#') ? '000000' : widget.subProfileResponse.color!}'));
-      if (widget.subProfileResponse.gender!.isNotEmpty) {
-        selectedGender = widget.subProfileResponse.gender?.toUpperCase() ?? 'MALE';
-      } else {
-        selectedGender = 'MALE';
-      }
+
+
+        final gender = widget.subProfileResponse.gender?.toLowerCase();
+
+        if (gender == "male") {
+          selectedGender = "Male";
+        } else if (gender == "female") {
+          selectedGender = "Female";
+        }
+
+
+      // if (widget.subProfileResponse.gender!.isNotEmpty) {
+      //   selectedGender = widget.subProfileResponse.gender?.toUpperCase() ?? 'MALE';
+      // } else {
+      //   selectedGender = 'MALE';
+      // }
       dobController.text = widget.subProfileResponse.age ?? '';
       weightController.text = widget.subProfileResponse.weight ?? '';
       heightController.text = widget.subProfileResponse.height ?? '';
@@ -320,11 +328,15 @@ class _SubUserProfileState extends State<SubUserProfile> {
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
-            isLbs = !isLbs; // toggle between lbs and kgs
+            if (_profileStore.subProfileRequest!.weightUnit == 'pound') {
+              _profileStore.subProfileRequest!.weightUnit = 'kg';
+            } else {
+              _profileStore.subProfileRequest!.weightUnit = 'pound';
+            }
           });
         },
         icon: Text(
-          isLbs ? 'lbs' : 'kgs',
+          _profileStore.subProfileRequest!.weightUnit != 'pound' ? 'kg' : 'lbs',
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),
@@ -347,11 +359,15 @@ class _SubUserProfileState extends State<SubUserProfile> {
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
-            isCm = !isCm; // toggle between lbs and kgs
+            if (_profileStore.subProfileRequest!.heightUnit == 'feet') {
+              _profileStore.subProfileRequest!.heightUnit = 'cm';
+            } else {
+              _profileStore.subProfileRequest!.heightUnit = 'feet';
+            }
           });
         },
         icon: Text(
-          isCm ? 'cm' : 'ft',
+          _profileStore.subProfileRequest!.heightUnit != 'feet' ? 'cm' : 'ft',
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),

@@ -2,7 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 import 'package:second_opinion_app/stores/report/report_store.dart';
+import 'package:second_opinion_app/ui/reports/report_filter.dart';
 import '../../utils/routes/routes.dart';
 import '../../widgets/prescription_widget.dart';
 import '../../widgets/progress_indicator_widget.dart';
@@ -17,6 +19,11 @@ class ReportsScreen extends StatefulWidget {
 }
 
 class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProviderStateMixin {
+  ReportFilterOption? filterOption;
+  String arrangeBy = 'Ascending';
+  String? type;
+  SubProfileResponse? user;
+
   ReportStore _reportStore = getIt<ReportStore>();
 
   late AnimationController _animationController;
@@ -25,7 +32,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   @override
   void initState() {
-    _reportStore.getAllDocumentList();
+    _reportStore.getFilteredDocumentList(filterOption?.getArrangeBy??'', filterOption?.user?.name??'', filterOption?.type??'',_searchController.text);
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -62,7 +69,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                   id: _reportStore.getAllDocumentResponseList!.results![index].id!,
                   symptoms: _reportStore.getAllDocumentResponseList?.results?[index].fileName ?? '',
                   dateTime: _reportStore.getAllDocumentResponseList?.results?[index].createdDate ?? '',
-                  doctorName: _reportStore.getAllDocumentResponseList?.results?[index].user?.name??'',
+                  doctorName: _reportStore.getAllDocumentResponseList?.results?[index].user??'',
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
@@ -123,18 +130,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     );
   }
 
-  List<Widget> _buildActions() {
-    return <Widget>[_buildAddButton()];
-  }
 
-  Widget _buildLeadingButton() {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back_ios_new_rounded),
-      onPressed: () {
-        widget.onBackPressed();
-      },
-    );
-  }
 
   Widget _buildTitle() {
     return Text(
@@ -165,7 +161,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                 controller: _searchController,
                 onChanged: (value) {},
                 onEditingComplete: () {
-                  _reportStore.getFilteredDocumentList('dsc', '', _searchController.text);
+                  _reportStore.getFilteredDocumentList(filterOption?.getArrangeBy??'', filterOption?.user?.name??'', filterOption?.type??'',_searchController.text);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search',
@@ -192,8 +188,12 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                 color: Colors.white,
                 size: 30,
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, Routes.filter);
+              onPressed: () async {
+            filterOption =await Navigator.push(context, MaterialPageRoute(builder: (context)=>ReportFilterScreen(selectedArrangeBy: filterOption?.arrangeBy, type: filterOption?.type, user: filterOption?.user,)));
+
+            if(filterOption!=null)_reportStore.getFilteredDocumentList(filterOption?.getArrangeBy??'', filterOption?.user?.name??'', filterOption?.type??'',_searchController.text);
+
+                //Todo Change to named Parameter
               },
             ),
           ),
@@ -202,33 +202,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     );
   }
 
-  Widget _buildAddButton() {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: SizedBox(
-        child: ElevatedButton.icon(
-          onPressed: () {
-            showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: (context) => SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.85,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.15),
-                        child: UploadDocumentWidget(),
-                      ),
-                    ));
-          },
-          icon: Icon(Icons.add),
-          label: Text('Add'),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF1ce0a3)),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   FloatingActionButton _buildFloatingActionButton() {
     return FloatingActionButton(

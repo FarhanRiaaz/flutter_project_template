@@ -87,13 +87,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
               SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildUploadWidget(),
-                    _buildSelectUserField(),
-                    _buildFileNameField(),
-                    _buildFileTypeField(),
-                    _buildButton()
-                  ],
+                  children: [_buildUploadWidget(), _buildSelectUserField(), _buildFileNameField(), _buildFileTypeField(), _buildButton()],
                 ),
               )
             ],
@@ -130,8 +124,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
                 SizedBox(height: 16.0),
                 Text(
                   'Upload',
-                  style:
-                      Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor, fontSize: 15),
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor, fontSize: 15),
                 ),
               ],
             )),
@@ -153,11 +146,15 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
         prefixIcon: Image.asset('assets/icons/Person.png'),
       ),
       value: selectedItem,
-      items:
-          _profileStore.currentSubUserProfile!.subProfile!.map<DropdownMenuItem<SubProfileResponse>>((SubProfileResponse value) {
+      items: _profileStore.currentSubUserProfile!.subProfile!.map<DropdownMenuItem<SubProfileResponse>>((SubProfileResponse value) {
         return DropdownMenuItem<SubProfileResponse>(
           value: value,
-          child: Text(value.name!),
+          child: Text(
+            value.name!,
+            style: TextStyle(
+              color: Color(int.parse('0xFF${value.color}')),
+            ),
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -200,8 +197,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please select file type';
-        }
-        else if(_reportStore.documentFile == null){
+        } else if (_reportStore.documentFile == null) {
           return 'Please upload a file';
         }
         return null; // Return null if the value is valid
@@ -215,14 +211,14 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       items: items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(
+            value,
+          ),
         );
       }).toList(),
       onChanged: (value) {
         setState(() {
-
-            _reportStore.fileType = value;
-
+          _reportStore.fileType = value;
         });
       },
     );

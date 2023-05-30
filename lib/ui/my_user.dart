@@ -198,7 +198,7 @@ class _MyUsersState extends State<MyUsers> {
                   children: [
                     Text(
                       name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold,color:  Color(int.parse('0xFF${subProfileResponse.color}'))),
                     ),
                     SizedBox(
                       height: 3,

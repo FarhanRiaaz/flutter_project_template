@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:second_opinion_app/stores/report/report_store.dart';
@@ -41,10 +42,13 @@ class PrescriptionWidget extends StatelessWidget {
               height: 90,
               width: 90,
               child: Center(
-                  child: Image.asset(
-                'assets/icons/blankImage.png',
-                scale: 2.6,
-              )),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.fill,
+                    imageUrl:     pdfUrl.endsWith('.jpg') || pdfUrl.endsWith('.png')
+                        ? pdfUrl
+                        : 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png', // Replace with your placeholder image URL
+                  )
+              ),
             ),
             SizedBox(
               width: 10,
@@ -81,7 +85,7 @@ class PrescriptionWidget extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ViewPDF(
-                                    fileName:symptoms,
+                                        fileName: symptoms,
                                         pdfURL: pdfUrl,
                                       )));
                         },

@@ -65,7 +65,7 @@ class Result {
   String? type;
   String? fileName;
   String? file;
-  User? user;
+  String? user;
   String? createdDate;
 
   Result({
@@ -79,49 +79,48 @@ class Result {
 
   Result.fromJson(Map<String, dynamic> data) {
     id = data['id'];
-    user = User.fromJson(data['user']);
     type = data['type'];
     fileName = data['fileName'];
     file = data['file'];
+    user = data['user'];
     createdDate = data['createdDate'];
   }
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user'] = this.user;
-    data['type'] = this.type;
-    data['fileName'] = this.fileName;
-    data['file'] = this.file;
-    data['createdDate'] = this.createdDate;
-
-    return data;
+    return {
+      'id': id,
+      'type': type,
+      'fileName': fileName,
+      'file': file,
+      'user': user,
+      'createdDate': createdDate,
+    };
   }
 
   factory Result.fromMap(Map<String, dynamic> data) => Result(
-        id: data['id'],
-        user: data['user'],
-        type: data['type'],
-        fileName: data['fileName'],
-        file: data['file'],
-        createdDate: data['createdDate'],
-      );
+    id: data['id'],
+    type: data['type'],
+    fileName: data['fileName'],
+    file: data['file'],
+    user: data['user'],
+    createdDate: data['createdDate'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'user': user,
-        'type': type,
-        'fileName': fileName,
-        'file': file,
-        'createdDate': createdDate,
-      };
+    'id': id,
+    'type': type,
+    'fileName': fileName,
+    'file': file,
+    'user': user,
+    'createdDate': createdDate,
+  };
 
   Result copyWith({
     int? id,
     String? type,
     String? fileName,
     String? file,
-    User? user,
+    String? user,
     String? createdDate,
   }) =>
       Result(

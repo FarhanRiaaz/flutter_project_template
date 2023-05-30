@@ -52,10 +52,10 @@ class ReportApi {
 
   // method to get filtered documents
   Future<GetAllDocumentResponse> getFilteredDocumentList(String sortFilter,
-      String userName, String reportType, String token) async {
+      String userName, String reportType, String token,String searchText) async {
     try {
       final res = await _dioClient.get(
-        "${Endpoints.filteredDocuments}&sort=$sortFilter&user=$userName&type=$reportType",
+        "${Endpoints.filteredDocuments}&sort=$sortFilter&user=$userName&type=$reportType&search=$searchText",
         options: Options(
           headers: {
             'Authorization': 'Token $token',

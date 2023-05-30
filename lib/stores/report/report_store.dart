@@ -99,9 +99,9 @@ abstract class _ReportStore with Store {
 
   /// method to get filtered document via api just pass the args and check the response of getAllDocumentResponseList
   @action
-  Future getFilteredDocumentList(String sortFilter, String userName, String reportType) async {
+  Future getFilteredDocumentList(String sortFilter, String userName, String reportType,String searchText) async {
     //Todo implement
-    final future = _reportRepository.getFilteredDocumentList(sortFilter, userName, reportType);
+    final future = _reportRepository.getFilteredDocumentList(sortFilter, userName, reportType,searchText);
     getAllDocumentResponseFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.count != null) {

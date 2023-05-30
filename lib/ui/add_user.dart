@@ -35,9 +35,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
-  bool isCm = true;
 
-  bool isLbs = true;
 
   ProfileStore _profileStore = getIt<ProfileStore>();
   File? _image;
@@ -363,11 +361,15 @@ class _AddUserScreenState extends State<AddUserScreen> {
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
-            isLbs = !isLbs; // toggle between lbs and kgs
+            if (_profileStore.subProfileRequest!.weightUnit == 'pound') {
+              _profileStore.subProfileRequest!.weightUnit = 'kg';
+            } else {
+              _profileStore.subProfileRequest!.weightUnit = 'pound';
+            }
           });
         },
         icon: Text(
-          isLbs ? 'lbs' : 'kgs',
+          _profileStore.subProfileRequest!.weightUnit != 'pound' ? 'kg' : 'lbs',
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),
@@ -389,11 +391,15 @@ class _AddUserScreenState extends State<AddUserScreen> {
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
-            isCm = !isCm; // toggle between lbs and kgs
+            if (_profileStore.subProfileRequest!.heightUnit == 'feet') {
+              _profileStore.subProfileRequest!.heightUnit = 'cm';
+            } else {
+              _profileStore.subProfileRequest!.heightUnit = 'feet';
+            }
           });
         },
         icon: Text(
-          isCm ? 'cm' : 'ft',
+          _profileStore.subProfileRequest!.heightUnit != 'feet' ? 'cm' : 'ft',
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),

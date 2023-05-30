@@ -27,6 +27,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String greetingMessage = '';
+
   //stores:---------------------------------------------------------------------
   late PostStore _postStore;
   late ThemeStore _themeStore;
@@ -35,8 +37,21 @@ class _HomeScreenState extends State<HomeScreen> {
   CategoryStore _categoryStore = getIt<CategoryStore>();
   ProfileStore _profileStore = getIt<ProfileStore>();
 
+  void initializeGreetingMessage() {
+    DateTime now = DateTime.now();
+    int currentHour = now.hour;
+    if (currentHour < 12) {
+      greetingMessage = 'Good morning';
+    } else if (currentHour < 18) {
+      greetingMessage = 'Good afternoon';
+    } else {
+      greetingMessage = 'Good evening';
+    }
+  }
+
   @override
   void initState() {
+    initializeGreetingMessage();
     _categoryStore.getAllCategories();
     _profileStore.getProfile();
     _profileStore.getSubUserProfiles();
@@ -92,9 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
         'assets/icons/Headphones.png',
       )),
       onPressed: () {
-
-          Navigator.of(context).pushNamed(Routes.support);
-
+        Navigator.of(context).pushNamed(Routes.support);
       },
     );
   }
@@ -133,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '👋 Good morning!',
+          '👋 $greetingMessage!',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
         ),
         Text(
@@ -205,8 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('You need our best consultancy and assistance ',
-                              style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
+                          Text('You need our best consultancy and assistance ', style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
                         ],
                       ),
                     ),
@@ -238,8 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('You need our best consultancy and assistance ',
-                              style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
+                          Text('You need our best consultancy and assistance ', style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
                         ],
                       ),
                     ),
@@ -271,8 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('You need our best consultancy and assistance ',
-                              style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
+                          Text('You need our best consultancy and assistance ', style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
                         ],
                       ),
                     ),
@@ -352,7 +362,11 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
-          itemCount: _categoryStore.allCategoryList == null ? 0 : _categoryStore.allCategoryList?.allCategoryList?.length,
+          itemCount: _categoryStore.allCategoryList == null
+              ? 0
+              : _categoryStore.allCategoryList!.allCategoryList!.length > 6
+                  ? 6
+                  : _categoryStore.allCategoryList?.allCategoryList?.length,
           itemBuilder: (context, index) => MedicalFieldGridTile(
             title: _categoryStore.allCategoryList!.allCategoryList![index].title!,
             url: _categoryStore.allCategoryList!.allCategoryList![index].image ?? placeholderImage,
@@ -526,7 +540,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Center(
                             child: Text(
                               _profileStore.currentSubUserProfile!.subProfile![index].name!.split(' ').first,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
+                                color: Color(int.parse('0xFF${_profileStore.currentSubUserProfile!.subProfile![index].color}')),
                                 fontSize: 12,
                               ),
                             ),
