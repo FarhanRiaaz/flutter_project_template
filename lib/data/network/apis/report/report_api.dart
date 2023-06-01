@@ -15,17 +15,15 @@ class ReportApi {
   ReportApi(this._dioClient);
 
   // method to upload documents
-  Future<UploadReportResponse> uploadDocument(String fileName, String fileType,
-      File documentFile, int userId, String token) async {
+  Future<UploadReportResponse> uploadDocument(String fileName, String fileType, File documentFile, int userId, String token) async {
     try {
       FormData formData = FormData.fromMap({
         'fileName': fileName,
         'type': fileType,
-        'file':
-            await MultipartFile.fromFile(documentFile.path, filename: fileName),
+        'file': await MultipartFile.fromFile(documentFile.path, filename: documentFile.path),
         'userId': userId,
       });
-
+      print(documentFile.path);
       final res = await _dioClient.post(
         Endpoints.documents,
         data: formData,
@@ -51,8 +49,8 @@ class ReportApi {
   //todo imp farhan here to look after the response type here
 
   // method to get filtered documents
-  Future<GetAllDocumentResponse> getFilteredDocumentList(String sortFilter,
-      String userName, String reportType, String token,String searchText) async {
+  Future<GetAllDocumentResponse> getFilteredDocumentList(
+      String sortFilter, String userName, String reportType, String token, String searchText) async {
     try {
       final res = await _dioClient.get(
         "${Endpoints.filteredDocuments}&sort=$sortFilter&user=$userName&type=$reportType&search=$searchText",

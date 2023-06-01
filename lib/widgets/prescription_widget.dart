@@ -3,26 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:second_opinion_app/stores/report/report_store.dart';
 import 'package:second_opinion_app/ui/pdf_view.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/ui/reports/view_report_image_screen.dart';
 import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 
+import '../di/components/service_locator.dart';
+import '../models/report/get_all_document_response.dart';
+
 class PrescriptionWidget extends StatelessWidget {
-  const PrescriptionWidget(
+    PrescriptionWidget(
       {Key? key,
-      required this.symptoms,
-      required this.doctorName,
-      required this.dateTime,
-      required this.id,
-      required this.reportStore,
-      required this.pdfUrl})
+      required this.result,required this.reportStore, required this.id})
       : super(key: key);
 
   final int id;
-  final String symptoms;
-  final String doctorName;
-  final String dateTime;
+ final Result result;
   final ReportStore reportStore;
-  final String pdfUrl;
+
+  ProfileStore _profileStore = getIt<ProfileStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +43,8 @@ class PrescriptionWidget extends StatelessWidget {
               child: Center(
                   child: CachedNetworkImage(
                 fit: BoxFit.fill,
-                imageUrl: pdfUrl.endsWith('.jpg') || pdfUrl.endsWith('.png')
-                    ? pdfUrl
+                imageUrl:result.file!.endsWith('.jpg') || result.file!.endsWith('.png')
+                    ? result.file!
                     : 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png', // Replace with your placeholder image URL
               )),
             ),
@@ -59,15 +57,15 @@ class PrescriptionWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    symptoms,
+                    result.fileName!,
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 16),
                   ),
                   Text(
-                    doctorName,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
+                    result.user!,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12,color: Color(int.parse('0xFF${_profileStore.getColorFromName(result.user!)}')),),
                   ),
                   Text(
-                    DateFormat('MMMM d, yyyy').format(DateTime.parse(dateTime)),
+                    DateFormat('MMMM d, yyyy').format(DateTime.parse(result.createdDate!)),
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                 ],
@@ -81,15 +79,15 @@ class PrescriptionWidget extends StatelessWidget {
                     _buildActionWidget(
                         icon: Icons.remove_red_eye_outlined,
                         onPressed: () {
-                          pdfUrl.endsWith('.jpg') || pdfUrl.endsWith('.png')
+                          result.file!.endsWith('.jpg') || result.file!.endsWith('.png')
                               ? Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => ViewReportImage(fileName: symptoms, imageUrl: pdfUrl)))
+                                  context, MaterialPageRoute(builder: (context) => ViewReportImage(fileName: result.fileName!, imageUrl: result.file!)))
                               : Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ViewPDF(
-                                            fileName: symptoms,
-                                            pdfURL: pdfUrl,
+                                            fileName: result.fileName!,
+                                            pdfURL: result.file!,
                                           )));
                         },
                         context: context),
@@ -99,7 +97,7 @@ class PrescriptionWidget extends StatelessWidget {
                     _buildActionWidget(
                         icon: Icons.delete_outline,
                         onPressed: () {
-                          DialogHelper.showDeleteConfirmationDialog(context, symptoms, () async {
+                          DialogHelper.showDeleteConfirmationDialog(context, result.user!, () async {
                             reportStore.currentDocumentToDelete = id;
                             reportStore.deleteDocument();
                             Navigator.pop(context);

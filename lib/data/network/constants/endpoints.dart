@@ -2,8 +2,8 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  //static const String baseUrl = "https://sop.zpexsolutions.com/patient-app/api";
-  static const String baseUrl = "https://backend.h3lth.net";
+  static const String baseUrl = "https://sop.zpexsolutions.com/patient-app/api";
+  //static const String baseUrl = "https://backend.h3lth.net";
 
   // receiveTimeout
   static const Duration receiveTimeout = Duration(milliseconds: 15000);

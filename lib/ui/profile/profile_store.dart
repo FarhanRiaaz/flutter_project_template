@@ -52,6 +52,21 @@ abstract class _ProfileStore with Store {
   bool get isSubProfileInProcess => subProfileFuture.status == FutureStatus.pending;
 
   @action
+  String? getColorFromName(String userName) {
+    String color = '000000';
+
+    if (currentSubUserProfile!.subProfile!.length > 0) {
+      for (SubProfileResponse items in currentSubUserProfile!.subProfile!) {
+        if (items.name!.contains(userName)) {
+          color = items.color!;
+        }
+      }
+    }
+
+    return color;
+  }
+
+  @action
   Future getProfile() async {
     final future = _repository.getProfile();
     profileFuture = ObservableFuture(future);

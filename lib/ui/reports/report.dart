@@ -65,12 +65,10 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
               itemCount: _reportStore.getAllDocumentResponseList?.results?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
                 return PrescriptionWidget(
-                  pdfUrl: _reportStore.getAllDocumentResponseList!.results![index].file!,
+            
                   reportStore: _reportStore,
-                  id: _reportStore.getAllDocumentResponseList!.results![index].id!,
-                  symptoms: _reportStore.getAllDocumentResponseList?.results?[index].fileName ?? '',
-                  dateTime: _reportStore.getAllDocumentResponseList?.results?[index].createdDate ?? '',
-                  doctorName: _reportStore.getAllDocumentResponseList?.results?[index].user ?? '',
+                  id: _reportStore.getAllDocumentResponseList!.results![index].id!, result: _reportStore.getAllDocumentResponseList!.results![index],
+                  
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
