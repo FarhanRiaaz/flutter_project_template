@@ -32,7 +32,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   @override
   void initState() {
-    _reportStore.getFilteredDocumentList(filterOption?.getArrangeBy??'', filterOption?.user?.name??'', filterOption?.type??'',_searchController.text);
+    _reportStore.getFilteredDocumentList(
+        filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type ?? '', _searchController.text);
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -58,7 +59,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   Widget _buildListView() {
     return Observer(builder: (context) {
-      return !_reportStore.isFetchDocumentInProcess && !_reportStore.isDeletedInProcess
+      return !_reportStore.isFetchDocumentInProcess && !_reportStore.isDeletedInProcess &&!_reportStore.isUploadInProcess
           ? ListView.separated(
               padding: EdgeInsets.only(bottom: 80),
               itemCount: _reportStore.getAllDocumentResponseList?.results?.length ?? 0,
@@ -69,7 +70,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                   id: _reportStore.getAllDocumentResponseList!.results![index].id!,
                   symptoms: _reportStore.getAllDocumentResponseList?.results?[index].fileName ?? '',
                   dateTime: _reportStore.getAllDocumentResponseList?.results?[index].createdDate ?? '',
-                  doctorName: _reportStore.getAllDocumentResponseList?.results?[index].user??'',
+                  doctorName: _reportStore.getAllDocumentResponseList?.results?[index].user ?? '',
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
@@ -130,8 +131,6 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
     );
   }
 
-
-
   Widget _buildTitle() {
     return Text(
       'Reports',
@@ -161,7 +160,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                 controller: _searchController,
                 onChanged: (value) {},
                 onEditingComplete: () {
-                  _reportStore.getFilteredDocumentList(filterOption?.getArrangeBy??'', filterOption?.user?.name??'', filterOption?.type??'',_searchController.text);
+                  _reportStore.getFilteredDocumentList(
+                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type ?? '', _searchController.text);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search',
@@ -189,9 +189,18 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                 size: 30,
               ),
               onPressed: () async {
-            filterOption =await Navigator.push(context, MaterialPageRoute(builder: (context)=>ReportFilterScreen(selectedArrangeBy: filterOption?.arrangeBy, type: filterOption?.type, user: filterOption?.user,)));
+                filterOption = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ReportFilterScreen(
+                              selectedArrangeBy: filterOption?.arrangeBy,
+                              type: filterOption?.type,
+                              user: filterOption?.user,
+                            )));
 
-            if(filterOption!=null)_reportStore.getFilteredDocumentList(filterOption?.getArrangeBy??'', filterOption?.user?.name??'', filterOption?.type??'',_searchController.text);
+                if (filterOption != null)
+                  _reportStore.getFilteredDocumentList(
+                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type ?? '', _searchController.text);
 
                 //Todo Change to named Parameter
               },
@@ -201,8 +210,6 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
       ),
     );
   }
-
-
 
   FloatingActionButton _buildFloatingActionButton() {
     return FloatingActionButton(

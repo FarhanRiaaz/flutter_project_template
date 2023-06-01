@@ -265,7 +265,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return Expanded(
       child: GridView.builder(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           crossAxisSpacing: 10,

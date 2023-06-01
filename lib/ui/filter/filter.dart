@@ -128,10 +128,10 @@ class _FilterScreenState extends State<FilterScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _buildStatusFilter(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      _buildPaymentFilter(),
+                      // SizedBox(
+                      //   height: 15,
+                      // ),
+                      // _buildPaymentFilter(),
                       SizedBox(
                         height: 15,
                       ),

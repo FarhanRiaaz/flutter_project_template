@@ -7,6 +7,7 @@ import 'package:second_opinion_app/ui/sub_user_profile.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 
 import '../di/components/service_locator.dart';
+import 'add_user.dart';
 
 class MyUsers extends StatefulWidget {
   const MyUsers({Key? key}) : super(key: key);
@@ -34,14 +35,14 @@ class _MyUsersState extends State<MyUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: _buildAppBar(),
+
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: _buildTitle(),
+      title: _buildTitle(),backgroundColor: Colors.transparent,
       centerTitle: true,
       leading: _buildLeadingButton(),
     );
@@ -64,18 +65,23 @@ class _MyUsersState extends State<MyUsers> {
             child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildSearchBarWithButton(),
-              SizedBox(
-                height: 10,
+        Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildSearchBarWithButton(),
+
+                    Expanded(child: _buildCardList()),
+                  ],
+                ),
               ),
-              Expanded(child: _buildCardList()),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -140,7 +146,11 @@ class _MyUsersState extends State<MyUsers> {
             ),
             child: IconButton(
               icon: Icon(Icons.add_circle_outline_rounded),
-              onPressed: () {},
+              onPressed: () {
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddUserScreen()));
+
+              },
             ),
           ),
         ],

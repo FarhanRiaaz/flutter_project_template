@@ -224,7 +224,7 @@ class _ReportFilterScreenState extends State<ReportFilterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Category',
+          'Users',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(

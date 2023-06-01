@@ -75,7 +75,15 @@ abstract class _ProfileStore with Store {
     subProfileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.subProfile != null) {
+        // currentSubUserProfile!.subProfile!=[];
+
         currentSubUserProfile = value;
+        currentSubUserProfile!.subProfile!.add(SubProfileResponse(
+            name: currentUserProfile!.name,
+            profileImg: currentUserProfile!.profileImg,
+            gender: currentUserProfile!.gender,
+            id: currentUserProfile!.id,
+            color: '000000'));
       } else {
         print('failed to getSubUserProfile\nSomething went wrong!');
       }

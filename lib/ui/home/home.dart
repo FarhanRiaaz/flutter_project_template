@@ -435,6 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Column(
           children: [
             _buildAppBar(),
+            SizedBox(height: 5,),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -520,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: _profileStore.currentSubUserProfile?.subProfile?.length != null
-                    ? _profileStore.currentSubUserProfile?.subProfile?.length.clamp(0, 3)
+                    ? (_profileStore.currentSubUserProfile!.subProfile!.length-1).clamp(0, 3)
                     : 0,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(

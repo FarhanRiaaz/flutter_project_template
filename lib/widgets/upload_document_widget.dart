@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
@@ -87,7 +88,13 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
               SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [_buildUploadWidget(), _buildSelectUserField(), _buildFileNameField(), _buildFileTypeField(), _buildButton()],
+                  children: [
+                    result == null ? _buildUploadWidget() : _buildPickedFileWidget(),
+                    _buildSelectUserField(),
+                    _buildFileNameField(),
+                    _buildFileTypeField(),
+                    _buildButton()
+                  ],
                 ),
               )
             ],
@@ -104,7 +111,9 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       child: InkWell(
         onTap: () async {
           result = await FilePicker.platform.pickFiles();
+          setState(() {
 
+          });
           if (result != null) {
             _reportStore.documentFile = File(result!.files.single.path!);
           } else {
@@ -128,6 +137,37 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
                 ),
               ],
             )),
+      ),
+    );
+  }
+
+  Widget _buildPickedFileWidget() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: RoundedRectangularWidget(
+        dashPattern: [5, 3],
+        child: InkWell(
+          onTap: () async {
+            result = await FilePicker.platform.pickFiles();
+setState(() {
+
+});
+            if (result != null) {
+              _reportStore.documentFile = File(result!.files.single.path!);
+            } else {
+              // User canceled the picker
+            }
+
+          },
+          child: Center(
+              child: result!.files[0].name.endsWith('.jpg') || result!.files[0].name.endsWith('.png')||result!.files[0].name.endsWith('.jpeg')
+                  ? Image.file(File(result!.files[0].path!))
+                  : CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png', // Replace with your placeholder image URL
+                    )),
+        ),
       ),
     );
   }
