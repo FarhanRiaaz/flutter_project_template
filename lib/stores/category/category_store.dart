@@ -1,6 +1,8 @@
 import 'package:mobx/mobx.dart';
 import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
+import 'package:second_opinion_app/models/categories/opinion_request.dart';
+import 'package:second_opinion_app/models/categories/opinion_response.dart';
 
 import '../../data/repository/category_repository.dart';
 
@@ -18,6 +20,8 @@ abstract class _CategoryStore with Store {
   static ObservableFuture<CategoryInstanceResponse>
       emptyCategoryInstanceResponse =
       ObservableFuture.value(CategoryInstanceResponse());
+  static ObservableFuture<OpinionSubmitResponse> emptyOpinionSubmitResponse =
+      ObservableFuture.value(OpinionSubmitResponse());
 
   @observable
   ObservableFuture<AllCategoryList> allCategoryFuture =
@@ -25,12 +29,18 @@ abstract class _CategoryStore with Store {
   @observable
   ObservableFuture<CategoryInstanceResponse> allCategoryInstanceFuture =
       emptyCategoryInstanceResponse;
+  @observable
+  ObservableFuture<OpinionSubmitResponse> opinionSubmitResponseFuture =
+      emptyOpinionSubmitResponse;
 
   @observable
   AllCategoryList? allCategoryList;
 
   @observable
   CategoryInstanceResponse? categoryInstanceResponse;
+
+  @observable
+  OpinionSubmitResponse? opinionSubmitResponse;
 
   @computed
   bool get isAllCategoriesInProcess =>
@@ -93,6 +103,25 @@ abstract class _CategoryStore with Store {
 
       print(
           'failed to getFormByCategory\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future submitSecondOpinion(OpinionSubmitRequest request) async {
+    final future = _categoryRepository.submitSecondOpinion(request);
+    opinionSubmitResponseFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value != null) {
+        opinionSubmitResponse = value;
+      } else {
+        print('failed to submitSecondOpinion\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to submitSecondOpinion\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
