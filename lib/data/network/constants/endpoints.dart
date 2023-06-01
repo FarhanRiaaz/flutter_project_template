@@ -3,6 +3,7 @@ class Endpoints {
 
   // base url
   static const String baseUrl = "https://sop.zpexsolutions.com/patient-app/api";
+
   //static const String baseUrl = "https://backend.h3lth.net";
 
   // receiveTimeout
@@ -22,5 +23,6 @@ class Endpoints {
   static const String getFormByCatId = baseUrl + "/forms";
   static const String getHomeData = baseUrl + "/home";
   static const String getCategories = baseUrl + "/categories/";
+  static const String submitSecondOpinion = baseUrl + "/submit-request/";
   static const String getFilteredCategories = baseUrl + "/categories/?search=";
 }
