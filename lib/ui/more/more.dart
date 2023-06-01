@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/data/sharedpref/shared_preference_helper.dart';
 import 'package:second_opinion_app/ui/payment/card_screen.dart';
+import 'package:second_opinion_app/ui/second_opinion_charges/second_opinion_charges.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,14 +18,14 @@ class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(backgroundColor: Colors.transparent,
-     // leading: _buildLeadingButton(),
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      // leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
     );
@@ -82,6 +83,9 @@ class _MoreScreenState extends State<MoreScreen> {
                       _buildIconCard('assets/icons/CreditCard.png', 'Payment', () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentScreen()));
                       }),
+                      _buildIconCard('assets/icons/info.png', 'Second Opinion Charges', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SecondOpinionCharges()));
+                      }),
                       _buildIconCard('assets/icons/Setting.png', 'Setting', () {
                         Navigator.pushNamed(context, Routes.setting);
                       }),
@@ -96,7 +100,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           Navigator.pop(context);
                           SharedPreferenceHelper(shared).removeAuthToken();
                           SharedPreferenceHelper(shared).saveIsLoggedIn(false);
-                          Navigator.pushNamed(context, Routes.login);
+                          Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
                         });
                       }),
                     ],

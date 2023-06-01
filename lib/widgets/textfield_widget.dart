@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TextFieldWidget extends StatelessWidget {
+  final String? Function(String?)? validator;
   final IconData? icon;
   final String? hint;
   final Widget? suffixIcon;
@@ -32,7 +33,7 @@ class TextFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
-      child: TextFormField(
+      child: TextFormField(validator: validator,
         inputFormatters: inputFormat ?? [],
         readOnly: isReadOnly,
         onTap: onTap != null
@@ -82,7 +83,7 @@ class TextFieldWidget extends StatelessWidget {
   }
 
   TextFieldWidget({
-    Key? key,
+    Key? key, this.validator,
     this.inputFormat,
     this.icon,
     this.isReadOnly = false,

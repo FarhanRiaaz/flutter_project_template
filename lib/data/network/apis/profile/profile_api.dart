@@ -40,13 +40,17 @@ class ProfileApi {
   }
 
   /// Method to update user profile
-  Future<ProfileResponse> updateProfile(String token, String gender, int age, File? profileImage) async {
+  Future<ProfileResponse> updateProfile(String token, File? profileImage,ProfileResponse currentProfile) async {
     try {
       String? fileName = profileImage?.path.split('/').last ?? null;
 
       FormData formData = FormData.fromMap({
-        'gender': gender,
-        'age': age,
+        'gender': currentProfile.gender,
+        'age': currentProfile.age,
+        'weight': currentProfile.weight,
+        'height' : currentProfile.height,
+        'weight_unit':currentProfile.weightUnit,
+        'height_unit':currentProfile.heightUnit,
         if (profileImage?.path != null) 'profileImg': await MultipartFile.fromFile(profileImage?.path ?? '', filename: fileName),
       });
 
@@ -105,6 +109,8 @@ class ProfileApi {
         'weight': request.weight,
         'color': request.color,
         'height': request.height,
+        'height_unit':request.heightUnit,
+        'weight_unit':request.weightUnit,
         if (request.profileImg?.path != null)
           'profileImg': await MultipartFile.fromFile(request.profileImg!.path   ),
       });

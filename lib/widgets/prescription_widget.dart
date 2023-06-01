@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:second_opinion_app/stores/report/report_store.dart';
 import 'package:second_opinion_app/ui/pdf_view.dart';
+import 'package:second_opinion_app/ui/reports/view_report_image_screen.dart';
 import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 
 class PrescriptionWidget extends StatelessWidget {
@@ -41,9 +43,11 @@ class PrescriptionWidget extends StatelessWidget {
               height: 90,
               width: 90,
               child: Center(
-                  child: Image.asset(
-                'assets/icons/blankImage.png',
-                scale: 2.6,
+                  child: CachedNetworkImage(
+                fit: BoxFit.fill,
+                imageUrl: pdfUrl.endsWith('.jpg') || pdfUrl.endsWith('.png')
+                    ? pdfUrl
+                    : 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png', // Replace with your placeholder image URL
               )),
             ),
             SizedBox(
@@ -63,7 +67,7 @@ class PrescriptionWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                   Text(
-                    dateTime,
+                    DateFormat('MMMM d, yyyy').format(DateTime.parse(dateTime)),
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12),
                   ),
                 ],
@@ -77,12 +81,16 @@ class PrescriptionWidget extends StatelessWidget {
                     _buildActionWidget(
                         icon: Icons.remove_red_eye_outlined,
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewPDF(
-                                        pdfURL: pdfUrl,
-                                      )));
+                          pdfUrl.endsWith('.jpg') || pdfUrl.endsWith('.png')
+                              ? Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => ViewReportImage(fileName: symptoms, imageUrl: pdfUrl)))
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewPDF(
+                                            fileName: symptoms,
+                                            pdfURL: pdfUrl,
+                                          )));
                         },
                         context: context),
                     SizedBox(

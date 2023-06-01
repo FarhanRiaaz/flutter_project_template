@@ -75,7 +75,15 @@ abstract class _ProfileStore with Store {
     subProfileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.subProfile != null) {
+        // currentSubUserProfile!.subProfile!=[];
+
         currentSubUserProfile = value;
+        currentSubUserProfile!.subProfile!.add(SubProfileResponse(
+            name: currentUserProfile!.name,
+            profileImg: currentUserProfile!.profileImg,
+            gender: currentUserProfile!.gender,
+            id: currentUserProfile!.id,
+            color: '000000'));
       } else {
         print('failed to getSubUserProfile\nSomething went wrong!');
       }
@@ -94,6 +102,7 @@ abstract class _ProfileStore with Store {
     await future.then((value) async {
       if (value != null) {
         currentAddSubUserProfile = value;
+        getSubUserProfiles();
       } else {
         print('failed to addSubUserProfile\nSomething went wrong!');
       }
@@ -107,7 +116,7 @@ abstract class _ProfileStore with Store {
 
   @action
   Future updateProfile(String gender, int age, File? profileImage) async {
-    final future = _repository.updateProfile(gender, age, profileImage ?? null);
+    final future = _repository.updateProfile(currentUserProfile!, profileImage ?? null);
     profileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {

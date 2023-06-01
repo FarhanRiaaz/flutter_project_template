@@ -3,7 +3,7 @@ class UploadReportResponse {
   String? type;
   String? fileName;
   String? file;
-  User? user;
+  String? user;
   String? createdDate;
 
   UploadReportResponse({
@@ -17,7 +17,7 @@ class UploadReportResponse {
 
   UploadReportResponse.fromJson(Map<String, dynamic> data) {
     id = data['id'];
-    user = User.fromJson(data['user']);
+    user = data['user'];
     type = data['type'];
     fileName = data['fileName'];
     file = data['file'];
@@ -47,20 +47,20 @@ class UploadReportResponse {
       );
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'user': user,
-        'type': type,
-        'fileName': fileName,
-        'file': file,
-        'createdDate': createdDate,
-      };
+    'id': id,
+    'user': user,
+    'type': type,
+    'fileName': fileName,
+    'file': file,
+    'createdDate': createdDate,
+  };
 
   UploadReportResponse copyWith({
     int? id,
     String? type,
     String? fileName,
     String? file,
-    User? user,
+    String? user,
     String? createdDate,
   }) =>
       UploadReportResponse(
@@ -72,6 +72,7 @@ class UploadReportResponse {
         createdDate: createdDate ?? this.createdDate,
       );
 }
+
 
 class User {
   int? id;

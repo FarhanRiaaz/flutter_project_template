@@ -30,12 +30,12 @@ class ReportRepository {
 
   Future<GetAllDocumentResponse> getFilteredDocumentList(
       String sortFilter,
-      String userName, String reportType,
+      String userName, String reportType,String searchText
       ) async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getFilteredDocumentList$authToken");
     return await _reportApi.getFilteredDocumentList(
-        sortFilter, userName, reportType, authToken!);
+        sortFilter, userName, reportType, authToken!,searchText);
   }
 
 

@@ -261,7 +261,8 @@ class _LoginScreenState extends State<LoginScreen> {
         buttonColor: Colors.orangeAccent,
         textColor: Colors.white,
         onPressed: () async {
-          if (_store.canLogin) {
+          //Todo Temporarily changing to true
+          if (true) {
             DeviceUtils.hideKeyboard(context);
             await _userStore.login(_store.userEmail, _store.password, context).then((value) {
               _store.login();

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
@@ -20,6 +21,8 @@ class UploadDocumentWidget extends StatefulWidget {
 }
 
 class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   ReportStore _reportStore = getIt<ReportStore>();
 
   ProfileStore _profileStore = getIt<ProfileStore>();
@@ -35,64 +38,67 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Container(
-                        width: 50,
-                        height: 50,
-                        child: Icon(
-                          Icons.arrow_back_ios_rounded,
-                          color: Theme.of(context).primaryColor,
+    return Form(
+      key: formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Container(
+                          width: 50,
+                          height: 50,
+                          child: Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const Center(
-                  child: Text(
-                    'Document Type',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  const Center(
+                    child: Text(
+                      'Document Type',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Expanded(child: Container())
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildUploadWidget(),
-                  _buildSelectUserField(),
-                  _buildFileNameField(),
-                  _buildFileTypeField(),
-                  _buildButton()
+                  Expanded(child: Container())
                 ],
               ),
-            )
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    result == null ? _buildUploadWidget() : _buildPickedFileWidget(),
+                    _buildSelectUserField(),
+                    _buildFileNameField(),
+                    _buildFileTypeField(),
+                    _buildButton()
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -105,7 +111,9 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       child: InkWell(
         onTap: () async {
           result = await FilePicker.platform.pickFiles();
+          setState(() {
 
+          });
           if (result != null) {
             _reportStore.documentFile = File(result!.files.single.path!);
           } else {
@@ -125,8 +133,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
                 SizedBox(height: 16.0),
                 Text(
                   'Upload',
-                  style:
-                      Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor, fontSize: 15),
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Theme.of(context).primaryColor, fontSize: 15),
                 ),
               ],
             )),
@@ -134,19 +141,60 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
     );
   }
 
+  Widget _buildPickedFileWidget() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: RoundedRectangularWidget(
+        dashPattern: [5, 3],
+        child: InkWell(
+          onTap: () async {
+            result = await FilePicker.platform.pickFiles();
+setState(() {
+
+});
+            if (result != null) {
+              _reportStore.documentFile = File(result!.files.single.path!);
+            } else {
+              // User canceled the picker
+            }
+
+          },
+          child: Center(
+              child: result!.files[0].name.endsWith('.jpg') || result!.files[0].name.endsWith('.png')||result!.files[0].name.endsWith('.jpeg')
+                  ? Image.file(File(result!.files[0].path!))
+                  : CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png', // Replace with your placeholder image URL
+                    )),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSelectUserField() {
     return DropdownButtonFormField<SubProfileResponse>(
+      validator: (value) {
+        if (value == null) {
+          return 'Please select user';
+        }
+        return null; // Return null if the value is valid
+      },
       decoration: InputDecoration(
         hintText: 'Select User',
         hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
         prefixIcon: Image.asset('assets/icons/Person.png'),
       ),
       value: selectedItem,
-      items:
-          _profileStore.currentSubUserProfile!.subProfile!.map<DropdownMenuItem<SubProfileResponse>>((SubProfileResponse value) {
+      items: _profileStore.currentSubUserProfile!.subProfile!.map<DropdownMenuItem<SubProfileResponse>>((SubProfileResponse value) {
         return DropdownMenuItem<SubProfileResponse>(
           value: value,
-          child: Text(value.name!),
+          child: Text(
+            value.name!,
+            style: TextStyle(
+              color: Color(int.parse('0xFF${value.color}')),
+            ),
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -160,6 +208,12 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
 
   Widget _buildFileNameField() {
     return TextFieldWidget(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter file name';
+        }
+        return null; // Return null if the value is valid
+      },
       padding: EdgeInsets.zero,
       hint: 'File Name',
       imageIcon: 'assets/icons/File.png',
@@ -180,6 +234,14 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
     String? selectedItem;
 
     return DropdownButtonFormField<String>(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please select file type';
+        } else if (_reportStore.documentFile == null) {
+          return 'Please upload a file';
+        }
+        return null; // Return null if the value is valid
+      },
       decoration: InputDecoration(
         hintText: 'File Type',
         hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
@@ -189,7 +251,9 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       items: items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(
+            value,
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -206,9 +270,11 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       height: 50,
       child: ElevatedButton(
         onPressed: () async {
-          _reportStore.uploadReport();
+          if ((formKey.currentState!.validate())) {
+            _reportStore.uploadReport();
 
-          Navigator.pop(context);
+            Navigator.pop(context);
+          }
         },
         child: Text('Upload'),
       ),

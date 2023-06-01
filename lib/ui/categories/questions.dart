@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
+import 'package:second_opinion_app/widgets/upload_document_widget.dart';
 
 class QuestionsScreen extends StatefulWidget {
   const QuestionsScreen({Key? key}) : super(key: key);
@@ -138,10 +140,23 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             shrinkWrap: true,
             itemCount: _categoryStore.categoryInstanceResponse?.questions?.length ?? 0,
             itemBuilder: (BuildContext context, int index) {
-              return _categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.MCQ
-                  ? _buildCard(_categoryStore.categoryInstanceResponse!.questions![index].question!,
-                      _categoryStore.categoryInstanceResponse!.questions![index].options!, selectedOption)
-                  : _buildTextEditQuestion(_categoryStore.categoryInstanceResponse!.questions![index].question!);
+              if (_categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.MCQ) {
+                return _buildCard(
+                  _categoryStore.categoryInstanceResponse!.questions![index].question!,
+                  _categoryStore.categoryInstanceResponse!.questions![index].options!,
+                  selectedOption,
+                );
+              } else if (_categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.EditText) {
+                return _buildTextEditQuestion(
+                  _categoryStore.categoryInstanceResponse!.questions![index].question!,
+                );
+              } else   {
+                return _buildDocument(
+                  _categoryStore.categoryInstanceResponse!.questions![index].question!,
+                  // Additional parameters for the specific type of question
+                );
+              }
+
             },
           ),
         );
@@ -176,6 +191,62 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildDocument(String question) {
+    return Card(
+      elevation: 2,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      margin: EdgeInsets.all(8.0),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              question,
+              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16.0),
+            Card( shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              color: Colors.white,
+              child: UploadWidgetProfileSetup( backgroundColor: Colors.transparent,
+                  padding: const EdgeInsets.all(8),
+                  dropdown: DropdownButtonFormField<String>(
+                    onChanged: (value) {},
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'Test Report',
+                        child: Text('Test Report'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Prescription',
+                        child: Text('Prescription'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Medical Report',
+                        child: Text('Medical Report'),
+                      ),
+                    ],
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Type',
+                      labelStyle: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  onFilePicked: (file) {
+
+                  },
+                  cert: {}),
+            ),
           ],
         ),
       ),
@@ -257,4 +328,173 @@ class OptionRadioTile extends StatelessWidget {
       ],
     );
   }
+}
+
+
+
+class UploadWidgetProfileSetup extends StatefulWidget {
+  const UploadWidgetProfileSetup(
+      {Key? key,
+        this.dropdown,
+        this.isCV = false,
+        this.padding,
+        this.onTextFieldValueChange,
+        required this.onFilePicked,
+        this.onRemoveButton,
+        this.index,
+        required this.cert,
+        this.borderRadius, this.backgroundColor, this.label})
+      : super(key: key);
+  final EdgeInsetsGeometry? padding;
+  final Function(String)? onTextFieldValueChange;
+  final Function(FilePickerResult) onFilePicked;
+  final Function(int)? onRemoveButton;
+  final int? index;
+  final Map<String, dynamic> cert;
+  final bool isCV;
+  final Color? backgroundColor;
+  final DropdownButtonFormField? dropdown;
+  final BorderRadius? borderRadius;
+  final String? label;
+
+  @override
+  State<UploadWidgetProfileSetup> createState() => _UploadWidgetProfileSetupState();
+}
+
+class _UploadWidgetProfileSetupState extends State<UploadWidgetProfileSetup> {
+  bool filePicked = false;
+  String? fileName;
+  late TextEditingController textEditingController;
+
+  void cvFile() {
+    if (widget.isCV) {
+      textEditingController = TextEditingController(text: 'CV File');
+      widget.onTextFieldValueChange!('CV File');
+    } else {
+      textEditingController = TextEditingController();
+    }
+  }
+
+  void _onFilePicked(FilePickerResult result) {
+    widget.onFilePicked(result);
+    setState(() {
+      fileName = result.files.single.name;
+      filePicked = true;
+    });
+  }
+
+  @override
+  void initState() {
+    cvFile();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOutQuint,
+      height: filePicked ? 160 : 90,
+      decoration: BoxDecoration(
+        color: widget.backgroundColor ?? Colors.white,
+        borderRadius: widget.borderRadius != null ? BorderRadius.circular(12) : widget.borderRadius,
+      ),
+      child: Padding(
+        padding: widget.padding == null ? const EdgeInsets.all(0) : widget.padding!,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 70,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child:widget.dropdown==null? !widget.isCV
+                          ? TextFormField(
+                        onChanged: (value) {
+                          widget.onTextFieldValueChange!(value);
+                        },
+                        decoration: InputDecoration(
+                          label: const Text("File Name"),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      )
+                          : Padding(
+                        padding:const  EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          widget.label??'CV File',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ):Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: widget.dropdown!,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowMultiple: false,
+                          allowedExtensions: ['jpg', 'jpeg', 'png', 'docx', 'pdf'],
+                        );
+                        if (result != null) {
+                          _onFilePicked(result);
+                        }
+                      },
+                      icon: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        child: const Icon(
+                          Icons.upload,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (filePicked)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.file_present_rounded,color: Theme.of(context).primaryColor,),
+                      AnimatedContainer(
+                        curve: Curves.easeOutQuint,
+                        height: filePicked ? 70 : 0,
+                        duration: const Duration(milliseconds: 1000),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Center(
+                            child: Text(fileName ?? ''),
+                          ),
+                        ),
+                      ),
+                      const Expanded(
+                          child: SizedBox(
+                            height: 0,
+                          )),
+                      if (widget.onRemoveButton != null)
+                        IconButton(
+                            onPressed: () {
+                              widget.onRemoveButton!(widget.index!);
+                            },
+                            icon: Icon(Icons.delete,
+                              color: Colors.redAccent,
+                            ))
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 }

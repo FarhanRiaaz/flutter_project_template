@@ -362,9 +362,11 @@ class _RegistrationState extends State<Registration> {
   }
 
   Widget navigate(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
+    Future.delayed(Duration(milliseconds: 0), () async {
+      await _userStore
+          .login(_store.userEmail, _store.confirmPassword,  context);
       Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.login, (Route<dynamic> route) => false);
+          Routes.home, (Route<dynamic> route) => false);
     });
 
     return Container();

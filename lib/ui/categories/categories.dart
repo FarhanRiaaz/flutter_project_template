@@ -157,25 +157,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(10),
-                bottomRight: Radius.circular(10),
-              ),
-              color: Theme.of(context).primaryColor,
-            ),
-            child: IconButton(
-              icon: ImageIcon(
-                AssetImage('assets/icons/SettingSlider.png'),
-                color: Colors.white,
-                size: 30,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, Routes.filter);
-              },
-            ),
-          ),
+
         ],
       ),
     );
@@ -280,18 +262,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   Widget _buildGridView() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: _categoryStore.allCategoryList == null ? 0 : _categoryStore.allCategoryList?.allCategoryList?.length,
-      itemBuilder: (context, index) => MedicalFieldGridTile(
-        title: _categoryStore.allCategoryList!.allCategoryList![index].title!,
-        url: _categoryStore.allCategoryList!.allCategoryList![index].image ?? placeholderImage,
+    return Expanded(
+      child: GridView.builder(
+        shrinkWrap: true,
+
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: _categoryStore.allCategoryList == null ? 0 : _categoryStore.allCategoryList?.allCategoryList?.length,
+        itemBuilder: (context, index) => MedicalFieldGridTile(
+          title: _categoryStore.allCategoryList!.allCategoryList![index].title!,
+          url: _categoryStore.allCategoryList!.allCategoryList![index].image ?? placeholderImage,
+        ),
       ),
     );
   }

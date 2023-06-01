@@ -165,12 +165,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           buttonText: 'Save',
                           buttonColor: Theme.of(context).primaryColor,
                           onPressed: () {
-                            _profileStore.updateProfile(
-                                selectedGender ?? _profileStore.currentUserProfile!.gender!,
-                                int.parse(
-                                    ageController.text.isEmpty ? _profileStore.currentUserProfile!.age! : ageController.text),
-                                _image ?? null);
+                            final String age;
+                            if (ageController.text.isEmpty) {
+                              if (_profileStore.currentUserProfile?.age == null || _profileStore.currentUserProfile!.age!.isEmpty) {
+                                age = '0';
+                              } else {
+                                age = _profileStore.currentUserProfile!.age!;
+                              }
+                            } else {
+                              age = ageController.text;
+                            }
 
+                            _profileStore.updateProfile(
+                                selectedGender ?? _profileStore.currentUserProfile!.gender!, int.parse(age), _image ?? null);
                           },
                         ),
                       )
@@ -269,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildNameField() {
     return Container(
-      child: TextFieldWidget(
+      child: TextFieldWidget(isReadOnly: true,
         hint: 'Enter Your Name',
         inputType: TextInputType.name,
         icon: Icons.person_outline_rounded,
@@ -284,8 +291,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildEmailField() {
-    return TextFieldWidget(
+    return TextFieldWidget(isReadOnly: true,
       hint: 'Enter Your Email',
+
       inputType: TextInputType.emailAddress,
       icon: Icons.email_outlined,
       inputAction: TextInputAction.next,
@@ -327,6 +335,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onChanged: (value) {
         setState(() {
           selectedGender = value!;
+          _profileStore.currentUserProfile!.gender = value;
           print(value);
         });
       },
@@ -340,17 +349,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       imageIcon: 'assets/icons/Weight.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {_profileStore.currentUserProfile!.weight = value;},
       onFieldSubmitted: (value) {},
       textController: weightController,
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
-            isLbs = !isLbs; // toggle between lbs and kgs
+            if (_profileStore.currentUserProfile!.weightUnit == 'pound') {
+              _profileStore.currentUserProfile!.weightUnit = 'kg';
+            } else {
+              _profileStore.currentUserProfile!.weightUnit = 'pound';
+            }
           });
         },
         icon: Text(
-          isLbs ? 'lbs' : 'kgs',
+          _profileStore.currentUserProfile!.weightUnit != 'pound' ? 'kg' : 'lbs',
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),
@@ -365,17 +378,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       imageIcon: 'assets/icons/Scale.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {_profileStore.currentUserProfile!.height = value;},
       onFieldSubmitted: (value) {},
       textController: heightController,
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
-            isCm = !isCm; // toggle between lbs and kgs
+            if (_profileStore.currentUserProfile!.heightUnit == 'feet') {
+              _profileStore.currentUserProfile!.heightUnit = 'cm';
+            } else {
+              _profileStore.currentUserProfile!.heightUnit = 'feet';
+            }
           });
         },
         icon: Text(
-          isCm ? 'cm' : 'ft',
+          _profileStore.currentUserProfile!.heightUnit != 'feet' ? 'cm' : 'ft',
           style: TextStyle(color: Colors.grey[600], fontSize: 16),
         ),
       ),
@@ -391,7 +408,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         textController: ageController,
         inputAction: TextInputAction.next,
         onTap: () {},
-        onChanged: (value) {},
+        onChanged: (value) {
+
+          _profileStore.currentUserProfile!.age = value;
+        },
         onFieldSubmitted: (value) {},
       );
     });
@@ -399,22 +419,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> popUpTheData() async {
     print('object');
-    if (_profileStore.isProfileInProcess)
-      nameController = TextEditingController(text: _profileStore.currentUserProfile?.name ?? "");
+    if (_profileStore.isProfileInProcess) nameController = TextEditingController(text: _profileStore.currentUserProfile?.name ?? "");
     ;
     emailController = TextEditingController(text: _profileStore.currentUserProfile?.email ?? "");
     ;
     if (_profileStore.isProfileInProcess) {
-      selectedGender = _profileStore.currentUserProfile?.gender!;
+      final gender = _profileStore.currentUserProfile?.gender?.toLowerCase();
+
+      if (gender == "male") {
+        selectedGender = "Male";
+      } else if (gender == "female") {
+        selectedGender = "Female";
+      }
     }
-    if (_profileStore.isProfileInProcess)
-      ageController = TextEditingController(text: _profileStore.currentUserProfile?.age ?? "");
+
+    if (_profileStore.isProfileInProcess) ageController = TextEditingController(text: _profileStore.currentUserProfile?.age ?? "");
     ;
-    if (_profileStore.isProfileInProcess)
-      heightController = TextEditingController(text: _profileStore.currentUserProfile?.height ?? "");
+    if (_profileStore.isProfileInProcess) heightController = TextEditingController(text: _profileStore.currentUserProfile?.height ?? "");
     ;
-    if (_profileStore.isProfileInProcess)
-      weightController = TextEditingController(text: _profileStore.currentUserProfile?.weight ?? "");
+    if (_profileStore.isProfileInProcess) weightController = TextEditingController(text: _profileStore.currentUserProfile?.weight ?? "");
     setState(() {});
   }
 }
