@@ -55,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _categoryStore.getAllCategories();
     _profileStore.getProfile();
     _profileStore.getSubUserProfiles();
+    _categoryStore.getSliderImages();
     super.initState();
   }
 
@@ -199,109 +200,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCard() {
+    List<String> imageUrls =
+        _categoryStore.sliderImageResponse!.allSliderImageResponse!.map((sliderImageResponse) => sliderImageResponse.image!).toList();
+
     return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.20,
-        child: PageView(
-          allowImplicitScrolling: true,
-          children: [
-            Card(
-              color: const Color(0xFFDCF1F5),
-              elevation: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Row(
-                  children: [
-                    //Todo Change to Image slider . Only URL images full card
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('You need our best consultancy and assistance ', style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Image.asset(
-                          'assets/images/doctor_image.png',
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      height: MediaQuery.of(context).size.height * 0.20,
+      child: PageView.builder(
+        allowImplicitScrolling: true,
+        itemCount: imageUrls.length,
+        itemBuilder: (context, index) {
+          return Card(
+            elevation: 0,
+            child: CachedNetworkImage(
+              imageUrl: imageUrls[index],
+              fit: BoxFit.fitWidth,
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
-            Card(
-              color: const Color(0xFFDCF1F5),
-              elevation: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Row(
-                  children: [
-                    //Todo Change to Image slider . Only URL images full card
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('You need our best consultancy and assistance ', style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Image.asset(
-                          'assets/images/doctor_image.png',
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Card(
-              color: const Color(0xFFDCF1F5),
-              elevation: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Row(
-                  children: [
-                    //Todo Change to Image slider . Only URL images full card
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text('Better Healthcare, Better Tomorrow', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('You need our best consultancy and assistance ', style: TextStyle(fontSize: 12, color: Color(0xFF6E6E6E))),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Image.asset(
-                          'assets/images/doctor_image.png',
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ));
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildNotificationButton() {
@@ -435,7 +353,9 @@ class _HomeScreenState extends State<HomeScreen> {
         return Column(
           children: [
             _buildAppBar(),
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -483,99 +403,104 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(
           height: 8,
         ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, Routes.myUsers);
-              },
-              child: Container(
-                height: 70,
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: 18,
-                      backgroundImage: CachedNetworkImageProvider(
-                        _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
-                      ),
-                    ),
-                    Text(
-                      'You',
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 6,
-            ),
-            Expanded(
-                child: Container(
-              height: 70,
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: _profileStore.currentSubUserProfile?.subProfile?.length != null
-                    ? (_profileStore.currentSubUserProfile!.subProfile!.length-1).clamp(0, 3)
-                    : 0,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.myUsers);
-                    },
+        Observer(
+          builder: (context) {
+            _profileStore.currentSubUserProfile;
+            return Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.myUsers);
+                  },
+                  child: Container(
+                    height: 70,
                     child: Column(
                       children: [
                         CircleAvatar(
                           backgroundColor: Colors.transparent,
                           radius: 18,
                           backgroundImage: CachedNetworkImageProvider(
-                              _profileStore.currentSubUserProfile?.subProfile?[index].profileImg ?? placeholderImage),
-                        ),
-                        SizedBox(
-                          width: 50,
-                          child: Center(
-                            child: Text(
-                              _profileStore.currentSubUserProfile!.subProfile![index].name!.split(' ').first,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(int.parse('0xFF${_profileStore.currentSubUserProfile!.subProfile![index].color}')),
-                                fontSize: 12,
-                              ),
-                            ),
+                            _profileStore.currentUserProfile?.profileImg ?? placeholderImage,
                           ),
                         ),
+                        Text(
+                          'You',
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        )
                       ],
                     ),
-                  );
-                },
-              ),
-            )),
-            SizedBox(
-              width: 2,
-            ),
-            SizedBox(
-              height: 70,
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddUserScreen()));
-                    },
-                    child: CircleAvatar(
-                      radius: 18,
-                      child: Icon(Icons.add),
-                    ),
                   ),
-                  Text('', style: TextStyle(fontSize: 12)),
-                ],
-              ),
-            ),
-          ],
+                ),
+                SizedBox(
+                  width: 6,
+                ),
+                Expanded(
+                    child: Container(
+                  height: 70,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _profileStore.currentSubUserProfile?.subProfile?.length != null
+                        ? (_profileStore.currentSubUserProfile!.subProfile!.length - 1).clamp(0, 3)
+                        : 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.myUsers);
+                        },
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              radius: 18,
+                              backgroundImage: CachedNetworkImageProvider(
+                                  _profileStore.currentSubUserProfile?.subProfile?[index].profileImg ?? placeholderImage),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              child: Center(
+                                child: Text(
+                                  _profileStore.currentSubUserProfile!.subProfile![index].name!.split(' ').first,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(int.parse('0xFF${_profileStore.currentSubUserProfile!.subProfile![index].color}')),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                )),
+                SizedBox(
+                  width: 2,
+                ),
+                SizedBox(
+                  height: 70,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddUserScreen()));
+                        },
+                        child: CircleAvatar(
+                          radius: 18,
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                      Text('', style: TextStyle(fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
         )
       ],
     );

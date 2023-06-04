@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
+import 'package:second_opinion_app/models/report/get_report_type_response.dart';
 import 'package:second_opinion_app/stores/report/report_store.dart';
 import 'package:second_opinion_app/stores/user/user_store.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
@@ -9,7 +10,7 @@ class ReportFilterScreen extends StatefulWidget {
   const ReportFilterScreen({Key? key, required this.selectedArrangeBy, required this.type, required this.user}) : super(key: key);
 
   final String? selectedArrangeBy;
-  final String? type;
+  final ReportTypeResponse? type;
   final SubProfileResponse? user;
 
   @override
@@ -18,6 +19,7 @@ class ReportFilterScreen extends StatefulWidget {
 
 class _ReportFilterScreenState extends State<ReportFilterScreen> {
   ProfileStore _profileStore = getIt<ProfileStore>();
+  ReportStore _reportStore = getIt<ReportStore>();
 
   List<String> status = ['All', 'Pending', 'Complete', 'Incomplete'];
   List<String> selectedStatus = [];
@@ -33,13 +35,9 @@ class _ReportFilterScreenState extends State<ReportFilterScreen> {
   List<String> categories = ['Cardiology', 'Neurology', 'Nephrology', 'Ontology'];
   List<SubProfileResponse> selectedCategories = [];
 
-  List<String> selectedType = [];
+  List<ReportTypeResponse> selectedType = [];
 
-  List<String> type = [
-    'Test Report',
-    'Prescription',
-    'Medical Report',
-  ];
+
 
   @override
   void initState() {
@@ -143,7 +141,7 @@ class _ReportFilterScreenState extends State<ReportFilterScreen> {
                           context,
                           ReportFilterOption(
                               arrangeBy: selectedArrangedByCategories.isNotEmpty ? selectedArrangedByCategories[0] : null,
-                              type: selectedType.isNotEmpty ? selectedType[0] : null,
+                              type:   selectedType.isNotEmpty ? selectedType[0] : null,
                               user: selectedCategories.isNotEmpty ? selectedCategories[0] : null));
                     },
                     child: Text('Apply'),
@@ -278,7 +276,7 @@ class _ReportFilterScreenState extends State<ReportFilterScreen> {
         ),
         Wrap(
           spacing: 8.0,
-          children: type.map((category) {
+          children: _reportStore.getAllDocumentTypeResponseList!.allReportTypeResponse!.map((category) {
             return FilterChip(
               labelPadding: EdgeInsets.symmetric(horizontal: 15),
               elevation: 1,
@@ -286,9 +284,9 @@ class _ReportFilterScreenState extends State<ReportFilterScreen> {
               showCheckmark: false,
               selectedColor: Color(0xFFcff4fa),
               label: !selectedType.contains(category)
-                  ? Text(category)
+                  ? Text(category.title!)
                   : Text(
-                      category,
+                      category.title!,
                       style: TextStyle(color: Color(0xFF16caea)),
                     ),
               selected: selectedType.contains(category),
@@ -319,7 +317,7 @@ class _ReportFilterScreenState extends State<ReportFilterScreen> {
 
 class ReportFilterOption {
   String? arrangeBy;
-  String? type;
+  ReportTypeResponse? type;
   SubProfileResponse? user;
 
   ReportFilterOption({

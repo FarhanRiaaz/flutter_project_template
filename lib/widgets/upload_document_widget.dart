@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
+import 'package:second_opinion_app/models/report/get_report_type_response.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 import 'package:second_opinion_app/widgets/roundedRectangle_widget.dart';
 import 'package:second_opinion_app/widgets/textfield_widget.dart';
 
@@ -35,6 +37,12 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
   SubProfileResponse? selectedItem;
 
   TextEditingController fileNameController = TextEditingController();
+
+  @override
+  void initState() {
+    _reportStore.getAllDocumentTypes();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +119,7 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
       child: InkWell(
         onTap: () async {
           result = await FilePicker.platform.pickFiles();
-          setState(() {
-
-          });
+          setState(() {});
           if (result != null) {
             _reportStore.documentFile = File(result!.files.single.path!);
           } else {
@@ -150,18 +156,21 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
         child: InkWell(
           onTap: () async {
             result = await FilePicker.platform.pickFiles();
-setState(() {
+            setState(() {});
+            if (result != null   ) {
 
-});
-            if (result != null) {
-              _reportStore.documentFile = File(result!.files.single.path!);
+              if ( result!.files.single.size < 20*1024*1024) {
+                _reportStore.documentFile = File(result!.files.single.path!);
+              }
+              else{DialogHelper.showCompletionDialog(context, 'Invalid File Size','File size should not exceed 20MB');}
             } else {
-              // User canceled the picker
-            }
 
+            }
           },
           child: Center(
-              child: result!.files[0].name.endsWith('.jpg') || result!.files[0].name.endsWith('.png')||result!.files[0].name.endsWith('.jpeg')
+              child: result!.files[0].name.endsWith('.jpg') ||
+                      result!.files[0].name.endsWith('.png') ||
+                      result!.files[0].name.endsWith('.jpeg')
                   ? Image.file(File(result!.files[0].path!))
                   : CachedNetworkImage(
                       fit: BoxFit.fill,
@@ -202,8 +211,7 @@ setState(() {
           selectedItem = value!;
           if (value.relationShip != 'Self') {
             _reportStore.userId = value.id;
-          }else{
-
+          } else {
             _reportStore.userId = null;
           }
         });
@@ -235,12 +243,11 @@ setState(() {
   }
 
   Widget _buildFileTypeField() {
-    List<String> items = ['Test Report', 'Prescription', 'Medical Report'];
-    String? selectedItem;
+    ReportTypeResponse? selectedItem;
 
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<ReportTypeResponse>(
       validator: (value) {
-        if (value == null || value.isEmpty) {
+        if (value == null) {
           return 'Please select file type';
         } else if (_reportStore.documentFile == null) {
           return 'Please upload a file';
@@ -253,17 +260,18 @@ setState(() {
         prefixIcon: Image.asset('assets/icons/File.png'),
       ),
       value: selectedItem,
-      items: items.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: _reportStore.getAllDocumentTypeResponseList!.allReportTypeResponse!
+          .map<DropdownMenuItem<ReportTypeResponse>>((ReportTypeResponse value) {
+        return DropdownMenuItem<ReportTypeResponse>(
           value: value,
           child: Text(
-            value,
+            value.title!,
           ),
         );
       }).toList(),
       onChanged: (value) {
         setState(() {
-          _reportStore.fileType = value;
+          _reportStore.fileType = value!.title;
         });
       },
     );

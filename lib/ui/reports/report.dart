@@ -32,8 +32,9 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   @override
   void initState() {
+    _reportStore.getAllDocumentTypes();
     _reportStore.getFilteredDocumentList(
-        filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type ?? '', _searchController.text);
+        filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type!.title ?? '', _searchController.text);
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -158,7 +159,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                 onChanged: (value) {},
                 onEditingComplete: () {
                   _reportStore.getFilteredDocumentList(
-                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type ?? '', _searchController.text);
+                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type?.title ?? '', _searchController.text);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search',
@@ -197,7 +198,7 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
                 if (filterOption != null)
                   _reportStore.getFilteredDocumentList(
-                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type ?? '', _searchController.text);
+                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type?.title ?? '', _searchController.text);
 
                 //Todo Change to named Parameter
               },

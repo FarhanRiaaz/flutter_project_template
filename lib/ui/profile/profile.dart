@@ -314,9 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       imageIcon: 'assets/icons/Call.png',
       inputAction: TextInputAction.next,
       onChanged: (value) {
-
         _profileStore.currentUserProfile!.phone = value;
-
       },
       onFieldSubmitted: (value) {},
       textController: mobileController,

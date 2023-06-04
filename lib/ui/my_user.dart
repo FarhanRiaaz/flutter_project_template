@@ -22,27 +22,24 @@ class _MyUsersState extends State<MyUsers> {
   static const placeholderImage =
       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
 
-
   @override
   void initState() {
     _profileStore.getSubUserProfiles();
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
       body: _buildBody(),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: _buildTitle(),backgroundColor: Colors.transparent,
+      title: _buildTitle(),
+      backgroundColor: Colors.transparent,
       centerTitle: true,
       leading: _buildLeadingButton(),
     );
@@ -75,7 +72,6 @@ class _MyUsersState extends State<MyUsers> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildSearchBarWithButton(),
-
                     Expanded(child: _buildCardList()),
                   ],
                 ),
@@ -147,9 +143,7 @@ class _MyUsersState extends State<MyUsers> {
             child: IconButton(
               icon: Icon(Icons.add_circle_outline_rounded),
               onPressed: () {
-
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddUserScreen()));
-
               },
             ),
           ),
@@ -161,7 +155,8 @@ class _MyUsersState extends State<MyUsers> {
   Widget _buildCardList() {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: _profileStore.currentSubUserProfile?.subProfile?.length ==null ? 0:_profileStore.currentSubUserProfile!.subProfile!.length-1,
+      itemCount:
+          _profileStore.currentSubUserProfile?.subProfile?.length == null ? 0 : _profileStore.currentSubUserProfile!.subProfile!.length - 1,
       itemBuilder: (BuildContext context, int index) {
         return _buildUserWidget(
             _profileStore.currentSubUserProfile!.subProfile![index].name!,
@@ -208,7 +203,7 @@ class _MyUsersState extends State<MyUsers> {
                   children: [
                     Text(
                       name,
-                      style: TextStyle(fontWeight: FontWeight.bold,color:  Color(int.parse('0xFF${subProfileResponse.color}'))),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color(int.parse('0xFF${subProfileResponse.color}'))),
                     ),
                     SizedBox(
                       height: 3,
