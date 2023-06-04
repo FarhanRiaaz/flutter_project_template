@@ -27,4 +27,5 @@ class Endpoints {
   static const String getFilteredCategories = baseUrl + "/categories/?search=";
   static const String uploadDocument = baseUrl + "/request/upload-document/";
   static const String getSliderImages = baseUrl + "/slider";
+  static const String getReportTypes = baseUrl + "/types";
 }
