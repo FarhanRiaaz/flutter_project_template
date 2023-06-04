@@ -1,10 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/stores/category/category_store.dart';
+import 'package:second_opinion_app/ui/second_opinion/second_opinion_filter.dart';
 
 import 'package:second_opinion_app/widgets/doctors_widget.dart';
 
+import '../../models/profile/sub_profile_response.dart';
 import '../../utils/routes/routes.dart';
+import '../../widgets/progress_indicator_widget.dart';
 
 class DoctorsScreen extends StatefulWidget {
   const DoctorsScreen({
@@ -16,6 +23,8 @@ class DoctorsScreen extends StatefulWidget {
 }
 
 class _DoctorsScreenState extends State<DoctorsScreen> {
+  CategoryStore _categoryStore = getIt<CategoryStore>();
+
   List<Map<String, dynamic>> prescriptionList = List.generate(15, (index) {
     final random = Random();
     final date = DateTime.now().subtract(Duration(days: random.nextInt(30)));
@@ -27,38 +36,58 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
     return {'date': date, 'doctorName': doctorName, 'symptoms': specializations, 'status': status};
   });
 
+  SecondOpinionFilterOption? filterOption;
+
+  TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    _categoryStore.getSecondOpinionSubmittedList(
+      _searchController.text,
+      filterOption?.getArrangeBy ?? '',
+      filterOption?.user?.name ?? '',
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
-     // appBar: _buildAppBar(),
+      // appBar: _buildAppBar(),
       floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
   Widget _buildListView() {
-    return ListView.separated(
-      padding: EdgeInsets.only(bottom: 80),
-      itemCount: prescriptionList.length,
-      itemBuilder: (BuildContext context, int index) {
-        final Map<String, dynamic> prescription = prescriptionList[index];
-        final DateTime dateTime = prescription['dateTime'] ?? DateTime.now();
-        final String doctorName = prescription['doctorName'] ?? '';
-        final String symptoms = prescription['symptoms'] ?? '';
-        final String status = prescription['status'] ?? '';
+    return Observer(
+      builder: (context) {
+        return _categoryStore.opinionSubmittedResponseFuture.status != FutureStatus.pending
+            ? ListView.separated(
+                padding: EdgeInsets.only(bottom: 80),
+                itemCount: _categoryStore.opinionSubmittedResponse?.results?.length ?? 0,
+                itemBuilder: (BuildContext context, int index) {
+                  final Map<String, dynamic> prescription = prescriptionList[index];
 
-        return DoctorsWidget(
-          status: status,
-          specialization: symptoms,
-          dateTime: dateTime,
-          doctorName: doctorName,
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 8,
-        );
-      },
+                  final String doctorName = prescription['doctorName'] ?? '';
+
+                  return DoctorsWidget(
+                    status: _categoryStore.opinionSubmittedResponse?.results?[index].status ?? '',
+                    specialization: _categoryStore.opinionSubmittedResponse?.results?[index].form?.category?.title ?? '',
+                    dateTime: DateTime.parse(_categoryStore.opinionSubmittedResponse?.results?[index].createDate ?? ''),
+                    doctorName: doctorName,
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: 8,
+                  );
+                },
+              )
+            : CustomProgressIndicatorWidget(
+                color: Colors.white,
+              );
+      }
     );
   }
 
@@ -99,8 +128,9 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(backgroundColor: Colors.transparent,
-     // leading: _buildLeadingButton(),
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      // leading: _buildLeadingButton(),
       title: _buildTitle(),
       // actions: _buildAction(),
       centerTitle: true,
@@ -110,9 +140,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   Widget _buildLeadingButton() {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
-      onPressed: () {
-
-      },
+      onPressed: () {},
     );
   }
 
@@ -122,6 +150,7 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
+
   Widget _buildSearchBarWithButton() {
     return Container(
       height: 50,
@@ -141,6 +170,12 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                 color: Colors.white,
               ),
               child: TextField(
+                onEditingComplete: (){_categoryStore.getSecondOpinionSubmittedList(
+                  _searchController.text,
+                  filterOption?.getArrangeBy ?? '',
+                  filterOption?.user?.name ?? '',
+                );},
+                controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   prefixIcon: Icon(
@@ -166,14 +201,28 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                 color: Colors.white,
                 size: 30,
               ),
-              onPressed: () {Navigator.pushNamed(context,Routes.filter);},
+              onPressed: () async {
+                filterOption = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SecondOpinionFilterScreen(
+                              selectedArrangeBy: filterOption?.arrangeBy,
+                              user: filterOption?.user,
+                            )));
+
+                if (filterOption != null)
+                  _categoryStore.getSecondOpinionSubmittedList(
+                    _searchController.text,
+                    filterOption?.getArrangeBy ?? '',
+                    filterOption?.user?.name ?? '',
+                  );
+              },
             ),
           ),
         ],
       ),
     );
   }
-
 
   Widget _buildAddButton() {
     return Padding(
@@ -208,5 +257,24 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       ),
       backgroundColor: Color(0xFFec652a),
     );
+  }
+}
+
+class SecondOpinionFilterOption {
+  String? arrangeBy;
+
+  SubProfileResponse? user;
+
+  SecondOpinionFilterOption({
+    required this.arrangeBy,
+    required this.user,
+  });
+
+  String get getArrangeBy {
+    if (arrangeBy == 'Ascending') {
+      return 'asc';
+    } else {
+      return 'dsc';
+    }
   }
 }

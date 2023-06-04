@@ -52,9 +52,9 @@ class Result {
   int? id;
   Form? form;
   bool? isSubUser;
-  Status? status;
+  String? status;
   bool? paymentCompleted;
-  DateTime? createDate;
+  String? createDate;
   bool? isPending;
   bool? isApproved;
   bool? isRuning;
@@ -115,9 +115,9 @@ class Result {
     int? id,
     Form? form,
     bool? isSubUser,
-    Status? status,
+    String? status,
     bool? paymentCompleted,
-    DateTime? createDate,
+    String? createDate,
     bool? isPending,
     bool? isApproved,
     bool? isRuning,
@@ -144,7 +144,7 @@ class Result {
 class Form {
   int? id;
   Category? category;
-  FormTitle? title;
+  String? title;
 
   Form({
     this.id,
@@ -173,7 +173,7 @@ class Form {
   Form copyWith({
     int? id,
     Category? category,
-    FormTitle? title,
+    String? title,
   }) =>
       Form(
         id: id ?? this.id,
@@ -184,7 +184,7 @@ class Form {
 
 class Category {
   int? id;
-  CategoryTitle? title;
+  String? title;
   int? price;
   String? image;
 
@@ -213,7 +213,7 @@ class Category {
 
   Category copyWith({
     int? id,
-    CategoryTitle? title,
+    String? title,
     int? price,
     String? image,
   }) =>
@@ -225,8 +225,7 @@ class Category {
       );
 }
 
-enum CategoryTitle { ALLERGY_IMMUNOLOGY, BARIATIC_SURGERY }
 
-enum FormTitle { REQUEST_FORM }
 
-enum Status { PENDING }
+
+

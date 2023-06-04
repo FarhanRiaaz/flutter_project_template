@@ -16,37 +16,27 @@ abstract class _CategoryStore with Store {
   final CategoryRepository _categoryRepository;
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<AllCategoryList> emptyGetAllCategoryResponse =
-      ObservableFuture.value(AllCategoryList());
+  static ObservableFuture<AllCategoryList> emptyGetAllCategoryResponse = ObservableFuture.value(AllCategoryList());
 
-  static ObservableFuture<AllSliderImageResponse> emptyGetSliderImagesResponse =
-      ObservableFuture.value(AllSliderImageResponse());
+  static ObservableFuture<AllSliderImageResponse> emptyGetSliderImagesResponse = ObservableFuture.value(AllSliderImageResponse());
 
-  static ObservableFuture<CategoryInstanceResponse>
-      emptyCategoryInstanceResponse =
-      ObservableFuture.value(CategoryInstanceResponse());
-  static ObservableFuture<OpinionSubmitResponse> emptyOpinionSubmitResponse =
-      ObservableFuture.value(OpinionSubmitResponse());
+  static ObservableFuture<CategoryInstanceResponse> emptyCategoryInstanceResponse = ObservableFuture.value(CategoryInstanceResponse());
+  static ObservableFuture<OpinionSubmitResponse> emptyOpinionSubmitResponse = ObservableFuture.value(OpinionSubmitResponse());
 
   static ObservableFuture<SecondOpinionSubmittedResponse> emptyOpinionSubmittedResponse =
       ObservableFuture.value(SecondOpinionSubmittedResponse());
 
   @observable
-  ObservableFuture<AllCategoryList> allCategoryFuture =
-      emptyGetAllCategoryResponse;
+  ObservableFuture<AllCategoryList> allCategoryFuture = emptyGetAllCategoryResponse;
   @observable
-  ObservableFuture<AllSliderImageResponse> sliderImagesFuture =
-      emptyGetSliderImagesResponse;
+  ObservableFuture<AllSliderImageResponse> sliderImagesFuture = emptyGetSliderImagesResponse;
   @observable
-  ObservableFuture<CategoryInstanceResponse> allCategoryInstanceFuture =
-      emptyCategoryInstanceResponse;
+  ObservableFuture<CategoryInstanceResponse> allCategoryInstanceFuture = emptyCategoryInstanceResponse;
   @observable
-  ObservableFuture<OpinionSubmitResponse> opinionSubmitResponseFuture =
-      emptyOpinionSubmitResponse;
+  ObservableFuture<OpinionSubmitResponse> opinionSubmitResponseFuture = emptyOpinionSubmitResponse;
 
   @observable
-  ObservableFuture<SecondOpinionSubmittedResponse> opinionSubmittedResponseFuture =
-      emptyOpinionSubmittedResponse;
+  ObservableFuture<SecondOpinionSubmittedResponse> opinionSubmittedResponseFuture = emptyOpinionSubmittedResponse;
 
   @observable
   AllCategoryList? allCategoryList;
@@ -63,12 +53,10 @@ abstract class _CategoryStore with Store {
   SecondOpinionSubmittedResponse? opinionSubmittedResponse;
 
   @computed
-  bool get isAllCategoriesInProcess =>
-      allCategoryFuture.status == FutureStatus.pending;
+  bool get isAllCategoriesInProcess => allCategoryFuture.status == FutureStatus.pending;
 
   @computed
-  bool get isCategoriesInstanceInProcess =>
-      allCategoryInstanceFuture.status == FutureStatus.pending;
+  bool get isCategoriesInstanceInProcess => allCategoryInstanceFuture.status == FutureStatus.pending;
 
   @action
   Future getAllCategories() async {
@@ -83,8 +71,7 @@ abstract class _CategoryStore with Store {
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to getAllCategories\nSomething went wrong!\n${e.toString()}');
+      print('failed to getAllCategories\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
@@ -102,8 +89,7 @@ abstract class _CategoryStore with Store {
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to getSliderImages\nSomething went wrong!\n${e.toString()}');
+      print('failed to getSliderImages\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
@@ -121,8 +107,7 @@ abstract class _CategoryStore with Store {
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to getFilteredCategories\nSomething went wrong!\n${e.toString()}');
+      print('failed to getFilteredCategories\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
@@ -140,8 +125,7 @@ abstract class _CategoryStore with Store {
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to getFormByCategory\nSomething went wrong!\n${e.toString()}');
+      print('failed to getFormByCategory\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
@@ -159,30 +143,28 @@ abstract class _CategoryStore with Store {
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to submitSecondOpinion\nSomething went wrong!\n${e.toString()}');
+      print('failed to submitSecondOpinion\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
 
   @action
-  Future getSecondOpinionSubmittedList(
-      String? searchString,
-      String? sort,
-      String? userName) async {
-    final future = _categoryRepository.getSecondOpinionSubmittedList(searchString,sort,userName);
+  Future getSecondOpinionSubmittedList(String? searchString, String? sort, String? userName) async {
+    final future = _categoryRepository.getSecondOpinionSubmittedList(searchString, sort, userName);
     opinionSubmittedResponseFuture = ObservableFuture(future);
+
+
     await future.then((value) async {
       if (value != null) {
         opinionSubmittedResponse = value;
+
       } else {
         print('failed to getSecondOpinionSubmittedList\nSomething went wrong');
       }
     }).catchError((e) {
       print(e);
 
-      print(
-          'failed to getSecondOpinionSubmittedList\nSomething went wrong!\n${e.toString()}');
+      print('failed to getSecondOpinionSubmittedList\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }

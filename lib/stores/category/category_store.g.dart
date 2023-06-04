@@ -41,6 +41,22 @@ mixin _$CategoryStore on _CategoryStore, Store {
     });
   }
 
+  late final _$sliderImagesFutureAtom =
+      Atom(name: '_CategoryStore.sliderImagesFuture', context: context);
+
+  @override
+  ObservableFuture<AllSliderImageResponse> get sliderImagesFuture {
+    _$sliderImagesFutureAtom.reportRead();
+    return super.sliderImagesFuture;
+  }
+
+  @override
+  set sliderImagesFuture(ObservableFuture<AllSliderImageResponse> value) {
+    _$sliderImagesFutureAtom.reportWrite(value, super.sliderImagesFuture, () {
+      super.sliderImagesFuture = value;
+    });
+  }
+
   late final _$allCategoryInstanceFutureAtom =
       Atom(name: '_CategoryStore.allCategoryInstanceFuture', context: context);
 
@@ -59,6 +75,43 @@ mixin _$CategoryStore on _CategoryStore, Store {
     });
   }
 
+  late final _$opinionSubmitResponseFutureAtom = Atom(
+      name: '_CategoryStore.opinionSubmitResponseFuture', context: context);
+
+  @override
+  ObservableFuture<OpinionSubmitResponse> get opinionSubmitResponseFuture {
+    _$opinionSubmitResponseFutureAtom.reportRead();
+    return super.opinionSubmitResponseFuture;
+  }
+
+  @override
+  set opinionSubmitResponseFuture(
+      ObservableFuture<OpinionSubmitResponse> value) {
+    _$opinionSubmitResponseFutureAtom
+        .reportWrite(value, super.opinionSubmitResponseFuture, () {
+      super.opinionSubmitResponseFuture = value;
+    });
+  }
+
+  late final _$opinionSubmittedResponseFutureAtom = Atom(
+      name: '_CategoryStore.opinionSubmittedResponseFuture', context: context);
+
+  @override
+  ObservableFuture<SecondOpinionSubmittedResponse>
+      get opinionSubmittedResponseFuture {
+    _$opinionSubmittedResponseFutureAtom.reportRead();
+    return super.opinionSubmittedResponseFuture;
+  }
+
+  @override
+  set opinionSubmittedResponseFuture(
+      ObservableFuture<SecondOpinionSubmittedResponse> value) {
+    _$opinionSubmittedResponseFutureAtom
+        .reportWrite(value, super.opinionSubmittedResponseFuture, () {
+      super.opinionSubmittedResponseFuture = value;
+    });
+  }
+
   late final _$allCategoryListAtom =
       Atom(name: '_CategoryStore.allCategoryList', context: context);
 
@@ -72,6 +125,22 @@ mixin _$CategoryStore on _CategoryStore, Store {
   set allCategoryList(AllCategoryList? value) {
     _$allCategoryListAtom.reportWrite(value, super.allCategoryList, () {
       super.allCategoryList = value;
+    });
+  }
+
+  late final _$sliderImageResponseAtom =
+      Atom(name: '_CategoryStore.sliderImageResponse', context: context);
+
+  @override
+  AllSliderImageResponse? get sliderImageResponse {
+    _$sliderImageResponseAtom.reportRead();
+    return super.sliderImageResponse;
+  }
+
+  @override
+  set sliderImageResponse(AllSliderImageResponse? value) {
+    _$sliderImageResponseAtom.reportWrite(value, super.sliderImageResponse, () {
+      super.sliderImageResponse = value;
     });
   }
 
@@ -92,12 +161,54 @@ mixin _$CategoryStore on _CategoryStore, Store {
     });
   }
 
+  late final _$opinionSubmitResponseAtom =
+      Atom(name: '_CategoryStore.opinionSubmitResponse', context: context);
+
+  @override
+  OpinionSubmitResponse? get opinionSubmitResponse {
+    _$opinionSubmitResponseAtom.reportRead();
+    return super.opinionSubmitResponse;
+  }
+
+  @override
+  set opinionSubmitResponse(OpinionSubmitResponse? value) {
+    _$opinionSubmitResponseAtom.reportWrite(value, super.opinionSubmitResponse,
+        () {
+      super.opinionSubmitResponse = value;
+    });
+  }
+
+  late final _$opinionSubmittedResponseAtom =
+      Atom(name: '_CategoryStore.opinionSubmittedResponse', context: context);
+
+  @override
+  SecondOpinionSubmittedResponse? get opinionSubmittedResponse {
+    _$opinionSubmittedResponseAtom.reportRead();
+    return super.opinionSubmittedResponse;
+  }
+
+  @override
+  set opinionSubmittedResponse(SecondOpinionSubmittedResponse? value) {
+    _$opinionSubmittedResponseAtom
+        .reportWrite(value, super.opinionSubmittedResponse, () {
+      super.opinionSubmittedResponse = value;
+    });
+  }
+
   late final _$getAllCategoriesAsyncAction =
       AsyncAction('_CategoryStore.getAllCategories', context: context);
 
   @override
   Future<dynamic> getAllCategories() {
     return _$getAllCategoriesAsyncAction.run(() => super.getAllCategories());
+  }
+
+  late final _$getSliderImagesAsyncAction =
+      AsyncAction('_CategoryStore.getSliderImages', context: context);
+
+  @override
+  Future<dynamic> getSliderImages() {
+    return _$getSliderImagesAsyncAction.run(() => super.getSliderImages());
   }
 
   late final _$getFilteredCategoriesAsyncAction =
@@ -118,13 +229,39 @@ mixin _$CategoryStore on _CategoryStore, Store {
         .run(() => super.getFormByCategory(catId));
   }
 
+  late final _$submitSecondOpinionAsyncAction =
+      AsyncAction('_CategoryStore.submitSecondOpinion', context: context);
+
+  @override
+  Future<dynamic> submitSecondOpinion(OpinionSubmitRequest request) {
+    return _$submitSecondOpinionAsyncAction
+        .run(() => super.submitSecondOpinion(request));
+  }
+
+  late final _$getSecondOpinionSubmittedListAsyncAction = AsyncAction(
+      '_CategoryStore.getSecondOpinionSubmittedList',
+      context: context);
+
+  @override
+  Future<dynamic> getSecondOpinionSubmittedList(
+      String? searchString, String? sort, String? userName) {
+    return _$getSecondOpinionSubmittedListAsyncAction.run(() =>
+        super.getSecondOpinionSubmittedList(searchString, sort, userName));
+  }
+
   @override
   String toString() {
     return '''
 allCategoryFuture: ${allCategoryFuture},
+sliderImagesFuture: ${sliderImagesFuture},
 allCategoryInstanceFuture: ${allCategoryInstanceFuture},
+opinionSubmitResponseFuture: ${opinionSubmitResponseFuture},
+opinionSubmittedResponseFuture: ${opinionSubmittedResponseFuture},
 allCategoryList: ${allCategoryList},
+sliderImageResponse: ${sliderImageResponse},
 categoryInstanceResponse: ${categoryInstanceResponse},
+opinionSubmitResponse: ${opinionSubmitResponse},
+opinionSubmittedResponse: ${opinionSubmittedResponse},
 isAllCategoriesInProcess: ${isAllCategoriesInProcess},
 isCategoriesInstanceInProcess: ${isCategoriesInstanceInProcess}
     ''';
