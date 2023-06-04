@@ -17,18 +17,29 @@ abstract class _ProfileStore with Store {
   final Repository _repository;
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<ProfileResponse> emptyProfileResponse = ObservableFuture.value(ProfileResponse());
-  static ObservableFuture<SubProfileList> emptySubProfileResponse = ObservableFuture.value(SubProfileList());
-  static ObservableFuture<SubProfileResponse> emptyAddSubProfileResponse = ObservableFuture.value(SubProfileResponse());
+  static ObservableFuture<ProfileResponse> emptyProfileResponse =
+      ObservableFuture.value(ProfileResponse());
+  static ObservableFuture<SubProfileList> emptySubProfileResponse =
+      ObservableFuture.value(SubProfileList());
+  static ObservableFuture<SubProfileResponse> emptyAddSubProfileResponse =
+      ObservableFuture.value(SubProfileResponse());
+  static ObservableFuture<bool> emptyDeleteSubProfileResponse =
+      ObservableFuture.value(false);
 
   @observable
   ObservableFuture<ProfileResponse> profileFuture = emptyProfileResponse;
 
   @observable
   ObservableFuture<SubProfileList> subProfileFuture = emptySubProfileResponse;
+  @observable
+  ObservableFuture<bool> deleteSubUserFuture = emptyDeleteSubProfileResponse;
 
   @observable
-  ObservableFuture<SubProfileResponse> addSubProfileFuture = emptyAddSubProfileResponse;
+  ObservableFuture<SubProfileResponse> addSubProfileFuture =
+      emptyAddSubProfileResponse;
+  @observable
+  ObservableFuture<SubProfileResponse> updateSubProfileFuture =
+      emptyAddSubProfileResponse;
 
   @observable
   ProfileResponse? currentUserProfile;
@@ -40,16 +51,25 @@ abstract class _ProfileStore with Store {
   SubProfileRequest? subProfileRequest;
 
   @observable
+  bool? isSubUserDeleted;
+
+  @observable
   SubProfileList? currentSubUserProfile;
 
   @computed
   bool get isProfileInProcess => profileFuture.status == FutureStatus.pending;
 
   @computed
-  bool get isSubProfileAddInProcess => addSubProfileFuture.status == FutureStatus.pending;
+  bool get isSubProfileAddInProcess =>
+      addSubProfileFuture.status == FutureStatus.pending;
 
   @computed
-  bool get isSubProfileInProcess => subProfileFuture.status == FutureStatus.pending;
+  bool get isUpdateSubProfileAddInProcess =>
+      updateSubProfileFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isSubProfileInProcess =>
+      subProfileFuture.status == FutureStatus.pending;
 
   @action
   String? getColorFromName(String userName) {
@@ -106,14 +126,16 @@ abstract class _ProfileStore with Store {
     }).catchError((e) {
       print(e);
 
-      print('failed to getSubUserProfile\nSomething went wrong!\n${e.toString()}');
+      print(
+          'failed to getSubUserProfile\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
 
   @action
   Future addSubUserProfile() async {
-    final future = _repository.addSubUserProfile(subProfileRequest ?? SubProfileRequest());
+    final future =
+        _repository.addSubUserProfile(subProfileRequest ?? SubProfileRequest());
     addSubProfileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value != null) {
@@ -125,14 +147,58 @@ abstract class _ProfileStore with Store {
     }).catchError((e) {
       print(e);
 
-      print('failed to addSubUserProfile\nSomething went wrong!\n${e.toString()}');
+      print(
+          'failed to addSubUserProfile\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future updateSubUserProfile(String subUserId) async {
+    final future = _repository.updateSubUserProfile(
+        subProfileRequest ?? SubProfileRequest(), subUserId);
+    updateSubProfileFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value != null) {
+        currentAddSubUserProfile = value;
+        getSubUserProfiles();
+      } else {
+        print('failed to updateSubUserProfile\nSomething went wrong!');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to updateSubUserProfile\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  /// method to delete Sub User Profile via api just pass the user id currentDocumentToDelete just check the response of isDocumentDeleted
+  @action
+  Future deleteSubUserProfile(int subUserId) async {
+    final future = _repository.deleteSubUserProfile(subUserId);
+    deleteSubUserFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value) {
+        isSubUserDeleted = value;
+        await getSubUserProfiles();
+      } else {
+        print('failed to deleteSubUserProfile\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to deleteSubUserProfile\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
 
   @action
   Future updateProfile(String gender, int age, File? profileImage) async {
-    final future = _repository.updateProfile(currentUserProfile!, profileImage ?? null);
+    final future =
+        _repository.updateProfile(currentUserProfile!, profileImage ?? null);
     profileFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {
