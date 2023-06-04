@@ -61,7 +61,7 @@ abstract class _ReportStore with Store {
   /// method to uploadReport via api fill the fields  and check the response of currentReportResponse
   @action
   Future uploadReport() async {
-    final future = _reportRepository.uploadDocument(fileName!, fileType!, documentFile!, userId!);
+    final future = _reportRepository.uploadDocument(fileName!, fileType!, documentFile!, userId);
     reportFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value.id != null) {

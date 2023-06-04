@@ -200,7 +200,12 @@ setState(() {
       onChanged: (value) {
         setState(() {
           selectedItem = value!;
-          _reportStore.userId = value.id;
+          if (value.relationShip != 'Self') {
+            _reportStore.userId = value.id;
+          }else{
+
+            _reportStore.userId = null;
+          }
         });
       },
     );

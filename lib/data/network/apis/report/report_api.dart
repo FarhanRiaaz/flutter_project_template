@@ -15,13 +15,13 @@ class ReportApi {
   ReportApi(this._dioClient);
 
   // method to upload documents
-  Future<UploadReportResponse> uploadDocument(String fileName, String fileType, File documentFile, int userId, String token) async {
+  Future<UploadReportResponse> uploadDocument(String fileName, String fileType, File documentFile, int? userId, String token) async {
     try {
       FormData formData = FormData.fromMap({
         'fileName': fileName,
         'type': fileType,
         'file': await MultipartFile.fromFile(documentFile.path, filename: documentFile.path),
-        'userId': userId,
+        if(userId!=null)'userId': userId,
       });
       print(documentFile.path);
       final res = await _dioClient.post(

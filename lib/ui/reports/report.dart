@@ -59,16 +59,15 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
 
   Widget _buildListView() {
     return Observer(builder: (context) {
-      return !_reportStore.isFetchDocumentInProcess && !_reportStore.isDeletedInProcess &&!_reportStore.isUploadInProcess
+      return !_reportStore.isFetchDocumentInProcess && !_reportStore.isDeletedInProcess && !_reportStore.isUploadInProcess
           ? ListView.separated(
               padding: EdgeInsets.only(bottom: 80),
               itemCount: _reportStore.getAllDocumentResponseList?.results?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
                 return PrescriptionWidget(
-            
                   reportStore: _reportStore,
-                  id: _reportStore.getAllDocumentResponseList!.results![index].id!, result: _reportStore.getAllDocumentResponseList!.results![index],
-                  
+                  id: _reportStore.getAllDocumentResponseList!.results![index].id!,
+                  result: _reportStore.getAllDocumentResponseList!.results![index],
                 );
               },
               separatorBuilder: (BuildContext context, int index) {

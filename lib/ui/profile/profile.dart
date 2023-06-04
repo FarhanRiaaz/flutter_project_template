@@ -276,7 +276,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildNameField() {
     return Container(
-      child: TextFieldWidget(isReadOnly: true,
+      child: TextFieldWidget(
+        isReadOnly: true,
         hint: 'Enter Your Name',
         inputType: TextInputType.name,
         icon: Icons.person_outline_rounded,
@@ -291,9 +292,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildEmailField() {
-    return TextFieldWidget(isReadOnly: true,
+    return TextFieldWidget(
+      isReadOnly: true,
       hint: 'Enter Your Email',
-
       inputType: TextInputType.emailAddress,
       icon: Icons.email_outlined,
       inputAction: TextInputAction.next,
@@ -312,7 +313,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       icon: Icons.phone_outlined,
       imageIcon: 'assets/icons/Call.png',
       inputAction: TextInputAction.next,
-      onChanged: (value) {},
+      onChanged: (value) {
+
+        _profileStore.currentUserProfile!.phone = value;
+
+      },
       onFieldSubmitted: (value) {},
       textController: mobileController,
     );
@@ -349,7 +354,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       imageIcon: 'assets/icons/Weight.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {_profileStore.currentUserProfile!.weight = value;},
+      onChanged: (value) {
+        _profileStore.currentUserProfile!.weight = value;
+      },
       onFieldSubmitted: (value) {},
       textController: weightController,
       suffixIcon: IconButton(
@@ -378,7 +385,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       imageIcon: 'assets/icons/Scale.png',
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {_profileStore.currentUserProfile!.height = value;},
+      onChanged: (value) {
+        _profileStore.currentUserProfile!.height = value;
+      },
       onFieldSubmitted: (value) {},
       textController: heightController,
       suffixIcon: IconButton(
@@ -409,7 +418,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         inputAction: TextInputAction.next,
         onTap: () {},
         onChanged: (value) {
-
           _profileStore.currentUserProfile!.age = value;
         },
         onFieldSubmitted: (value) {},
@@ -436,6 +444,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_profileStore.isProfileInProcess) ageController = TextEditingController(text: _profileStore.currentUserProfile?.age ?? "");
     ;
     if (_profileStore.isProfileInProcess) heightController = TextEditingController(text: _profileStore.currentUserProfile?.height ?? "");
+    if (_profileStore.isProfileInProcess) mobileController = TextEditingController(text: _profileStore.currentUserProfile?.phone ?? "");
     ;
     if (_profileStore.isProfileInProcess) weightController = TextEditingController(text: _profileStore.currentUserProfile?.weight ?? "");
     setState(() {});

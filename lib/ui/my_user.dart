@@ -161,7 +161,7 @@ class _MyUsersState extends State<MyUsers> {
   Widget _buildCardList() {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: _profileStore.currentSubUserProfile?.subProfile?.length ?? 0,
+      itemCount: _profileStore.currentSubUserProfile?.subProfile?.length ==null ? 0:_profileStore.currentSubUserProfile!.subProfile!.length-1,
       itemBuilder: (BuildContext context, int index) {
         return _buildUserWidget(
             _profileStore.currentSubUserProfile!.subProfile![index].name!,

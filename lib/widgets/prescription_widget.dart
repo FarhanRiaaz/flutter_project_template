@@ -20,7 +20,7 @@ class PrescriptionWidget extends StatelessWidget {
  final Result result;
   final ReportStore reportStore;
 
-  ProfileStore _profileStore = getIt<ProfileStore>();
+ final ProfileStore _profileStore = getIt<ProfileStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +43,9 @@ class PrescriptionWidget extends StatelessWidget {
               child: Center(
                   child: CachedNetworkImage(
                 fit: BoxFit.fill,
-                imageUrl:result.file!.endsWith('.jpg') || result.file!.endsWith('.png')
+                imageUrl: result.file!.endsWith('.jpg') || result.file!.endsWith('.png')
                     ? result.file!
-                    : 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png', // Replace with your placeholder image URL
+                    : 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png',
               )),
             ),
             SizedBox(
@@ -61,7 +61,7 @@ class PrescriptionWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 16),
                   ),
                   Text(
-                    result.user!,
+                    result.user! ,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12,color: Color(int.parse('0xFF${_profileStore.getColorFromName(result.user!)}')),),
                   ),
                   Text(

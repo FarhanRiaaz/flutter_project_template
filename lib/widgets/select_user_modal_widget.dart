@@ -56,7 +56,7 @@ class _SelectUserModalState extends State<SelectUserModal> {
                           children: [
                             Text(_profileStore.currentSubUserProfile?.subProfile?[index].name ?? '',style: TextStyle(color:   Color(int.parse('0xFF${_profileStore.currentSubUserProfile!.subProfile![index].color}')),),),
                             Text(
-                              'Personal',
+                              _profileStore.currentSubUserProfile?.subProfile?[index].relationShip ?? '',
                               style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Color(0xFF8b8b8b)),
                             ),
                           ],

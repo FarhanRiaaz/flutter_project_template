@@ -98,6 +98,7 @@ abstract class _ProfileStore with Store {
             profileImg: currentUserProfile!.profileImg,
             gender: currentUserProfile!.gender,
             id: currentUserProfile!.id,
+            relationShip: 'Self',
             color: '000000'));
       } else {
         print('failed to getSubUserProfile\nSomething went wrong!');

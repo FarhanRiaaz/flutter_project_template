@@ -9,6 +9,7 @@ class ProfileResponse {
   String? height;
   String? weightUnit;
   String? heightUnit;
+  String? phone;
 
   ProfileResponse({
     this.id,
@@ -21,6 +22,7 @@ class ProfileResponse {
     this.height,
     this.weightUnit,
     this.heightUnit,
+    this.phone,
   });
 
   ProfileResponse.fromJson(Map<String, dynamic> data) {
@@ -34,6 +36,7 @@ class ProfileResponse {
     height = data['height'];
     weightUnit = data['weight_unit'];
     heightUnit = data['height_unit'];
+    phone = data['phone'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class ProfileResponse {
     data['height'] = this.height;
     data['weight_unit'] = this.weightUnit;
     data['height_unit'] = this.heightUnit;
+    data['phone'] = this.phone;
     return data;
   }
 
@@ -61,6 +65,7 @@ class ProfileResponse {
     height: data['height'],
     weightUnit: data['weight_unit'],
     heightUnit: data['height_unit'],
+    phone: data['phone'],
   );
 
   Map<String, dynamic> toMap() => {
@@ -73,6 +78,7 @@ class ProfileResponse {
     'height': height,
     'weight_unit': weightUnit,
     'height_unit': heightUnit,
+    'phone': phone,
   };
 
   ProfileResponse copyWith({
@@ -86,6 +92,7 @@ class ProfileResponse {
     String? height,
     String? weightUnit,
     String? heightUnit,
+    String? phone,
   }) =>
       ProfileResponse(
         id: id ?? this.id,
@@ -98,5 +105,6 @@ class ProfileResponse {
         height: height ?? this.height,
         weightUnit: weightUnit ?? this.weightUnit,
         heightUnit: heightUnit ?? this.heightUnit,
+        phone: phone ?? this.phone,
       );
 }

@@ -51,6 +51,7 @@ class ProfileApi {
         'height' : currentProfile.height,
         'weight_unit':currentProfile.weightUnit,
         'height_unit':currentProfile.heightUnit,
+        'phone':currentProfile.phone,
         if (profileImage?.path != null) 'profileImg': await MultipartFile.fromFile(profileImage?.path ?? '', filename: fileName),
       });
 

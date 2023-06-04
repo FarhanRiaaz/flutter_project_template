@@ -20,7 +20,7 @@ class ReportRepository {
     String fileName,
     String fileType,
     File documentFile,
-    int userId,
+    int? userId,
   ) async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("uploadReport$authToken");
