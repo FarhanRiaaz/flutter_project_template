@@ -4,6 +4,7 @@ import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/models/categories/opinion_request.dart';
 import 'package:second_opinion_app/models/categories/opinion_response.dart';
+import 'package:second_opinion_app/models/slider/slider_images_response.dart';
 
 import '../../constants/endpoints.dart';
 
@@ -30,6 +31,31 @@ class CategoryApi {
 
       if (res != null) {
         return AllCategoryList.fromJson(res);
+      } else {
+        throw Exception("Null response received!");
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  /// Method to get list of slider images
+  ///
+  Future<AllSliderImageResponse> getSliderImages(String authToken) async{
+    try {
+      final res = await _dioClient.get(
+        Endpoints.getSliderImages,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $authToken',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (res != null) {
+        return AllSliderImageResponse.fromJson(res);
       } else {
         throw Exception("Null response received!");
       }

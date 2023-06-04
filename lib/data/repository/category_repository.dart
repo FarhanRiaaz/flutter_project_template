@@ -4,6 +4,7 @@ import 'package:second_opinion_app/models/categories/all_category_response.dart'
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/models/categories/opinion_request.dart';
 import 'package:second_opinion_app/models/categories/opinion_response.dart';
+import 'package:second_opinion_app/models/slider/slider_images_response.dart';
 
 import '../sharedpref/shared_preference_helper.dart';
 
@@ -21,6 +22,12 @@ class CategoryRepository {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getAllCategories$authToken");
     return await _categoryApi.getAllCategories(authToken!);
+  }
+
+  Future<AllSliderImageResponse> getSliderImages() async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("getSliderImages$authToken");
+    return await _categoryApi.getSliderImages(authToken!);
   }
 
   Future<AllCategoryList> getFilteredCategories(String searchString) async {

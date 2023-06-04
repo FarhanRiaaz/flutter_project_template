@@ -3,6 +3,7 @@ import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/models/categories/opinion_request.dart';
 import 'package:second_opinion_app/models/categories/opinion_response.dart';
+import 'package:second_opinion_app/models/slider/slider_images_response.dart';
 
 import '../../data/repository/category_repository.dart';
 
@@ -17,6 +18,9 @@ abstract class _CategoryStore with Store {
   static ObservableFuture<AllCategoryList> emptyGetAllCategoryResponse =
       ObservableFuture.value(AllCategoryList());
 
+  static ObservableFuture<AllSliderImageResponse> emptyGetSliderImagesResponse =
+      ObservableFuture.value(AllSliderImageResponse());
+
   static ObservableFuture<CategoryInstanceResponse>
       emptyCategoryInstanceResponse =
       ObservableFuture.value(CategoryInstanceResponse());
@@ -27,6 +31,9 @@ abstract class _CategoryStore with Store {
   ObservableFuture<AllCategoryList> allCategoryFuture =
       emptyGetAllCategoryResponse;
   @observable
+  ObservableFuture<AllSliderImageResponse> sliderImagesFuture =
+      emptyGetSliderImagesResponse;
+  @observable
   ObservableFuture<CategoryInstanceResponse> allCategoryInstanceFuture =
       emptyCategoryInstanceResponse;
   @observable
@@ -35,6 +42,8 @@ abstract class _CategoryStore with Store {
 
   @observable
   AllCategoryList? allCategoryList;
+  @observable
+  AllSliderImageResponse? sliderImageResponse;
 
   @observable
   CategoryInstanceResponse? categoryInstanceResponse;
@@ -65,6 +74,25 @@ abstract class _CategoryStore with Store {
 
       print(
           'failed to getAllCategories\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future getSliderImages() async {
+    final future = _categoryRepository.getSliderImages();
+    sliderImagesFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value != null) {
+        sliderImageResponse = value;
+      } else {
+        print('failed to getSliderImages\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to getSliderImages\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
