@@ -1,14 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/stores/post/post_store.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
-
 import '../../di/components/service_locator.dart';
-import '../../utils/routes/routes.dart';
 import '../home/categories_widget.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -57,7 +54,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-
       body: WillPopScope(
         onWillPop: () async {
           _categoryStore.getAllCategories();
@@ -70,7 +66,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   // app bar methods:-----------------------------------------------------------
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(backgroundColor: Colors.transparent,
+    return AppBar(
+      backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       centerTitle: true,
       title: _buildTitle(),
@@ -122,6 +119,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
     );
   }
+
   Widget _buildSearchBarWithButton() {
     return Container(
       height: 50,
@@ -141,7 +139,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 color: Colors.white,
               ),
               child: TextField(
-                 controller: _searchController,
+                controller: _searchController,
                 onChanged: (value) {},
                 onEditingComplete: () {
                   _categoryStore.getFilteredCategories(_searchController.text);
@@ -157,11 +155,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
             ),
           ),
-
         ],
       ),
     );
   }
+
   Widget _buildSearchBar() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       FocusScope.of(context).autofocus(focusNode);
@@ -247,7 +245,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildSearchBarWithButton(),
-
                         _buildGridView(),
                       ],
                     ),
@@ -265,7 +262,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return Expanded(
       child: GridView.builder(
         shrinkWrap: true,
-
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           crossAxisSpacing: 10,

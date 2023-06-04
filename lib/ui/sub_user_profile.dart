@@ -34,7 +34,6 @@ class _SubUserProfileState extends State<SubUserProfile> {
   TextEditingController ageController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
-
   ProfileStore _profileStore = getIt<ProfileStore>();
   File? _image;
 
@@ -43,18 +42,16 @@ class _SubUserProfileState extends State<SubUserProfile> {
       nameController.text = widget.subProfileResponse.name ?? '';
       colorController.text = widget.subProfileResponse.color ?? '';
       if (widget.subProfileResponse.color != null || widget.subProfileResponse.color!.isNotEmpty)
-        selectedColor = Color(
-            int.parse('0xFF${widget.subProfileResponse.color!.contains('#') ? '000000' : widget.subProfileResponse.color!}'));
+        selectedColor =
+            Color(int.parse('0xFF${widget.subProfileResponse.color!.contains('#') ? '000000' : widget.subProfileResponse.color!}'));
 
+      final gender = widget.subProfileResponse.gender?.toLowerCase();
 
-        final gender = widget.subProfileResponse.gender?.toLowerCase();
-
-        if (gender == "male") {
-          selectedGender = "Male";
-        } else if (gender == "female") {
-          selectedGender = "Female";
-        }
-
+      if (gender == "male") {
+        selectedGender = "Male";
+      } else if (gender == "female") {
+        selectedGender = "Female";
+      }
 
       // if (widget.subProfileResponse.gender!.isNotEmpty) {
       //   selectedGender = widget.subProfileResponse.gender?.toUpperCase() ?? 'MALE';
@@ -64,6 +61,7 @@ class _SubUserProfileState extends State<SubUserProfile> {
       dobController.text = widget.subProfileResponse.age ?? '';
       weightController.text = widget.subProfileResponse.weight ?? '';
       heightController.text = widget.subProfileResponse.height ?? '';
+      relationshipController.text = widget.subProfileResponse.relationShip ?? '';
     });
   }
 

@@ -1,12 +1,12 @@
 class OpinionSubmitRequest {
   int? form;
   int? userId;
-  List<Answer>? answers;
+  List<Answer>? answers = [];
 
   OpinionSubmitRequest({
     this.form,
     this.userId,
-    this.answers,
+     this.answers,
   });
 
   OpinionSubmitRequest.fromJson(Map<String, dynamic> json) {

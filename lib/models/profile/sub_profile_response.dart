@@ -8,6 +8,7 @@ class SubProfileResponse {
   String? weight;
   String? height;
   int? user;
+  String? relationShip;
 
   SubProfileResponse({
     this.id,
@@ -19,6 +20,7 @@ class SubProfileResponse {
     this.weight,
     this.height,
     this.user,
+    this.relationShip,
   });
 
   SubProfileResponse.fromJson(Map<String, dynamic> data) {
@@ -31,6 +33,7 @@ class SubProfileResponse {
     age = data['age'];
     weight = data['weight'];
     height = data['height'];
+    relationShip = data['relation_ship'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +47,7 @@ class SubProfileResponse {
     data['weight'] = this.weight;
     data['color'] = this.color;
     data['height'] = this.height;
+    data['relation_ship'] = this.relationShip;
     return data;
   }
 
@@ -58,19 +62,21 @@ class SubProfileResponse {
         color: data['color'],
         weight: data['weight'],
         height: data['height'],
+        relationShip: data['relation_ship'],
       );
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'user': user,
-        'name': name,
-        'color': color,
-        'profileImg': profileImg,
-        'gender': gender,
-        'age': age,
-        'weight': weight,
-        'height': height,
-      };
+    'id': id,
+    'user': user,
+    'name': name,
+    'color': color,
+    'profileImg': profileImg,
+    'gender': gender,
+    'age': age,
+    'weight': weight,
+    'height': height,
+    'relation_ship': relationShip,
+  };
 
   SubProfileResponse copyWith({
     int? id,
@@ -82,6 +88,7 @@ class SubProfileResponse {
     String? weight,
     String? height,
     int? user,
+    String? relationShip,
   }) =>
       SubProfileResponse(
         id: id ?? this.id,
@@ -93,5 +100,6 @@ class SubProfileResponse {
         weight: weight ?? this.weight,
         height: height ?? this.height,
         user: user ?? this.user,
+        relationShip: relationShip ?? this.relationShip,
       );
 }

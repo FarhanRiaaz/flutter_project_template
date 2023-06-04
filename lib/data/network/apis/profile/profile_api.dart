@@ -111,6 +111,7 @@ class ProfileApi {
         'height': request.height,
         'height_unit':request.heightUnit,
         'weight_unit':request.weightUnit,
+        'relation_ship':request.relationship,
         if (request.profileImg?.path != null)
           'profileImg': await MultipartFile.fromFile(request.profileImg!.path   ),
       });

@@ -45,6 +45,7 @@ class CategoryInstanceResponse {
 enum QuestionType {
   MCQ,
   EditText,
+  Document
 }
 
 class Question {
@@ -62,7 +63,7 @@ class Question {
 
   Question.fromJson(Map<String, dynamic> data) {
     id = data['id'];
-    type = _parseQuestionType(data['type']); // Parse string to enum
+    type = parseQuestionType(data['type']); // Parse string to enum
     options = (data['options'] as List<dynamic>).map((item) => Option.fromJson(item)).toList();
     question = data['question'];
   }
@@ -71,7 +72,7 @@ class Question {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
     data['id'] = this.id;
-    data['type'] = _getQuestionTypeString(this.type); // Convert enum to string
+    data['type'] = getQuestionTypeString(this.type); // Convert enum to string
     data['options'] = this.options;
     data['question'] = this.question;
     return data;
@@ -91,22 +92,27 @@ class Question {
       );
 
   // Helper function to parse string to enum
-  static QuestionType? _parseQuestionType(String? type) {
+    QuestionType? parseQuestionType(String? type) {
     if (type == 'MCQ') {
       return QuestionType.MCQ;
     } else if (type == 'EditText') {
       return QuestionType.EditText;
+    }else if((type == 'Document')){
+      return QuestionType.Document;
+
     }
     return null; // Handle unrecognized types
   }
 
   // Helper function to convert enum to string
-  static String? _getQuestionTypeString(QuestionType? type) {
+    String? getQuestionTypeString(QuestionType? type) {
     switch (type) {
       case QuestionType.MCQ:
         return 'MCQ';
       case QuestionType.EditText:
         return 'EditText';
+      case QuestionType.Document:
+        return 'Document';
       default:
         return null; // Handle unrecognized types
     }

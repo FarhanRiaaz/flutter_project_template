@@ -2,8 +2,6 @@ import 'package:second_opinion_app/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
-import '../../data/network/apis/user/authentication_api.dart';
-
 part 'form_store.g.dart';
 
 class FormStore = _FormStore with _$FormStore;

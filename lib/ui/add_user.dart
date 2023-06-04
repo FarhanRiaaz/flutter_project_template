@@ -350,7 +350,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
       icon: Icons.person_outline_rounded,
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.relationship = value;
+      },
       onFieldSubmitted: (value) {},
       textController: genderController,
     );

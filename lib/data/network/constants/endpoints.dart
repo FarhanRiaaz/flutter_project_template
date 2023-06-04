@@ -2,9 +2,9 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "https://sop.zpexsolutions.com/patient-app/api";
+ // static const String baseUrl = "https://sop.zpexsolutions.com/patient-app/api";
 
-  //static const String baseUrl = "https://backend.h3lth.net";
+  static const String baseUrl = "https://backend.h3lth.net/patient-app/api";
 
   // receiveTimeout
   static const Duration receiveTimeout = Duration(milliseconds: 15000);
@@ -25,4 +25,5 @@ class Endpoints {
   static const String getCategories = baseUrl + "/categories/";
   static const String submitSecondOpinion = baseUrl + "/submit-request/";
   static const String getFilteredCategories = baseUrl + "/categories/?search=";
+  static const String uploadDocument = baseUrl + "/request/upload-document/";
 }

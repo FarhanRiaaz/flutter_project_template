@@ -71,6 +71,82 @@ class DialogHelper {
     );
   }
 
+
+  static Future<void> showCompletionDialog(
+      BuildContext context,
+      String title,
+      String description,
+      ) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            height: 311,
+            width: 290,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              image: DecorationImage(
+                image: AssetImage(Assets.popupBackground),
+                fit: BoxFit.contain,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 60,
+                      child: Icon(
+                        Icons.warning,
+                        size: 60,
+                        color: Colors.red,
+                      ),
+
+                    ),
+                    const SizedBox(height: 20.0),
+                    Center(
+                      child: Text(
+                        title,
+                        style: TextStyle(fontSize: 18.0, color: Color(0xFF222B2C)),
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    Text(
+                      description,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16.0, color: Color(0xFFBEBEBE)),
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close the dialog
+                      },
+                      child: Text(
+                        'OK',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
   static Future<void> showDeleteConfirmationDialog(BuildContext context, String documentName, VoidCallback callback) async {
     return showDialog(
       context: context,

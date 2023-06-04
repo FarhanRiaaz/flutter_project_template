@@ -5,7 +5,10 @@ import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/stores/category/category_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
-import 'package:second_opinion_app/widgets/upload_document_widget.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
+
+import '../../models/categories/opinion_request.dart';
+import '../../widgets/mcq_selector_widget.dart';
 
 class QuestionsScreen extends StatefulWidget {
   const QuestionsScreen({Key? key}) : super(key: key);
@@ -21,16 +24,28 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   int selectedOption = -1;
 
+  OpinionSubmitRequest submitRequest = OpinionSubmitRequest();
+
+  initialize() async {
+    await _categoryStore.getFormByCategory(2);
+
+    submitRequest.userId = 2;
+    submitRequest.form = 2;
+    submitRequest.answers = [];
+    for (Question question in _categoryStore.categoryInstanceResponse!.questions!) {
+      submitRequest.answers!.add(Answer(question: question.id, type: question.getQuestionTypeString(question.type)));
+    }
+  }
+
   @override
   void initState() {
-    _categoryStore.getFormByCategory(2);
+    initialize();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Stack(
         children: [
           Align(
@@ -78,7 +93,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                   .elevatedButtonTheme
                                   .style
                                   ?.copyWith(backgroundColor: MaterialStatePropertyAll(Colors.grey.shade400)),
-                              onPressed: () {},
+                              onPressed: () {
+                                print(submitRequest.toJson());
+                              },
                               child: Text('Previous'),
                             ),
                           ),
@@ -86,8 +103,21 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                             width: MediaQuery.of(context).size.width * 0.4,
                             height: MediaQuery.of(context).size.width * 0.12,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, Routes.upload_screen);
+                              onPressed: () async {
+                                for (Answer answer in submitRequest.answers!) {
+                                  if (answer.answer == null || answer.answer == '') {
+                                    await DialogHelper.showCompletionDialog(
+                                      context,
+                                      'Complete Form',
+                                      'Please fill in all the required fields.',
+                                    );
+                                    return;
+                                  }
+                                }
+
+                                _categoryStore.submitSecondOpinion(submitRequest);
+
+                                //  Navigator.pushNamed(context, Routes.upload_screen);
                               },
                               child: Text('Next'),
                             ),
@@ -109,12 +139,14 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(backgroundColor: Colors.transparent,
+    return AppBar(
+      backgroundColor: Colors.transparent,
       leading: _buildLeadingButton(),
       title: _buildTitle(),
       centerTitle: true,
     );
   }
+
   Widget _buildLeadingButton() {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -123,6 +155,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       },
     );
   }
+
   _buildTitle() {
     return Text(
       'Muhammad Zeeshan',
@@ -131,40 +164,42 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   }
 
   Widget _buildBody() {
-    return Observer(
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: _categoryStore.categoryInstanceResponse?.questions?.length ?? 0,
-            itemBuilder: (BuildContext context, int index) {
-              if (_categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.MCQ) {
-                return _buildCard(
-                  _categoryStore.categoryInstanceResponse!.questions![index].question!,
-                  _categoryStore.categoryInstanceResponse!.questions![index].options!,
-                  selectedOption,
-                );
-              } else if (_categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.EditText) {
-                return _buildTextEditQuestion(
-                  _categoryStore.categoryInstanceResponse!.questions![index].question!,
-                );
-              } else   {
-                return _buildDocument(
-                  _categoryStore.categoryInstanceResponse!.questions![index].question!,
-                  // Additional parameters for the specific type of question
-                );
+    return Observer(builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: _categoryStore.categoryInstanceResponse?.questions?.length ?? 0,
+          itemBuilder: (BuildContext context, int index) {
+            if (_categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.MCQ) {
+              return McqWidget(
+                  question: _categoryStore.categoryInstanceResponse!.questions![index].question!,
+                  options: _categoryStore.categoryInstanceResponse!.questions![index].options!,
+                  selectedOption: selectedOption,
+                  onSelect: (selectedValue) {
+                    submitRequest.answers![index].answer =
+                        _categoryStore.categoryInstanceResponse!.questions![index].options![selectedValue].option;
+                    print(submitRequest.answers![index].answer);
+                  });
+            } else if (_categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.EditText) {
+              return _buildTextEditQuestion(_categoryStore.categoryInstanceResponse!.questions![index].question!, (value) {
+                submitRequest.answers![index].answer = value;
+              });
+            } else {
+              return _buildDocument(_categoryStore.categoryInstanceResponse!.questions![index].question!, (pickedFile) {
+                submitRequest.answers![index].answer = pickedFile;
               }
-
-            },
-          ),
-        );
-      }
-    );
+                  // Additional parameters for the specific type of question
+                  );
+            }
+          },
+        ),
+      );
+    });
   }
 
-  _buildTextEditQuestion(String question) {
+  _buildTextEditQuestion(String question, Function(String) onChanged) {
     return Card(
       elevation: 2,
       color: Colors.white,
@@ -181,6 +216,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             ),
             SizedBox(height: 16.0),
             TextField(
+              onChanged: (value) {
+                onChanged(value);
+              },
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Theme.of(context).splashColor,
@@ -197,7 +235,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     );
   }
 
-  _buildDocument(String question) {
+  _buildDocument(String question, Function(String) onFilePicked) {
     return Card(
       elevation: 2,
       color: Colors.white,
@@ -213,9 +251,11 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
               style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.0),
-            Card( shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               color: Colors.white,
-              child: UploadWidgetProfileSetup( backgroundColor: Colors.transparent,
+              child: UploadWidgetProfileSetup(
+                  backgroundColor: Colors.transparent,
                   padding: const EdgeInsets.all(8),
                   dropdown: DropdownButtonFormField<String>(
                     onChanged: (value) {},
@@ -243,7 +283,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                     ),
                   ),
                   onFilePicked: (file) {
-
+                    onFilePicked(file.files.first.path!);
                   },
                   cert: {}),
             ),
@@ -253,7 +293,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     );
   }
 
-  Widget _buildCard(String question, List<Option> option, int selectedOption) {
+  Widget _buildCard(String question, List<Option> option, int selectedOption, Function(int) onSelect) {
     return Card(
       elevation: 2,
       color: Colors.white,
@@ -278,6 +318,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   selectedOption: selectedOption,
                   value: i,
                   onChanged: (int? value) {
+                    onSelect(value!);
                     setState(() {
                       selectedOption = value!;
                       print(selectedOption);
@@ -316,6 +357,7 @@ class OptionRadioTile extends StatelessWidget {
           value: value,
           groupValue: selectedOption,
           onChanged: onChanged,
+          activeColor: Theme.of(context).primaryColor,
         ),
         Text(
           option,
@@ -330,20 +372,20 @@ class OptionRadioTile extends StatelessWidget {
   }
 }
 
-
-
 class UploadWidgetProfileSetup extends StatefulWidget {
   const UploadWidgetProfileSetup(
       {Key? key,
-        this.dropdown,
-        this.isCV = false,
-        this.padding,
-        this.onTextFieldValueChange,
-        required this.onFilePicked,
-        this.onRemoveButton,
-        this.index,
-        required this.cert,
-        this.borderRadius, this.backgroundColor, this.label})
+      this.dropdown,
+      this.isCV = false,
+      this.padding,
+      this.onTextFieldValueChange,
+      required this.onFilePicked,
+      this.onRemoveButton,
+      this.index,
+      required this.cert,
+      this.borderRadius,
+      this.backgroundColor,
+      this.label})
       : super(key: key);
   final EdgeInsetsGeometry? padding;
   final Function(String)? onTextFieldValueChange;
@@ -409,26 +451,28 @@ class _UploadWidgetProfileSetupState extends State<UploadWidgetProfileSetup> {
                 child: Row(
                   children: [
                     Expanded(
-                      child:widget.dropdown==null? !widget.isCV
-                          ? TextFormField(
-                        onChanged: (value) {
-                          widget.onTextFieldValueChange!(value);
-                        },
-                        decoration: InputDecoration(
-                          label: const Text("File Name"),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                      )
+                      child: widget.dropdown == null
+                          ? !widget.isCV
+                              ? TextFormField(
+                                  onChanged: (value) {
+                                    widget.onTextFieldValueChange!(value);
+                                  },
+                                  decoration: InputDecoration(
+                                    label: const Text("File Name"),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    widget.label ?? 'CV File',
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                )
                           : Padding(
-                        padding:const  EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          widget.label??'CV File',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ):Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: widget.dropdown!,
-                      ),
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: widget.dropdown!,
+                            ),
                     ),
                     IconButton(
                       onPressed: () async {
@@ -463,7 +507,10 @@ class _UploadWidgetProfileSetupState extends State<UploadWidgetProfileSetup> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(Icons.file_present_rounded,color: Theme.of(context).primaryColor,),
+                      Icon(
+                        Icons.file_present_rounded,
+                        color: Theme.of(context).primaryColor,
+                      ),
                       AnimatedContainer(
                         curve: Curves.easeOutQuint,
                         height: filePicked ? 70 : 0,
@@ -477,14 +524,15 @@ class _UploadWidgetProfileSetupState extends State<UploadWidgetProfileSetup> {
                       ),
                       const Expanded(
                           child: SizedBox(
-                            height: 0,
-                          )),
+                        height: 0,
+                      )),
                       if (widget.onRemoveButton != null)
                         IconButton(
                             onPressed: () {
                               widget.onRemoveButton!(widget.index!);
                             },
-                            icon: Icon(Icons.delete,
+                            icon: Icon(
+                              Icons.delete,
                               color: Colors.redAccent,
                             ))
                     ],
@@ -496,5 +544,4 @@ class _UploadWidgetProfileSetupState extends State<UploadWidgetProfileSetup> {
       ),
     );
   }
-
 }

@@ -41,8 +41,7 @@ class CategoryApi {
 
   /// Method to get list of categories filtered
   ///
-  Future<AllCategoryList> getFilteredCategories(
-      String authToken, String searchText) async {
+  Future<AllCategoryList> getFilteredCategories(String authToken, String searchText) async {
     try {
       final res = await _dioClient.get(
         "${Endpoints.getFilteredCategories}$searchText",
@@ -66,8 +65,7 @@ class CategoryApi {
   }
 
 //todo shahzaib we need to test and add things to following method
-  Future<CategoryInstanceResponse> getFormByCategory(
-      String authToken, int catType) async {
+  Future<CategoryInstanceResponse> getFormByCategory(String authToken, int catType) async {
     try {
       final res = await _dioClient.get(
         '${Endpoints.getFormByCatId}/$catType/',
@@ -90,16 +88,16 @@ class CategoryApi {
   }
 
   ///Method to submit second opinion
-  Future<OpinionSubmitResponse> submitSecondOpinion(
-      OpinionSubmitRequest request, String token) async {
+  Future<OpinionSubmitResponse> submitSecondOpinion(OpinionSubmitRequest request, String token) async {
     try {
+      uploadDocument(request, token);
       final res = await _dioClient.post(
-        Endpoints.subProfile,
+        Endpoints.submitSecondOpinion,
         data: request.toJson(),
         options: Options(
           headers: {
             'Authorization': 'Token $token',
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
         ),
       );
@@ -108,6 +106,32 @@ class CategoryApi {
       } else {
         print("Null response received!\submitSecondOpinion()");
         return OpinionSubmitResponse();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<void> uploadDocument(OpinionSubmitRequest request, String token) async {
+    try {
+      for (Answer answer in request.answers!) {
+        if (answer.type == 'Document') {
+          FormData formData = FormData.fromMap({
+            'file': await MultipartFile.fromFile(answer.answer!),
+          });
+          final res = await _dioClient.post(
+            Endpoints.uploadDocument,
+            data: formData,
+            options: Options(
+              headers: {
+                'Authorization': 'Token $token',
+                'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>',
+              },
+            ),
+          );
+
+        }
       }
     } catch (e) {
       print(e.toString());
