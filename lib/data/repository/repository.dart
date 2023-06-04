@@ -72,7 +72,7 @@ class Repository {
     final authToken = await _sharedPrefsHelper.authToken;
     print("updateProfile$authToken");
     return await _profileApi.updateProfile(
-        authToken!,  profileImage,currentProfile);
+        authToken!, profileImage, currentProfile);
   }
 
   Future<SubProfileList> getSubUserProfile() async {
@@ -86,6 +86,19 @@ class Repository {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getSubUserProfile$authToken");
     return await _profileApi.addSubUserProfile(request, authToken!);
+  }
+
+  Future<SubProfileResponse> updateSubUserProfile(
+      SubProfileRequest request, String userId) async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("updateSubUserProfile$authToken");
+    return await _profileApi.updateSubUserProfile(request, userId, authToken!);
+  }
+
+  Future<bool> deleteSubUserProfile(int id) async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("deleteSubUserProfile$authToken");
+    return await _profileApi.deleteSubUserProfile(authToken!, id);
   }
 
   Future<void> saveIsLoggedIn(bool value) =>
