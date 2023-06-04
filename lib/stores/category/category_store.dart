@@ -3,6 +3,7 @@ import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/models/categories/opinion_request.dart';
 import 'package:second_opinion_app/models/categories/opinion_response.dart';
+import 'package:second_opinion_app/models/categories/submitted_opinion_response.dart';
 import 'package:second_opinion_app/models/slider/slider_images_response.dart';
 
 import '../../data/repository/category_repository.dart';
@@ -27,6 +28,9 @@ abstract class _CategoryStore with Store {
   static ObservableFuture<OpinionSubmitResponse> emptyOpinionSubmitResponse =
       ObservableFuture.value(OpinionSubmitResponse());
 
+  static ObservableFuture<SecondOpinionSubmittedResponse> emptyOpinionSubmittedResponse =
+      ObservableFuture.value(SecondOpinionSubmittedResponse());
+
   @observable
   ObservableFuture<AllCategoryList> allCategoryFuture =
       emptyGetAllCategoryResponse;
@@ -41,6 +45,10 @@ abstract class _CategoryStore with Store {
       emptyOpinionSubmitResponse;
 
   @observable
+  ObservableFuture<SecondOpinionSubmittedResponse> opinionSubmittedResponseFuture =
+      emptyOpinionSubmittedResponse;
+
+  @observable
   AllCategoryList? allCategoryList;
   @observable
   AllSliderImageResponse? sliderImageResponse;
@@ -50,6 +58,9 @@ abstract class _CategoryStore with Store {
 
   @observable
   OpinionSubmitResponse? opinionSubmitResponse;
+
+  @observable
+  SecondOpinionSubmittedResponse? opinionSubmittedResponse;
 
   @computed
   bool get isAllCategoriesInProcess =>
@@ -150,6 +161,28 @@ abstract class _CategoryStore with Store {
 
       print(
           'failed to submitSecondOpinion\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  @action
+  Future getSecondOpinionSubmittedList(
+      String? searchString,
+      String? sort,
+      String? userName) async {
+    final future = _categoryRepository.getSecondOpinionSubmittedList(searchString,sort,userName);
+    opinionSubmittedResponseFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value != null) {
+        opinionSubmittedResponse = value;
+      } else {
+        print('failed to getSecondOpinionSubmittedList\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print(
+          'failed to getSecondOpinionSubmittedList\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }

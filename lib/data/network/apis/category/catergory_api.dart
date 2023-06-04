@@ -4,6 +4,7 @@ import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/models/categories/opinion_request.dart';
 import 'package:second_opinion_app/models/categories/opinion_response.dart';
+import 'package:second_opinion_app/models/categories/submitted_opinion_response.dart';
 import 'package:second_opinion_app/models/slider/slider_images_response.dart';
 
 import '../../constants/endpoints.dart';
@@ -42,7 +43,7 @@ class CategoryApi {
 
   /// Method to get list of slider images
   ///
-  Future<AllSliderImageResponse> getSliderImages(String authToken) async{
+  Future<AllSliderImageResponse> getSliderImages(String authToken) async {
     try {
       final res = await _dioClient.get(
         Endpoints.getSliderImages,
@@ -67,7 +68,8 @@ class CategoryApi {
 
   /// Method to get list of categories filtered
   ///
-  Future<AllCategoryList> getFilteredCategories(String authToken, String searchText) async {
+  Future<AllCategoryList> getFilteredCategories(
+      String authToken, String searchText) async {
     try {
       final res = await _dioClient.get(
         "${Endpoints.getFilteredCategories}$searchText",
@@ -91,7 +93,8 @@ class CategoryApi {
   }
 
 //todo shahzaib we need to test and add things to following method
-  Future<CategoryInstanceResponse> getFormByCategory(String authToken, int catType) async {
+  Future<CategoryInstanceResponse> getFormByCategory(
+      String authToken, int catType) async {
     try {
       final res = await _dioClient.get(
         '${Endpoints.getFormByCatId}/$catType/',
@@ -114,9 +117,10 @@ class CategoryApi {
   }
 
   ///Method to submit second opinion
-  Future<OpinionSubmitResponse> submitSecondOpinion(OpinionSubmitRequest request, String token) async {
+  Future<OpinionSubmitResponse> submitSecondOpinion(
+      OpinionSubmitRequest request, String token) async {
     try {
-      uploadDocument(request, token);
+     await uploadDocument(request, token);
       final res = await _dioClient.post(
         Endpoints.submitSecondOpinion,
         data: request.toJson(),
@@ -139,7 +143,37 @@ class CategoryApi {
     }
   }
 
-  Future<void> uploadDocument(OpinionSubmitRequest request, String token) async {
+//todo
+  ///Method to get second opinion list response
+  Future<SecondOpinionSubmittedResponse> getSecondOpinionSubmittedList(
+      String? searchString,
+      String? sort,
+      String? userName,
+      String token) async {
+    try {
+      final res = await _dioClient.get(
+        "${Endpoints.getSecondOpinionSubmittedList}?search=$searchString&sort=$sort&user=$userName",
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if (res != null) {
+        return SecondOpinionSubmittedResponse.fromJson(res);
+      } else {
+        print("Null response received!\ getSecondOpinionSubmittedList()");
+        return SecondOpinionSubmittedResponse();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<void> uploadDocument(
+      OpinionSubmitRequest request, String token) async {
     try {
       for (Answer answer in request.answers!) {
         if (answer.type == 'Document') {
@@ -152,11 +186,11 @@ class CategoryApi {
             options: Options(
               headers: {
                 'Authorization': 'Token $token',
-                'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>',
+                'Content-Type':
+                    'multipart/form-data; boundary=<calculated when request is sent>',
               },
             ),
           );
-
         }
       }
     } catch (e) {
