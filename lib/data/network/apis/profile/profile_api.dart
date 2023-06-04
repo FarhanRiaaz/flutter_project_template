@@ -142,6 +142,7 @@ class ProfileApi {
     }
   }
 
+
   /// Method to update sub profile
   Future<SubProfileResponse> updateSubUserProfile(
       SubProfileRequest request, String userId, String token) async {
