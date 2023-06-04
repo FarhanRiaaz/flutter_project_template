@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:second_opinion_app/models/report/get_all_document_response.dart';
+import 'package:second_opinion_app/models/report/get_report_type_response.dart';
 import 'package:second_opinion_app/models/report/upload_report_response.dart';
 
 import '../network/apis/report/report_api.dart';
@@ -52,6 +53,11 @@ class ReportRepository {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getAllDocumentList$authToken");
     return await _reportApi.deleteDocument(authToken!,id);
+  }
+  Future<AllReportTypeResponse> getAllDocumentTypes() async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("getAllDocumentList$authToken");
+    return await _reportApi.getAllDocumentTypes(authToken!);
   }
 
   Future<String?> get authToken async => await _sharedPrefsHelper.authToken;

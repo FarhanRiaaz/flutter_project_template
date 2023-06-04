@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:second_opinion_app/models/report/get_all_document_response.dart';
+import 'package:second_opinion_app/models/report/get_report_type_response.dart';
 import 'package:second_opinion_app/models/report/upload_report_response.dart';
 
 import '../../constants/endpoints.dart';
@@ -97,6 +98,7 @@ class ReportApi {
     }
   }
 
+
   // method to get delete a documents
   Future<bool> deleteDocument(String token, int id) async {
     try {
@@ -120,6 +122,29 @@ class ReportApi {
     } catch (e) {
       print(e.toString());
       return false;
+      throw e;
+    }
+  }
+  // method to get all documents types
+  Future<AllReportTypeResponse> getAllDocumentTypes(String token) async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.getReportTypes,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (res != null) {
+        return AllReportTypeResponse.fromJson(res);
+      } else {
+        throw Exception("Null response received!");
+      }
+    } catch (e) {
+      print(e.toString());
       throw e;
     }
   }

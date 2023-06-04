@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:second_opinion_app/data/repository/report_repository.dart';
 import 'package:second_opinion_app/models/report/get_all_document_response.dart';
+import 'package:second_opinion_app/models/report/get_report_type_response.dart';
 import 'package:second_opinion_app/models/report/upload_report_response.dart';
 
 part 'report_store.g.dart';
@@ -16,6 +17,7 @@ abstract class _ReportStore with Store {
   static ObservableFuture<UploadReportResponse> emptyUploadReportResponse = ObservableFuture.value(UploadReportResponse());
 
   static ObservableFuture<GetAllDocumentResponse> emptyGetAllDocumentResponse = ObservableFuture.value(GetAllDocumentResponse());
+  static ObservableFuture<AllReportTypeResponse> emptyGetAllDocumentTypeResponse = ObservableFuture.value(AllReportTypeResponse());
 
   static ObservableFuture<bool> emptyDeleteDocumentResponse = ObservableFuture.value(false);
 
@@ -27,12 +29,16 @@ abstract class _ReportStore with Store {
 
   @observable
   ObservableFuture<GetAllDocumentResponse> getAllDocumentResponseFuture = emptyGetAllDocumentResponse;
+  @observable
+  ObservableFuture<AllReportTypeResponse> getAllDocumentTypeResponseFuture = emptyGetAllDocumentTypeResponse;
 
   @observable
   UploadReportResponse? currentReportResponse;
 
   @observable
   GetAllDocumentResponse? getAllDocumentResponseList;
+  @observable
+  AllReportTypeResponse? getAllDocumentTypeResponseList;
 
   @observable
   int? currentDocumentToDelete;
@@ -100,7 +106,6 @@ abstract class _ReportStore with Store {
   /// method to get filtered document via api just pass the args and check the response of getAllDocumentResponseList
   @action
   Future getFilteredDocumentList(String sortFilter, String userName, String reportType,String searchText) async {
-    //Todo implement
     final future = _reportRepository.getFilteredDocumentList(sortFilter, userName, reportType,searchText);
     getAllDocumentResponseFuture = ObservableFuture(future);
     await future.then((value) async {
@@ -113,6 +118,25 @@ abstract class _ReportStore with Store {
       print(e);
 
       print('failed to getFilteredDocumentList\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+
+  /// method to get filtered document via api just pass the args and check the response of getAllDocumentResponseList
+  @action
+  Future getAllDocumentTypes() async {
+    final future = _reportRepository.getAllDocumentTypes();
+    getAllDocumentTypeResponseFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value != null) {
+        getAllDocumentTypeResponseList = value;
+      } else {
+        print('failed to getAllDocumentTypes\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to getAllDocumentTypes\nSomething went wrong!\n${e.toString()}');
       throw e;
     });
   }
