@@ -1,35 +1,45 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/intl.dart';
+import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/models/categories/submitted_opinion_detail_response.dart';
+import 'package:second_opinion_app/stores/category/category_store.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
+import 'package:second_opinion_app/widgets/progress_indicator_widget.dart';
+
+import '../../models/categories/submitted_opinion_response.dart';
 
 class SecondOpinionDetailScreen extends StatefulWidget {
-  const SecondOpinionDetailScreen({Key? key}) : super(key: key);
+  const SecondOpinionDetailScreen({Key? key, this.submittedOpinion}) : super(key: key);
+
+  final Result? submittedOpinion;
 
   @override
   State<SecondOpinionDetailScreen> createState() => _SecondOpinionDetailScreenState();
 }
 
 class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
-  final List<Map<String, dynamic>> questions = [
-    {
-      'question': 'From how long you are suffering from heart disease??',
-      'answer': 3,
-      'options': ['Less then one year', 'One year', 'Two years', 'More then two years'],
-    },
-    {
-      'question': 'Have you ever consult to doctor?',
-      'answer': 1,
-      'options': [
-        'Yes',
-        'No',
-      ],
-    },
-    {
-      'question': 'Do you have any test reports of yours?',
-      'answer': 0,
-      'options': ['Yes', 'No'],
-    },
-  ];
+  CategoryStore _categoryStore = getIt<CategoryStore>();
+  ProfileStore _profileStore = getIt<ProfileStore>();
 
-  List<int> selectedOptions = [-1, -1, -1];
+  int userIndex = -1;
+
+  @override
+  void initState() {
+    _categoryStore.getSecondOpinionSubmittedDetail(widget.submittedOpinion!.id.toString()).then(
+      (value) {
+        if (_categoryStore.opinionSubmittedDetailResponse?.request?.request?.user != null) {
+          userIndex = _profileStore.currentSubUserProfile!.subProfile!
+              .indexWhere((element) => element.id == _categoryStore.opinionSubmittedDetailResponse!.request!.request!.user);
+        } else {
+          userIndex = -2;
+        }
+      },
+    );
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,44 +61,48 @@ class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
               child: Opacity(opacity: 0.25, child: Image.asset('assets/images/background/topLeft.png')),
             ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: _buildUserDetails(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: _buildBookingDetail(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: _buildBody(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: _buildBookingDetail(),
-                ),
-
-                SizedBox(
-                  height: 20,
-                )
-              ],
-            ),
-          ),
+          Observer(builder: (context) {
+            return !_categoryStore.isSubmittedDetailInstanceInProcess
+                ? SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: _buildUserDetails(),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: _buildBookingDetail(),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: _buildBody(),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        //   child: _buildPaymentDetail(),
+                        // ),
+                        // SizedBox(
+                        //   height: 20,
+                        // )
+                      ],
+                    ),
+                  )
+                : CustomProgressIndicatorWidget(
+                    color: Colors.transparent,
+                  );
+          }),
         ],
       ),
     );
@@ -106,7 +120,7 @@ class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
     return IconButton(
       icon: const Icon(
         Icons.arrow_back_ios_new_rounded,
-        color: Colors.black,
+
       ),
       onPressed: () {
         Navigator.pop(context);
@@ -114,69 +128,48 @@ class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
     );
   }
 
-  _buildTitle() {
+  Widget _buildTitle() {
     return Text(
       'Second Opinion',
-      style: TextStyle(color: Colors.black),
+      style: Theme.of(context).textTheme.headlineMedium,
     );
   }
 
   Widget _buildBody() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('Attributes',  style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),),
+            child: Text(
+              'Attributes',
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.black),
+            ),
           ),
           ListView.separated(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: questions.length,
+            itemCount: _categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData!.length,
             itemBuilder: (BuildContext context, int index) {
-              final question = questions[index];
-              int selectedOption = -1;
-              return _buildCard(
-                question,
-                selectedOption,
-              );
-            }, separatorBuilder: (BuildContext context, int index) {return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Divider(),
-            ) ;},
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCard(question, selectedOption) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            question['question'],
-            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 16.0),
-          ...List<Widget>.generate(
-            question['options'].length,
-            (int i) {
-              final option = question['options'][i];
-              return OptionRadioTile(
-                option: option,
-                selectedOption: question['answer'],
-                value: i,
-                onChanged: (int? value) {
-                  setState(() {
-                    selectedOption = value!;
-                    print(selectedOption);
-                    print(i);
-                  });
-                },
+              if (_categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData![index].typeQ.contains('MCQ')) {
+                return _buildCard(
+                  _categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData![index],
+                );
+              } else if (_categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData![index].typeQ.contains('Document')) {
+                return _buildDocumentWidget(
+                    _categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData![index].question.question!,
+                    _categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData![index].answer);
+              }
+              return _buildTextEditQuestion(
+                  _categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData![index].question.question!,
+                  _categoryStore.opinionSubmittedDetailResponse!.requestSubmittedUserData![index].answer);
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Divider(),
               );
             },
           ),
@@ -185,71 +178,97 @@ class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
     );
   }
 
-  Future<void> showRegistrationDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+  Widget _buildCard(
+    SubmittedUserData question,
+  ) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            question.question.question!,
+            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
           ),
-          child: Container(
-            height: 311,
-            width: 290,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              image: const DecorationImage(
-                image: AssetImage("assets/images/background/backgroundPopUp.png"),
-                fit: BoxFit.contain,
-              ),
+          SizedBox(height: 16.0),
+          ...List<Widget>.generate(
+            question.question.options!.length,
+            (int i) {
+              final option = question.question.options![i];
+              return OptionRadioTile(
+                option: option.option!,
+                selectedOption: question.answer,
+                value: option.option!,
+                onChanged: (String? value) {},
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextEditQuestion(String question, String text) {
+    return Card(
+      elevation: 0,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      margin: EdgeInsets.all(8.0),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              question,
+              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
+            SizedBox(height: 16.0),
+            Text(
+              text,
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDocumentWidget(String question, String fileUrl) {
+    return Card(
+      elevation: 0,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      margin: EdgeInsets.all(8.0),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              question,
+              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16.0),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              height: 90,
+              width: 90,
               child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 60,
-                      child: Image.asset(
-                        'assets/images/background/tick-icon.png',
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Center(
-                      child: Text(
-                        "Thank You!",
-                        style: TextStyle(fontSize: 18.0, color: Color(0xFF222B2C)),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Text(
-                      "You have successfully made second opinion with us",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16.0, color: Color(0xFFBEBEBE)),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Continue",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: CachedNetworkImage(
+                  fit: BoxFit.fill,
+                  imageUrl: fileUrl.contains('http') && (fileUrl.endsWith('.jpg') || fileUrl.endsWith('.png') || fileUrl.endsWith('.jpeg'))
+                      ? fileUrl
+                      : 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png',
                 ),
               ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 
@@ -271,19 +290,37 @@ class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
             SizedBox(
               height: 16,
             ),
-            Column(
+            userIndex >= 0
+                ? Column(
+                    children: [
+                      _buildCardRow('Name', _profileStore.currentSubUserProfile?.subProfile?[userIndex].name ?? 'No Name Specified'),
+                      Divider(),
+                      _buildCardRow('Gender', _profileStore.currentSubUserProfile?.subProfile?[userIndex].gender ?? 'No Gender Specified'),
+                      Divider(),
+                      _buildCardRow('Date of Birth', _profileStore.currentSubUserProfile?.subProfile?[userIndex].age ?? 'No Age Specified'),
+                      Divider(),
+                      _buildCardRow('Weight',
+                          '${_profileStore.currentSubUserProfile?.subProfile?[userIndex].weight ?? 'No Weight Specified'} ${_profileStore.currentSubUserProfile?.subProfile?[userIndex].weightUnit ?? ''}'),
+                      Divider(),
+                      _buildCardRow('Height',
+                          '${_profileStore.currentSubUserProfile?.subProfile?[userIndex].height ?? 'No Height Specified'} ${_profileStore.currentSubUserProfile?.subProfile?[userIndex].heightUnit ?? ''}')
+                    ],
+                  )
+                :userIndex ==-1? _buildCardRow('User ID', _categoryStore.opinionSubmittedDetailResponse?.request?.request?.user ?? 'No User ID'):Column(
               children: [
-                _buildCardRow('Name', 'Malik Zeeshan'),
+                _buildCardRow('Name', _profileStore.currentUserProfile?.name ?? 'No Name Specified'),
                 Divider(),
-                _buildCardRow('Gender', 'Male'),
+                _buildCardRow('Gender', _profileStore.currentUserProfile?.gender ?? 'No Gender Specified'),
                 Divider(),
-                _buildCardRow('Date of Birth', '23/12/1996'),
+                _buildCardRow('Date of Birth', _profileStore.currentUserProfile?.age ?? 'No Age Specified'),
                 Divider(),
-                _buildCardRow('Weight', '100 lbs'),
+                _buildCardRow('Weight',
+                    '${_profileStore.currentUserProfile?.weight ?? 'No Weight Specified'} ${_profileStore.currentUserProfile?.weightUnit ?? ''}'),
                 Divider(),
-                _buildCardRow('Height', '4.2 fts')
+                _buildCardRow('Height',
+                    '${_profileStore.currentUserProfile?.height ?? 'No Height Specified'} ${_profileStore.currentUserProfile?.heightUnit ?? ''}')
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -310,13 +347,15 @@ class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
             ),
             Column(
               children: [
-                _buildCardRow('Field', 'Cardiologist'),
+                _buildCardRow(
+                    'Field', _categoryStore.opinionSubmittedDetailResponse?.request?.request?.form?.category?.title ?? 'No Field'),
                 Divider(),
-                _buildCardRow('Doctor', 'Dr. Ali'),
+                _buildCardRow(
+                    'Created On',
+                    DateFormat('MMMM d, yyyy')
+                        .format(DateTime.parse(_categoryStore.opinionSubmittedDetailResponse!.request!.createdDate!))),
                 Divider(),
-                _buildCardRow('Created On', 'March 22, 2023'),
-                Divider(),
-                _buildCardRowStatus('Status', 'Complete')
+                _buildCardRowStatus('Status', _categoryStore.opinionSubmittedDetailResponse?.request?.status ?? 'No Status')
               ],
             )
           ],
@@ -404,9 +443,9 @@ class _SecondOpinionDetailScreenState extends State<SecondOpinionDetailScreen> {
 
 class OptionRadioTile extends StatelessWidget {
   final String option;
-  final int selectedOption;
-  final int value;
-  final void Function(int?) onChanged;
+  final String selectedOption;
+  final String value;
+  final void Function(String?) onChanged;
 
   const OptionRadioTile({
     Key? key,
@@ -420,7 +459,7 @@ class OptionRadioTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Radio(
+        Radio<String>(
           activeColor: Theme.of(context).primaryColor,
           value: value,
           groupValue: selectedOption,

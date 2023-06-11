@@ -6,7 +6,7 @@ class OpinionSubmitRequest {
   OpinionSubmitRequest({
     this.form,
     this.userId,
-     this.answers,
+    this.answers,
   });
 
   OpinionSubmitRequest.fromJson(Map<String, dynamic> json) {
@@ -23,7 +23,9 @@ class OpinionSubmitRequest {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['form'] = this.form;
-    data['userId'] = this.userId;
+    if (this.userId != null) {
+      data['userId'] = this.userId;
+    }
     if (this.answers != null) {
       data['answers'] = this.answers!.map((v) => v.toJson()).toList();
     }

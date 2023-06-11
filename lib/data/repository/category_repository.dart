@@ -4,6 +4,7 @@ import 'package:second_opinion_app/models/categories/all_category_response.dart'
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/models/categories/opinion_request.dart';
 import 'package:second_opinion_app/models/categories/opinion_response.dart';
+import 'package:second_opinion_app/models/categories/submitted_opinion_detail_response.dart';
 import 'package:second_opinion_app/models/categories/submitted_opinion_response.dart';
 import 'package:second_opinion_app/models/slider/slider_images_response.dart';
 
@@ -50,6 +51,13 @@ class CategoryRepository {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getSecondOpinionSubmittedList$authToken");
     return await _categoryApi.getSecondOpinionSubmittedList(searchString,sort,userName,authToken!);
+  }
+
+  Future<SubmittedOpinionDetailResponse> getSecondOpinionSubmittedDetail(
+      String? id) async {
+    final authToken = await _sharedPrefsHelper.authToken;
+    print("getSecondOpinionSubmittedList$authToken");
+    return await _categoryApi.getSecondOpinionSubmittedDetail(id,authToken!);
   }
 
   Future<OpinionSubmitResponse> submitSecondOpinion(

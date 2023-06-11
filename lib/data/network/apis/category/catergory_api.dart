@@ -7,6 +7,7 @@ import 'package:second_opinion_app/models/categories/opinion_response.dart';
 import 'package:second_opinion_app/models/categories/submitted_opinion_response.dart';
 import 'package:second_opinion_app/models/slider/slider_images_response.dart';
 
+import '../../../../models/categories/submitted_opinion_detail_response.dart';
 import '../../constants/endpoints.dart';
 
 class CategoryApi {
@@ -120,7 +121,7 @@ class CategoryApi {
   Future<OpinionSubmitResponse> submitSecondOpinion(
       OpinionSubmitRequest request, String token) async {
     try {
-     await uploadDocument(request, token);
+    request = await uploadDocument(request, token);
       final res = await _dioClient.post(
         Endpoints.submitSecondOpinion,
         data: request.toJson(),
@@ -172,10 +173,35 @@ class CategoryApi {
     }
   }
 
-  Future<void> uploadDocument(
-      OpinionSubmitRequest request, String token) async {
+  Future<SubmittedOpinionDetailResponse> getSecondOpinionSubmittedDetail(
+      String? id,
+      String token) async {
     try {
-      for (Answer answer in request.answers!) {
+      final res = await _dioClient.get(
+        "${Endpoints.getSecondOpinionSubmittedDetail}$id",
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if (res != null) {
+        return SubmittedOpinionDetailResponse.fromJson(res);
+      } else {
+        print("Null response received!\ getSecondOpinionSubmittedList()");
+        return SubmittedOpinionDetailResponse();
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<OpinionSubmitRequest> uploadDocument(OpinionSubmitRequest request, String token) async {
+    try {
+      for (int i = 0; i < request.answers!.length; i++) {
+        Answer answer = request.answers![i];
         if (answer.type == 'Document') {
           FormData formData = FormData.fromMap({
             'file': await MultipartFile.fromFile(answer.answer!),
@@ -187,15 +213,19 @@ class CategoryApi {
               headers: {
                 'Authorization': 'Token $token',
                 'Content-Type':
-                    'multipart/form-data; boundary=<calculated when request is sent>',
+                'multipart/form-data; boundary=<calculated when request is sent>',
               },
             ),
           );
+          request.answers![i].answer = '${'https://backend.h3lth.net'}${res['file_url']}';
+          print('${'https://backend.h3lth.net'}${res['file_url']}');
         }
       }
+      return request;
     } catch (e) {
       print(e.toString());
       throw e;
     }
   }
+
 }

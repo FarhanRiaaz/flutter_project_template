@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
@@ -11,6 +12,7 @@ import 'package:second_opinion_app/widgets/rounded_button_widget.dart';
 import 'package:flex_color_picker/flex_color_picker.dart' as flex;
 import '../../widgets/textfield_widget.dart';
 import '../models/profile/sub_profile_response.dart';
+import '../widgets/progress_indicator_widget.dart';
 
 //Todo Profile Image
 
@@ -106,7 +108,9 @@ class _SubUserProfileState extends State<SubUserProfile> {
   }
 
   Widget _buildBody() {
-    return _buildMainContent();
+    return Observer(builder: (context) {
+      return _profileStore.isUpdateSubProfileAddInProcess ? CustomProgressIndicatorWidget() : _buildMainContent();
+    });
   }
 
   Widget _buildMainContent() {
@@ -183,7 +187,7 @@ class _SubUserProfileState extends State<SubUserProfile> {
                           buttonText: 'Save',
                           buttonColor: Theme.of(context).primaryColor,
                           onPressed: () {
-                            Navigator.pop(context);
+                            _profileStore.updateSubUserProfile(widget.subProfileResponse.id.toString());
                           },
                         ),
                       )
@@ -210,36 +214,82 @@ class _SubUserProfileState extends State<SubUserProfile> {
   }
 
   Widget _buildPictureWidget() {
-    return Container(
-      width: 90,
-      height: 90,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Stack(
-        children: [
-          if (widget.subProfileResponse.profileImg == null)
-            Image.asset(
-              width: 90,
-              'assets/images/profilePicture.png',
-              fit: BoxFit.fitWidth,
-            )
-          else if (widget.subProfileResponse.profileImg != null)
-            CachedNetworkImage(
-              imageUrl: widget.subProfileResponse.profileImg!,
-              width: 90,
-              fit: BoxFit.fitWidth,
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return SafeArea(
+              child: Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Choose from gallery'),
+                    onTap: () {
+                      _getImage(ImageSource.gallery);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera_alt),
+                    title: const Text('Take a photo'),
+                    onTap: () {
+                      _getImage(ImageSource.camera);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Stack(
+          children: [
+            if (_image == null && widget.subProfileResponse.profileImg == null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  'assets/images/profilePicture.png',
+                  width: 90,
+                  fit: BoxFit.fitWidth,
+                ),
+              )
+            else if (widget.subProfileResponse.profileImg != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: widget.subProfileResponse.profileImg!,
+                  width: 90,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            if (_image != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  _image!,
+                  width: 90,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Icon(
-              Icons.camera_alt,
-              color: Colors.white,
-              size: 24,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -264,7 +314,16 @@ class _SubUserProfileState extends State<SubUserProfile> {
 
   Widget _buildColorField() {
     return TextFieldWidget(
-      onTap: () async {},
+      onTap: () async {
+        final pickedColor = await flex.showColorPickerDialog(context, selectedColor);
+        if (pickedColor != null) {
+          setState(() {
+            selectedColor = pickedColor;
+            colorController.text = pickedColor.hex.toString();
+            _profileStore.subProfileRequest!.color = colorController.text;
+          });
+        }
+      },
       hint: 'Select the Color for name',
       inputType: TextInputType.emailAddress,
       isReadOnly: true,
@@ -308,13 +367,14 @@ class _SubUserProfileState extends State<SubUserProfile> {
 
   Widget _buildRelationshipField() {
     return TextFieldWidget(
-      isReadOnly: true,
       hint: 'Enter Relationship',
       inputType: TextInputType.text,
       icon: Icons.person_outline_rounded,
       inputAction: TextInputAction.next,
       autoFocus: false,
-      onChanged: (value) {},
+      onChanged: (value) {
+        _profileStore.subProfileRequest!.relationship = value;
+      },
       onFieldSubmitted: (value) {},
       textController: relationshipController,
     );
@@ -322,7 +382,6 @@ class _SubUserProfileState extends State<SubUserProfile> {
 
   Widget _buildWeightField() {
     return TextFieldWidget(
-      isReadOnly: true,
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {
@@ -353,7 +412,6 @@ class _SubUserProfileState extends State<SubUserProfile> {
 
   Widget _buildHeightField() {
     return TextFieldWidget(
-      isReadOnly: true,
       suffixIcon: IconButton(
         onPressed: () {
           setState(() {

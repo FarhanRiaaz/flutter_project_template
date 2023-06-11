@@ -3,9 +3,9 @@ import 'package:second_opinion_app/models/categories/all_category_list.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/models/categories/opinion_request.dart';
 import 'package:second_opinion_app/models/categories/opinion_response.dart';
+import 'package:second_opinion_app/models/categories/submitted_opinion_detail_response.dart';
 import 'package:second_opinion_app/models/categories/submitted_opinion_response.dart';
 import 'package:second_opinion_app/models/slider/slider_images_response.dart';
-
 import '../../data/repository/category_repository.dart';
 
 part 'category_store.g.dart';
@@ -26,12 +26,18 @@ abstract class _CategoryStore with Store {
   static ObservableFuture<SecondOpinionSubmittedResponse> emptyOpinionSubmittedResponse =
       ObservableFuture.value(SecondOpinionSubmittedResponse());
 
+  static ObservableFuture<SubmittedOpinionDetailResponse> emptyOpinionSubmittedDetailResponse =
+      ObservableFuture.value(SubmittedOpinionDetailResponse());
+
   @observable
   ObservableFuture<AllCategoryList> allCategoryFuture = emptyGetAllCategoryResponse;
+
   @observable
   ObservableFuture<AllSliderImageResponse> sliderImagesFuture = emptyGetSliderImagesResponse;
+
   @observable
   ObservableFuture<CategoryInstanceResponse> allCategoryInstanceFuture = emptyCategoryInstanceResponse;
+
   @observable
   ObservableFuture<OpinionSubmitResponse> opinionSubmitResponseFuture = emptyOpinionSubmitResponse;
 
@@ -39,7 +45,11 @@ abstract class _CategoryStore with Store {
   ObservableFuture<SecondOpinionSubmittedResponse> opinionSubmittedResponseFuture = emptyOpinionSubmittedResponse;
 
   @observable
+  ObservableFuture<SubmittedOpinionDetailResponse> opinionSubmittedDetailResponseFuture = emptyOpinionSubmittedDetailResponse;
+
+  @observable
   AllCategoryList? allCategoryList;
+
   @observable
   AllSliderImageResponse? sliderImageResponse;
 
@@ -52,11 +62,17 @@ abstract class _CategoryStore with Store {
   @observable
   SecondOpinionSubmittedResponse? opinionSubmittedResponse;
 
+  @observable
+  SubmittedOpinionDetailResponse? opinionSubmittedDetailResponse;
+
   @computed
   bool get isAllCategoriesInProcess => allCategoryFuture.status == FutureStatus.pending;
 
   @computed
   bool get isCategoriesInstanceInProcess => allCategoryInstanceFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isSubmittedDetailInstanceInProcess => opinionSubmittedDetailResponseFuture.status == FutureStatus.pending;
 
   @action
   Future getAllCategories() async {
@@ -157,6 +173,26 @@ abstract class _CategoryStore with Store {
     await future.then((value) async {
       if (value != null) {
         opinionSubmittedResponse = value;
+
+      } else {
+        print('failed to getSecondOpinionSubmittedList\nSomething went wrong');
+      }
+    }).catchError((e) {
+      print(e);
+
+      print('failed to getSecondOpinionSubmittedList\nSomething went wrong!\n${e.toString()}');
+      throw e;
+    });
+  }
+  @action
+  Future getSecondOpinionSubmittedDetail(String? id) async {
+    final future = _categoryRepository.getSecondOpinionSubmittedDetail(id);
+    opinionSubmittedDetailResponseFuture = ObservableFuture(future);
+
+
+    await future.then((value) async {
+      if (value != null) {
+        opinionSubmittedDetailResponse = value;
 
       } else {
         print('failed to getSecondOpinionSubmittedList\nSomething went wrong');

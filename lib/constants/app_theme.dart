@@ -25,11 +25,7 @@ class AppThemeData {
   static const _lightFillColor = Colors.black;
   static const _darkFillColor = Colors.white;
 
-
-
-
-
-  static ThemeData themeData(  ) {
+  static ThemeData themeData() {
     return ThemeData(
       primaryColor: lightColorScheme.primary,
       elevatedButtonTheme: ElevatedButtonThemeData(

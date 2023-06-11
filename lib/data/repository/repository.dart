@@ -22,13 +22,11 @@ class Repository {
   final SharedPreferenceHelper _sharedPrefsHelper;
 
   // constructor
-  Repository(
-      this._authenticationApi, this._sharedPrefsHelper, this._profileApi);
+  Repository(this._authenticationApi, this._sharedPrefsHelper, this._profileApi);
 
   // Register:------------------------------------------------------------------
 
-  Future<RegisterUserResponse> register(
-      String name, String password, String email) async {
+  Future<RegisterUserResponse> register(String name, String password, String email) async {
     return await _authenticationApi
         .registerUser(RegistrationRequest(
       name: name,
@@ -48,9 +46,7 @@ class Repository {
 
   // Login:---------------------------------------------------------------------
   Future<LoginUserResponse> login(String email, String password) async {
-    return await _authenticationApi
-        .loginUser(LoginRequest(email: email, password: password))
-        .then((response) {
+    return await _authenticationApi.loginUser(LoginRequest(email: email, password: password)).then((response) {
       if (response.token != null) {
         saveIsLoggedIn(true);
         saveAuthenticationToken(response.token!);
@@ -67,12 +63,10 @@ class Repository {
     return await _profileApi.getUserProfile(authToken!);
   }
 
-  Future<ProfileResponse> updateProfile(
-      ProfileResponse currentProfile, File? profileImage) async {
+  Future<ProfileResponse> updateProfile(ProfileResponse currentProfile, File? profileImage) async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("updateProfile$authToken");
-    return await _profileApi.updateProfile(
-        authToken!, profileImage, currentProfile);
+    return await _profileApi.updateProfile(authToken!, profileImage, currentProfile);
   }
 
   Future<SubProfileList> getSubUserProfile() async {
@@ -81,15 +75,13 @@ class Repository {
     return await _profileApi.getSubUserProfile(authToken!);
   }
 
-  Future<SubProfileResponse> addSubUserProfile(
-      SubProfileRequest request) async {
+  Future<SubProfileResponse> addSubUserProfile(SubProfileRequest request) async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("getSubUserProfile$authToken");
     return await _profileApi.addSubUserProfile(request, authToken!);
   }
 
-  Future<SubProfileResponse> updateSubUserProfile(
-      SubProfileRequest request, String userId) async {
+  Future<SubProfileResponse> updateSubUserProfile(SubProfileRequest request, String userId) async {
     final authToken = await _sharedPrefsHelper.authToken;
     print("updateSubUserProfile$authToken");
     return await _profileApi.updateSubUserProfile(request, userId, authToken!);
@@ -101,25 +93,21 @@ class Repository {
     return await _profileApi.deleteSubUserProfile(authToken!, id);
   }
 
-  Future<void> saveIsLoggedIn(bool value) =>
-      _sharedPrefsHelper.saveIsLoggedIn(value);
+  Future<void> saveIsLoggedIn(bool value) => _sharedPrefsHelper.saveIsLoggedIn(value);
 
-  Future<void> saveAuthenticationToken(String value) =>
-      _sharedPrefsHelper.saveAuthToken(value);
+  Future<void> saveAuthenticationToken(String value) => _sharedPrefsHelper.saveAuthToken(value);
 
   Future<bool> get isLoggedIn => _sharedPrefsHelper.isLoggedIn;
 
   Future<String?> get authToken async => await _sharedPrefsHelper.authToken;
 
   // Theme: --------------------------------------------------------------------
-  Future<void> changeBrightnessToDark(bool value) =>
-      _sharedPrefsHelper.changeBrightnessToDark(value);
+  Future<void> changeBrightnessToDark(bool value) => _sharedPrefsHelper.changeBrightnessToDark(value);
 
   bool get isDarkMode => _sharedPrefsHelper.isDarkMode;
 
   // Language: -----------------------------------------------------------------
-  Future<void> changeLanguage(String value) =>
-      _sharedPrefsHelper.changeLanguage(value);
+  Future<void> changeLanguage(String value) => _sharedPrefsHelper.changeLanguage(value);
 
   String? get currentLanguage => _sharedPrefsHelper.currentLanguage;
 }

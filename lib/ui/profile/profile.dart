@@ -242,22 +242,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Stack(
           children: [
             if (_image == null && _profileStore.currentUserProfile?.profileImg == null)
-              Image.asset(
-                width: 90,
-                'assets/images/profilePicture.png',
-                fit: BoxFit.fitWidth,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  'assets/images/profilePicture.png',
+                  width: 90,
+                  fit: BoxFit.fitWidth,
+                ),
               )
             else if (_profileStore.currentUserProfile?.profileImg != null)
-              CachedNetworkImage(
-                imageUrl: _profileStore.currentUserProfile!.profileImg!,
-                width: 90,
-                fit: BoxFit.fitWidth,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: _profileStore.currentUserProfile!.profileImg!,
+                  width: 90,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             if (_image != null)
-              Image.file(
-                width: 90,
-                _image!,
-                fit: BoxFit.fitWidth,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  _image!,
+                  width: 90,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             Positioned(
               bottom: 10,

@@ -60,35 +60,33 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
   }
 
   Widget _buildListView() {
-    return Observer(
-      builder: (context) {
-        return _categoryStore.opinionSubmittedResponseFuture.status != FutureStatus.pending
-            ? ListView.separated(
-                padding: EdgeInsets.only(bottom: 80),
-                itemCount: _categoryStore.opinionSubmittedResponse?.results?.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  final Map<String, dynamic> prescription = prescriptionList[index];
+    return Observer(builder: (context) {
+      return _categoryStore.opinionSubmittedResponseFuture.status != FutureStatus.pending
+          ? ListView.separated(
+              padding: EdgeInsets.only(bottom: 80),
+              itemCount: _categoryStore.opinionSubmittedResponse?.results?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                final Map<String, dynamic> prescription = prescriptionList[index];
 
-                  final String doctorName = prescription['doctorName'] ?? '';
+                final String doctorName = prescription['doctorName'] ?? '';
 
-                  return DoctorsWidget(
-                    status: _categoryStore.opinionSubmittedResponse?.results?[index].status ?? '',
-                    specialization: _categoryStore.opinionSubmittedResponse?.results?[index].form?.category?.title ?? '',
-                    dateTime: DateTime.parse(_categoryStore.opinionSubmittedResponse?.results?[index].createDate ?? ''),
-                    doctorName: doctorName,
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 8,
-                  );
-                },
-              )
-            : CustomProgressIndicatorWidget(
-                color: Colors.white,
-              );
-      }
-    );
+                return DoctorsWidget(
+                  status: _categoryStore.opinionSubmittedResponse?.results?[index].status ?? '',
+                  specialization: _categoryStore.opinionSubmittedResponse?.results?[index].request?.form?.category?.title ?? '',
+                  dateTime: DateTime.parse(_categoryStore.opinionSubmittedResponse?.results?[index].createdDate ?? ''),
+                  doctorName: doctorName, secondOpinionResult:_categoryStore.opinionSubmittedResponse!.results![index],
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  height: 8,
+                );
+              },
+            )
+          : CustomProgressIndicatorWidget(
+              color: Colors.white,
+            );
+    });
   }
 
   Widget _buildBody() {
@@ -170,11 +168,13 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
                 color: Colors.white,
               ),
               child: TextField(
-                onEditingComplete: (){_categoryStore.getSecondOpinionSubmittedList(
-                  _searchController.text,
-                  filterOption?.getArrangeBy ?? '',
-                  filterOption?.user?.name ?? '',
-                );},
+                onEditingComplete: () {
+                  _categoryStore.getSecondOpinionSubmittedList(
+                    _searchController.text,
+                    filterOption?.getArrangeBy ?? '',
+                    filterOption?.user?.name ?? '',
+                  );
+                },
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search',

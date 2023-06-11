@@ -158,8 +158,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                 controller: _searchController,
                 onChanged: (value) {},
                 onEditingComplete: () {
-                  _reportStore.getFilteredDocumentList(
-                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type?.title ?? '', _searchController.text);
+                  _reportStore.getFilteredDocumentList(filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '',
+                      filterOption?.type?.title ?? '', _searchController.text);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search',
@@ -197,8 +197,8 @@ class _ReportsScreenState extends State<ReportsScreen> with SingleTickerProvider
                             )));
 
                 if (filterOption != null)
-                  _reportStore.getFilteredDocumentList(
-                      filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '', filterOption?.type?.title ?? '', _searchController.text);
+                  _reportStore.getFilteredDocumentList(filterOption?.getArrangeBy ?? '', filterOption?.user?.name ?? '',
+                      filterOption?.type?.title ?? '', _searchController.text);
 
                 //Todo Change to named Parameter
               },

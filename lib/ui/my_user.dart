@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:second_opinion_app/models/home/home_api_response.dart';
 import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/ui/sub_user_profile.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
+import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
 
 import '../di/components/service_locator.dart';
 import 'add_user.dart';
@@ -72,7 +74,9 @@ class _MyUsersState extends State<MyUsers> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildSearchBarWithButton(),
-                    Expanded(child: _buildCardList()),
+                    Expanded(child: Observer(builder: (context) {
+                      return _buildCardList();
+                    })),
                   ],
                 ),
               ),
@@ -219,7 +223,16 @@ class _MyUsersState extends State<MyUsers> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  _buildActionWidget(icon: Icons.delete_outline, onPressed: () {}, context: context),
+                  _buildActionWidget(
+                      icon: Icons.delete_outline,
+                      onPressed: () async {
+                        DialogHelper.showUserDeleteConfirmationDialog(context, subProfileResponse.name!, () async {
+                          await _profileStore.deleteSubUserProfile(subProfileResponse.id!);
+                          _profileStore.getSubUserProfiles();
+                          Navigator.pop(context);
+                        });
+                      },
+                      context: context),
                 ],
               ),
             ],

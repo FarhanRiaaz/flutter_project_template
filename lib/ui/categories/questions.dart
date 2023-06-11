@@ -4,14 +4,19 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
 import 'package:second_opinion_app/models/categories/category_instance_response.dart';
 import 'package:second_opinion_app/stores/category/category_store.dart';
+import 'package:second_opinion_app/ui/profile/profile_store.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/widgets/helper/DialogHelper.dart';
-
+import 'package:second_opinion_app/widgets/progress_indicator_widget.dart';
 import '../../models/categories/opinion_request.dart';
+import '../../models/profile/sub_profile_response.dart';
 import '../../widgets/mcq_selector_widget.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({Key? key}) : super(key: key);
+  const QuestionsScreen({Key? key, this.user, this.count}) : super(key: key);
+
+  final SubProfileResponse? user;
+  final int? count;
 
   @override
   State<QuestionsScreen> createState() => _QuestionsScreenState();
@@ -19,6 +24,7 @@ class QuestionsScreen extends StatefulWidget {
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
   CategoryStore _categoryStore = getIt<CategoryStore>();
+  ProfileStore _profileStore = getIt<ProfileStore>();
 
   List<int> selectedOptions = [-1, -1, -1];
 
@@ -29,7 +35,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   initialize() async {
     await _categoryStore.getFormByCategory(2);
 
-    submitRequest.userId = 2;
+    submitRequest.userId = widget.user!.id;
+
     submitRequest.form = 2;
     submitRequest.answers = [];
     for (Question question in _categoryStore.categoryInstanceResponse!.questions!) {
@@ -65,72 +72,78 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           Column(
             children: [
               _buildAppBar(),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Text(
-                          'Please Answer Following Questions',
-                          style: TextStyle(fontSize: 12),
+              Observer(builder: (context) {
+                return Expanded(
+                  child: !_categoryStore.isCategoriesInstanceInProcess
+                      ? SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: Text(
+                                  'Please Answer Following Questions',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              _buildBody(),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.4,
+                                    height: MediaQuery.of(context).size.width * 0.12,
+                                    child: ElevatedButton(
+                                      style: Theme.of(context)
+                                          .elevatedButtonTheme
+                                          .style
+                                          ?.copyWith(backgroundColor: MaterialStatePropertyAll(Colors.grey.shade400)),
+                                      onPressed: () {
+                                        print(submitRequest.toJson());
+                                      },
+                                      child: Text('Previous'),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.4,
+                                    height: MediaQuery.of(context).size.width * 0.12,
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        for (Answer answer in submitRequest.answers!) {
+                                          if (answer.answer == null || answer.answer == '') {
+                                            await DialogHelper.showCompletionDialog(
+                                              context,
+                                              'Complete Form',
+                                              'Please fill in all the required fields.',
+                                            );
+                                            return;
+                                          }
+                                        }
+
+                                        _categoryStore.submitSecondOpinion(submitRequest);
+
+                                        Navigator.pushNamed(context, Routes.upload_screen);
+                                      },
+                                      child: Text('Next'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
+                          ),
+                        )
+                      : CustomProgressIndicatorWidget(
+                          color: Colors.white10,
                         ),
-                      ),
-                      _buildBody(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.width * 0.12,
-                            child: ElevatedButton(
-                              style: Theme.of(context)
-                                  .elevatedButtonTheme
-                                  .style
-                                  ?.copyWith(backgroundColor: MaterialStatePropertyAll(Colors.grey.shade400)),
-                              onPressed: () {
-                                print(submitRequest.toJson());
-                              },
-                              child: Text('Previous'),
-                            ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.width * 0.12,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                for (Answer answer in submitRequest.answers!) {
-                                  if (answer.answer == null || answer.answer == '') {
-                                    await DialogHelper.showCompletionDialog(
-                                      context,
-                                      'Complete Form',
-                                      'Please fill in all the required fields.',
-                                    );
-                                    return;
-                                  }
-                                }
-
-                                _categoryStore.submitSecondOpinion(submitRequest);
-
-                                //  Navigator.pushNamed(context, Routes.upload_screen);
-                              },
-                              child: Text('Next'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                );
+              }),
             ],
           ),
         ],
@@ -158,7 +171,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   _buildTitle() {
     return Text(
-      'Muhammad Zeeshan',
+      widget.user!.name ?? '',
       style: Theme.of(context).textTheme.headlineMedium,
     );
   }
@@ -180,7 +193,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   onSelect: (selectedValue) {
                     submitRequest.answers![index].answer =
                         _categoryStore.categoryInstanceResponse!.questions![index].options![selectedValue].option;
-                    print(submitRequest.answers![index].answer);
                   });
             } else if (_categoryStore.categoryInstanceResponse!.questions![index].type == QuestionType.EditText) {
               return _buildTextEditQuestion(_categoryStore.categoryInstanceResponse!.questions![index].question!, (value) {

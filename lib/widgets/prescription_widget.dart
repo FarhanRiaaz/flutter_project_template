@@ -11,16 +11,13 @@ import '../di/components/service_locator.dart';
 import '../models/report/get_all_document_response.dart';
 
 class PrescriptionWidget extends StatelessWidget {
-    PrescriptionWidget(
-      {Key? key,
-      required this.result,required this.reportStore, required this.id})
-      : super(key: key);
+  PrescriptionWidget({Key? key, required this.result, required this.reportStore, required this.id}) : super(key: key);
 
   final int id;
- final Result result;
+  final Result result;
   final ReportStore reportStore;
 
- final ProfileStore _profileStore = getIt<ProfileStore>();
+  final ProfileStore _profileStore = getIt<ProfileStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +40,7 @@ class PrescriptionWidget extends StatelessWidget {
               child: Center(
                   child: CachedNetworkImage(
                 fit: BoxFit.fill,
-                imageUrl: result.file!.endsWith('.jpg') || result.file!.endsWith('.png')
+                imageUrl: result.file!.endsWith('.jpg') || result.file!.endsWith('.png')||result.file!.endsWith('.jpeg')
                     ? result.file!
                     : 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png',
               )),
@@ -61,8 +58,11 @@ class PrescriptionWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 16),
                   ),
                   Text(
-                    result.user! ,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 12,color: Color(int.parse('0xFF${_profileStore.getColorFromName(result.user!)}')),),
+                    result.user!=''?result.user!:_profileStore.currentUserProfile!.name!,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 12,
+                          color: Color(int.parse('0xFF${_profileStore.getColorFromName(result.user!)}')),
+                        ),
                   ),
                   Text(
                     DateFormat('MMMM d, yyyy').format(DateTime.parse(result.createdDate!)),
@@ -79,9 +79,11 @@ class PrescriptionWidget extends StatelessWidget {
                     _buildActionWidget(
                         icon: Icons.remove_red_eye_outlined,
                         onPressed: () {
-                          result.file!.endsWith('.jpg') || result.file!.endsWith('.png')
+                          result.file!.endsWith('.jpg') || result.file!.endsWith('.png')||result.file!.endsWith('.jpeg')
                               ? Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => ViewReportImage(fileName: result.fileName!, imageUrl: result.file!)))
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewReportImage(fileName: result.fileName!, imageUrl: result.file!)))
                               : Navigator.push(
                                   context,
                                   MaterialPageRoute(

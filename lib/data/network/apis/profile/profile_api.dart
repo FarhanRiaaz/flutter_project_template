@@ -40,8 +40,7 @@ class ProfileApi {
   }
 
   /// Method to update user profile
-  Future<ProfileResponse> updateProfile(
-      String token, File? profileImage, ProfileResponse currentProfile) async {
+  Future<ProfileResponse> updateProfile(String token, File? profileImage, ProfileResponse currentProfile) async {
     try {
       String? fileName = profileImage?.path.split('/').last ?? null;
 
@@ -52,9 +51,7 @@ class ProfileApi {
         'height': currentProfile.height,
         'weight_unit': currentProfile.weightUnit,
         'height_unit': currentProfile.heightUnit,
-        if (profileImage?.path != null)
-          'profileImg': await MultipartFile.fromFile(profileImage?.path ?? '',
-              filename: fileName),
+        if (profileImage?.path != null) 'profileImg': await MultipartFile.fromFile(profileImage?.path ?? '', filename: fileName),
       });
 
       final res = await _dioClient.patch(
@@ -103,8 +100,7 @@ class ProfileApi {
   }
 
   /// Method to add sub profile
-  Future<SubProfileResponse> addSubUserProfile(
-      SubProfileRequest request, String token) async {
+  Future<SubProfileResponse> addSubUserProfile(SubProfileRequest request, String token) async {
     try {
       FormData formData = FormData.fromMap({
         'name': request.name,
@@ -116,8 +112,7 @@ class ProfileApi {
         'height_unit': request.heightUnit,
         'weight_unit': request.weightUnit,
         'relation_ship': request.relationship,
-        if (request.profileImg?.path != null)
-          'profileImg': await MultipartFile.fromFile(request.profileImg!.path),
+        if (request.profileImg?.path != null) 'profileImg': await MultipartFile.fromFile(request.profileImg!.path),
       });
       print(formData.fields);
       final res = await _dioClient.post(
@@ -142,10 +137,8 @@ class ProfileApi {
     }
   }
 
-
   /// Method to update sub profile
-  Future<SubProfileResponse> updateSubUserProfile(
-      SubProfileRequest request, String userId, String token) async {
+  Future<SubProfileResponse> updateSubUserProfile(SubProfileRequest request, String userId, String token) async {
     try {
       FormData formData = FormData.fromMap({
         if (request.name != null) 'name': request.name,
@@ -157,8 +150,7 @@ class ProfileApi {
         if (request.heightUnit != null) 'height_unit': request.heightUnit,
         if (request.weightUnit != null) 'weight_unit': request.weightUnit,
         if (request.relationship != null) 'relation_ship': request.relationship,
-        if (request.profileImg?.path != null)
-          'profileImg': await MultipartFile.fromFile(request.profileImg!.path),
+        if (request.profileImg?.path != null) 'profileImg': await MultipartFile.fromFile(request.profileImg!.path),
       });
       print(formData.fields);
       final res = await _dioClient.patch(

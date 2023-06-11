@@ -24,6 +24,14 @@ mixin _$CategoryStore on _CategoryStore, Store {
               () => super.isCategoriesInstanceInProcess,
               name: '_CategoryStore.isCategoriesInstanceInProcess'))
           .value;
+  Computed<bool>? _$isSubmittedDetailInstanceInProcessComputed;
+
+  @override
+  bool get isSubmittedDetailInstanceInProcess =>
+      (_$isSubmittedDetailInstanceInProcessComputed ??= Computed<bool>(
+              () => super.isSubmittedDetailInstanceInProcess,
+              name: '_CategoryStore.isSubmittedDetailInstanceInProcess'))
+          .value;
 
   late final _$allCategoryFutureAtom =
       Atom(name: '_CategoryStore.allCategoryFuture', context: context);
@@ -112,6 +120,26 @@ mixin _$CategoryStore on _CategoryStore, Store {
     });
   }
 
+  late final _$opinionSubmittedDetailResponseFutureAtom = Atom(
+      name: '_CategoryStore.opinionSubmittedDetailResponseFuture',
+      context: context);
+
+  @override
+  ObservableFuture<SubmittedOpinionDetailResponse>
+      get opinionSubmittedDetailResponseFuture {
+    _$opinionSubmittedDetailResponseFutureAtom.reportRead();
+    return super.opinionSubmittedDetailResponseFuture;
+  }
+
+  @override
+  set opinionSubmittedDetailResponseFuture(
+      ObservableFuture<SubmittedOpinionDetailResponse> value) {
+    _$opinionSubmittedDetailResponseFutureAtom
+        .reportWrite(value, super.opinionSubmittedDetailResponseFuture, () {
+      super.opinionSubmittedDetailResponseFuture = value;
+    });
+  }
+
   late final _$allCategoryListAtom =
       Atom(name: '_CategoryStore.allCategoryList', context: context);
 
@@ -195,6 +223,23 @@ mixin _$CategoryStore on _CategoryStore, Store {
     });
   }
 
+  late final _$opinionSubmittedDetailResponseAtom = Atom(
+      name: '_CategoryStore.opinionSubmittedDetailResponse', context: context);
+
+  @override
+  SubmittedOpinionDetailResponse? get opinionSubmittedDetailResponse {
+    _$opinionSubmittedDetailResponseAtom.reportRead();
+    return super.opinionSubmittedDetailResponse;
+  }
+
+  @override
+  set opinionSubmittedDetailResponse(SubmittedOpinionDetailResponse? value) {
+    _$opinionSubmittedDetailResponseAtom
+        .reportWrite(value, super.opinionSubmittedDetailResponse, () {
+      super.opinionSubmittedDetailResponse = value;
+    });
+  }
+
   late final _$getAllCategoriesAsyncAction =
       AsyncAction('_CategoryStore.getAllCategories', context: context);
 
@@ -249,6 +294,16 @@ mixin _$CategoryStore on _CategoryStore, Store {
         super.getSecondOpinionSubmittedList(searchString, sort, userName));
   }
 
+  late final _$getSecondOpinionSubmittedDetailAsyncAction = AsyncAction(
+      '_CategoryStore.getSecondOpinionSubmittedDetail',
+      context: context);
+
+  @override
+  Future<dynamic> getSecondOpinionSubmittedDetail(String? id) {
+    return _$getSecondOpinionSubmittedDetailAsyncAction
+        .run(() => super.getSecondOpinionSubmittedDetail(id));
+  }
+
   @override
   String toString() {
     return '''
@@ -257,13 +312,16 @@ sliderImagesFuture: ${sliderImagesFuture},
 allCategoryInstanceFuture: ${allCategoryInstanceFuture},
 opinionSubmitResponseFuture: ${opinionSubmitResponseFuture},
 opinionSubmittedResponseFuture: ${opinionSubmittedResponseFuture},
+opinionSubmittedDetailResponseFuture: ${opinionSubmittedDetailResponseFuture},
 allCategoryList: ${allCategoryList},
 sliderImageResponse: ${sliderImageResponse},
 categoryInstanceResponse: ${categoryInstanceResponse},
 opinionSubmitResponse: ${opinionSubmitResponse},
 opinionSubmittedResponse: ${opinionSubmittedResponse},
+opinionSubmittedDetailResponse: ${opinionSubmittedDetailResponse},
 isAllCategoriesInProcess: ${isAllCategoriesInProcess},
-isCategoriesInstanceInProcess: ${isCategoriesInstanceInProcess}
+isCategoriesInstanceInProcess: ${isCategoriesInstanceInProcess},
+isSubmittedDetailInstanceInProcess: ${isSubmittedDetailInstanceInProcess}
     ''';
   }
 }

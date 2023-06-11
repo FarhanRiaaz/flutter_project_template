@@ -50,37 +50,30 @@ class _PageViewScreenState extends State<PageViewScreen> {
     return [
       BottomNavigationBarItem(
           icon: SvgPicture.asset(
-              'assets/icons/Selected_home.svg',
-
-            color: currentPageIndex ==0?Theme.of(context).primaryColor:Colors.white,
+            'assets/icons/Selected_home.svg',
+            color: currentPageIndex == 0 ? Theme.of(context).primaryColor : Colors.white,
           ),
           label: 'Home'),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
-            'assets/icons/unselected_report.svg',
-
-          color: currentPageIndex ==1?Color(0xFF1ce0a3):Colors.white,
+          'assets/icons/unselected_report.svg',
+          color: currentPageIndex == 1 ? Color(0xFF1ce0a3) : Colors.white,
         ),
         label: 'Report',
       ),
       BottomNavigationBarItem(
-        icon: SvgPicture.asset(
-              'assets/icons/unselected_opinion.svg',
-
-            color: currentPageIndex ==2?Color(0xFFec652a):Colors.white),
+        icon: SvgPicture.asset('assets/icons/unselected_opinion.svg', color: currentPageIndex == 2 ? Color(0xFFec652a) : Colors.white),
         label: 'Second Opinion',
       ),
       BottomNavigationBarItem(
         icon: SvgPicture.asset(
           'assets/icons/More_unselected.svg',
-
-          color: currentPageIndex ==3?Theme.of(context).primaryColor:Colors.white,
+          color: currentPageIndex == 3 ? Theme.of(context).primaryColor : Colors.white,
         ),
         label: 'More',
       ),
     ];
   }
-
 
   Widget _buildBottomNavBar() {
     Color selectedItemColor = Theme.of(context).primaryColor;

@@ -25,6 +25,7 @@ class Endpoints {
   static const String getCategories = baseUrl + "/categories/";
   static const String submitSecondOpinion = baseUrl + "/submit-request/";
   static const String getSecondOpinionSubmittedList = baseUrl + "/requests/";
+  static const String getSecondOpinionSubmittedDetail = baseUrl + "/requests/";
   static const String getFilteredCategories = baseUrl + "/categories/?search=";
   static const String uploadDocument = baseUrl + "/request/upload-document/";
   static const String getSliderImages = baseUrl + "/slider";

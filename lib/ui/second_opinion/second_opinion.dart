@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:second_opinion_app/utils/routes/routes.dart';
 import 'package:second_opinion_app/widgets/roundedRectangle_widget.dart';
 import 'package:second_opinion_app/widgets/upload_document_widget.dart';
 
+import '../../widgets/second_opinion_upload_widget.dart';
 import '../../widgets/textfield_widget.dart';
 
 class SecondOpinionScreen extends StatefulWidget {
@@ -18,6 +23,8 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
   TextEditingController diseaseController = TextEditingController();
 
   TextEditingController descriptionController = TextEditingController();
+
+  FilePickerResult? result;
 
   @override
   void dispose() {
@@ -104,7 +111,7 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
                         height: 15,
                       ),
                       _buildDescriptionField(),
-                      _buildUploadWidget(),
+                      result == null ? _buildUploadWidget() : _buildPickedFileWidget(),
                     ],
                   ),
                 ),
@@ -181,8 +188,8 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.2,
       child: InkWell(
-        onTap: () {
-          showModalBottomSheet(
+        onTap: ()async {
+         result = await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               context: context,
@@ -190,9 +197,12 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
                     height: MediaQuery.of(context).size.height * 0.85,
                     child: Padding(
                       padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.15),
-                      child: const UploadDocumentWidget(),
+                      child: const SecondOpinionUploadDocumentWidget(),
                     ),
                   ));
+         setState(() {
+
+         });
         },
         child: RoundedRectangularWidget(
             dashPattern: [5, 3],
@@ -221,6 +231,37 @@ class _SecondOpinionScreenState extends State<SecondOpinionScreen> {
       child: ElevatedButton(
         onPressed: () {},
         child: Text('Proceed'),
+      ),
+    );
+  }
+
+  Widget _buildPickedFileWidget() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: RoundedRectangularWidget(
+        dashPattern: [5, 3],
+        child: InkWell(
+          onTap: () async {
+            result = await FilePicker.platform.pickFiles();
+            setState(() {});
+            if (result != null   ) {
+
+
+            } else {
+
+            }
+          },
+          child: Center(
+              child: result!.files[0].name.endsWith('.jpg') ||
+                  result!.files[0].name.endsWith('.png') ||
+                  result!.files[0].name.endsWith('.jpeg')
+                  ? Image.file(File(result!.files[0].path!))
+                  : CachedNetworkImage(
+                fit: BoxFit.fill,
+                imageUrl: 'https://cdn-icons-png.flaticon.com/512/4208/4208479.png', // Replace with your placeholder image URL
+              )),
+        ),
       ),
     );
   }

@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:second_opinion_app/constants/app_theme.dart';
 import 'package:second_opinion_app/di/components/service_locator.dart';
+import 'package:second_opinion_app/models/profile/sub_profile_response.dart';
 import 'package:second_opinion_app/ui/profile/profile_store.dart';
 
+import '../ui/categories/questions.dart';
 import '../utils/routes/routes.dart';
 
 class SelectUserModal extends StatefulWidget {
@@ -14,10 +17,9 @@ class SelectUserModal extends StatefulWidget {
 
 class _SelectUserModalState extends State<SelectUserModal> {
   ProfileStore _profileStore = getIt<ProfileStore>();
-  String _selectedOption = '-1';
+  SubProfileResponse _selectedOption = SubProfileResponse();
   static const placeholderImage =
       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png';
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,24 +39,30 @@ class _SelectUserModalState extends State<SelectUserModal> {
           SizedBox(
             height: 300,
             child: ListView.builder(
-              itemCount: _profileStore.currentSubUserProfile?.subProfile?.length??0,
+              itemCount: _profileStore.currentSubUserProfile?.subProfile?.length ?? 0,
               itemBuilder: (BuildContext context, int index) => Card(
                 elevation: 1,
-                child: RadioListTile<String>(
+                child: RadioListTile<SubProfileResponse>(
+                  activeColor: AppThemeData.themeData().primaryColor,
                   title: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage:
-                              CachedNetworkImageProvider(_profileStore.currentSubUserProfile?.subProfile?[index].profileImg??placeholderImage),
+                          backgroundImage: CachedNetworkImageProvider(
+                              _profileStore.currentSubUserProfile?.subProfile?[index].profileImg ?? placeholderImage),
                         ),
                         SizedBox(width: 8.0),
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(_profileStore.currentSubUserProfile?.subProfile?[index].name ?? '',style: TextStyle(color:   Color(int.parse('0xFF${_profileStore.currentSubUserProfile!.subProfile![index].color}')),),),
+                            Text(
+                              _profileStore.currentSubUserProfile?.subProfile?[index].name ?? '',
+                              style: TextStyle(
+                                color: Color(int.parse('0xFF${_profileStore.currentSubUserProfile!.subProfile![index].color}')),
+                              ),
+                            ),
                             Text(
                               _profileStore.currentSubUserProfile?.subProfile?[index].relationShip ?? '',
                               style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Color(0xFF8b8b8b)),
@@ -64,14 +72,13 @@ class _SelectUserModalState extends State<SelectUserModal> {
                       ],
                     ),
                   ),
-                  value: _profileStore.currentSubUserProfile!.subProfile![index].id!.toString(),
+                  value: _profileStore.currentSubUserProfile!.subProfile![index],
                   groupValue: _selectedOption,
                   onChanged: (value) {
                     setState(() {
                       _selectedOption = value!;
                     });
                   },
-                  activeColor: Colors.green,
                   controlAffinity: ListTileControlAffinity.trailing,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                   selected: _selectedOption == _profileStore.currentSubUserProfile?.subProfile?[index].id,
@@ -85,7 +92,7 @@ class _SelectUserModalState extends State<SelectUserModal> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, Routes.question);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionsScreen(user: _selectedOption)));
               },
               child: Text('Continue'),
             ),

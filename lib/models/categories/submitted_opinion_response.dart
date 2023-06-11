@@ -18,18 +18,18 @@ class SecondOpinionSubmittedResponse {
     if (json['results'] != null) {
       results = <Result>[];
       json['results'].forEach((v) {
-        results!.add(new Result.fromJson(v));
+        results!.add(Result.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
-    data['next'] = this.next;
-    data['previous'] = this.previous;
-    if (this.results != null) {
-      data['results'] = this.results!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['count'] = count;
+    data['next'] = next;
+    data['previous'] = previous;
+    if (results != null) {
+      data['results'] = results!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -39,106 +39,178 @@ class SecondOpinionSubmittedResponse {
     dynamic next,
     dynamic previous,
     List<Result>? results,
-  }) =>
-      SecondOpinionSubmittedResponse(
-        count: count ?? this.count,
-        next: next ?? this.next,
-        previous: previous ?? this.previous,
-        results: results ?? this.results,
-      );
+  }) {
+    return SecondOpinionSubmittedResponse(
+      count: count ?? this.count,
+      next: next ?? this.next,
+      previous: previous ?? this.previous,
+      results: results ?? this.results,
+    );
+  }
 }
 
 class Result {
   int? id;
-  Form? form;
-  bool? isSubUser;
+  Request? request;
   String? status;
-  bool? paymentCompleted;
-  String? createDate;
+  String? chatRoom;
+  String? totalPrice;
+  int? totalNo;
+  String? paymentTransactionNo;
+  String? createdDate;
   bool? isPending;
   bool? isApproved;
-  bool? isRuning;
+  bool? isRunning;
   bool? isComplete;
-  int? mainuser;
-  int? user;
+  bool? isOpened;
+  bool? paymentCompleted;
+  List<int>? doctors;
 
   Result({
     this.id,
-    this.form,
-    this.isSubUser,
+    this.request,
     this.status,
-    this.paymentCompleted,
-    this.createDate,
+    this.chatRoom,
+    this.totalPrice,
+    this.totalNo,
+    this.paymentTransactionNo,
+    this.createdDate,
     this.isPending,
     this.isApproved,
-    this.isRuning,
+    this.isRunning,
     this.isComplete,
-    this.mainuser,
-    this.user,
+    this.isOpened,
+    this.paymentCompleted,
+    this.doctors,
   });
 
   Result.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    form = json['form'] != null ? new Form.fromJson(json['form']) : null;
-    isSubUser = json['is_sub_user'];
+    request = json['request'] != null ? Request.fromJson(json['request']) : null;
     status = json['status'];
-    paymentCompleted = json['payment_completed'];
-    createDate = json['create_date'];
+    chatRoom = json['chat_room'];
+    totalPrice = json['total_price'];
+    totalNo = json['total_no'];
+    paymentTransactionNo = json['payment_transaction_no'];
+    createdDate = json['created_date'];
     isPending = json['is_pending'];
     isApproved = json['is_approved'];
-    isRuning = json['is_runing'];
+    isRunning = json['is_running'];
     isComplete = json['is_complete'];
-    mainuser = json['mainuser'];
-    user = json['user'];
+    isOpened = json['is_opened'];
+    paymentCompleted = json['payment_completed'];
+    doctors = json['doctors'] != null ? List<int>.from(json['doctors']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.form != null) {
-      data['form'] = this.form!.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    if (request != null) {
+      data['request'] = request!.toJson();
     }
-    data['is_sub_user'] = this.isSubUser;
-    data['status'] = this.status;
-    data['payment_completed'] = this.paymentCompleted;
-    data['create_date'] = this.createDate;
-    data['is_pending'] = this.isPending;
-    data['is_approved'] = this.isApproved;
-    data['is_runing'] = this.isRuning;
-    data['is_complete'] = this.isComplete;
-    data['mainuser'] = this.mainuser;
-    data['user'] = this.user;
+    data['status'] = status;
+    data['chat_room'] = chatRoom;
+    data['total_price'] = totalPrice;
+    data['total_no'] = totalNo;
+    data['payment_transaction_no'] = paymentTransactionNo;
+    data['created_date'] = createdDate;
+    data['is_pending'] = isPending;
+    data['is_approved'] = isApproved;
+    data['is_running'] = isRunning;
+    data['is_complete'] = isComplete;
+    data['is_opened'] = isOpened;
+    data['payment_completed'] = paymentCompleted;
+    data['doctors'] = doctors;
     return data;
   }
 
   Result copyWith({
     int? id,
-    Form? form,
-    bool? isSubUser,
+    Request? request,
     String? status,
-    bool? paymentCompleted,
-    String? createDate,
+    String? chatRoom,
+    String? totalPrice,
+    int? totalNo,
+    String? paymentTransactionNo,
+    String? createdDate,
     bool? isPending,
     bool? isApproved,
-    bool? isRuning,
+    bool? isRunning,
     bool? isComplete,
-    int? mainuser,
-    int? user,
-  }) =>
-      Result(
-        id: id ?? this.id,
-        form: form ?? this.form,
-        isSubUser: isSubUser ?? this.isSubUser,
-        status: status ?? this.status,
-        paymentCompleted: paymentCompleted ?? this.paymentCompleted,
-        createDate: createDate ?? this.createDate,
-        isPending: isPending ?? this.isPending,
-        isApproved: isApproved ?? this.isApproved,
-        isRuning: isRuning ?? this.isRuning,
-        isComplete: isComplete ?? this.isComplete,
-        mainuser: mainuser ?? this.mainuser,
-        user: user ?? this.user,
-      );
+    bool? isOpened,
+    bool? paymentCompleted,
+    List<int>? doctors,
+  }) {
+    return Result(
+      id: id ?? this.id,
+      request: request ?? this.request,
+      status: status ?? this.status,
+      chatRoom: chatRoom ?? this.chatRoom,
+      totalPrice: totalPrice ?? this.totalPrice,
+      totalNo: totalNo ?? this.totalNo,
+      paymentTransactionNo: paymentTransactionNo ?? this.paymentTransactionNo,
+      createdDate: createdDate ?? this.createdDate,
+      isPending: isPending ?? this.isPending,
+      isApproved: isApproved ?? this.isApproved,
+      isRunning: isRunning ?? this.isRunning,
+      isComplete: isComplete ?? this.isComplete,
+      isOpened: isOpened ?? this.isOpened,
+      paymentCompleted: paymentCompleted ?? this.paymentCompleted,
+      doctors: doctors ?? this.doctors,
+    );
+  }
+}
+
+class Request {
+  int? id;
+  Form? form;
+  bool? isSubUser;
+  int? mainUser;
+  dynamic user;
+
+  Request({
+    this.id,
+    this.form,
+    this.isSubUser,
+    this.mainUser,
+    this.user,
+  });
+
+  Request.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    form = json['form'] != null ? Form.fromJson(json['form']) : null;
+    isSubUser = json['is_sub_user'];
+    mainUser = json['mainuser'];
+    user = json['user'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    if (form != null) {
+      data['form'] = form!.toJson();
+    }
+    data['is_sub_user'] = isSubUser;
+    data['mainuser'] = mainUser;
+    data['user'] = user;
+    return data;
+  }
+
+  Request copyWith({
+    int? id,
+    Form? form,
+    bool? isSubUser,
+    int? mainUser,
+    dynamic user,
+  }) {
+    return Request(
+      id: id ?? this.id,
+      form: form ?? this.form,
+      isSubUser: isSubUser ?? this.isSubUser,
+      mainUser: mainUser ?? this.mainUser,
+      user: user ?? this.user,
+    );
+  }
 }
 
 class Form {
@@ -154,19 +226,17 @@ class Form {
 
   Form.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    category = json['category'] != null
-        ? new Category.fromJson(json['category'])
-        : null;
+    category = json['category'] != null ? Category.fromJson(json['category']) : null;
     title = json['title'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.category != null) {
-      data['category'] = this.category!.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    if (category != null) {
+      data['category'] = category!.toJson();
     }
-    data['title'] = this.title;
+    data['title'] = title;
     return data;
   }
 
@@ -174,12 +244,13 @@ class Form {
     int? id,
     Category? category,
     String? title,
-  }) =>
-      Form(
-        id: id ?? this.id,
-        category: category ?? this.category,
-        title: title ?? this.title,
-      );
+  }) {
+    return Form(
+      id: id ?? this.id,
+      category: category ?? this.category,
+      title: title ?? this.title,
+    );
+  }
 }
 
 class Category {
@@ -203,11 +274,11 @@ class Category {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['price'] = this.price;
-    data['image'] = this.image;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['title'] = title;
+    data['price'] = price;
+    data['image'] = image;
     return data;
   }
 
@@ -216,16 +287,12 @@ class Category {
     String? title,
     int? price,
     String? image,
-  }) =>
-      Category(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        price: price ?? this.price,
-        image: image ?? this.image,
-      );
+  }) {
+    return Category(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      price: price ?? this.price,
+      image: image ?? this.image,
+    );
+  }
 }
-
-
-
-
-
